@@ -1,24 +1,24 @@
-import { Container, filters, Graphics, Point, Sprite, Texture } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { CardOptions } from './Pixi';
 
-export const cardColor = (cardAttr: CardOptions, color: number): Container => {
+export const cardColor = (cardAttr: CardOptions, color: number): PIXI.Container => {
     const { width, height, radius, borderColor, alpha } = cardAttr;
 
-    return new Graphics()
+    return new PIXI.Graphics()
         .lineStyle(2, borderColor ?? 0x000000, 1)
         .beginFill(color ?? 0x000000, alpha ?? 1)
         .drawRoundedRect(0, 0, width, height, radius)
         .endFill();
 };
 
-export const cardImage = (cardAttr: CardOptions, image: Texture): Container => {
+export const cardImage = (cardAttr: CardOptions, image: PIXI.Texture): PIXI.Container => {
     const { width, height, radius, borderColor } = cardAttr;
 
-    const component = new Container()
-    const imgSprite = new Sprite(image);
-    const graphic = new Graphics()
+    const component = new PIXI.Container()
+    const imgSprite = new PIXI.Sprite(image);
+    const graphic = new PIXI.Graphics()
         .lineStyle(2, borderColor, 1)
         .beginFill(0x000000)
         .drawRoundedRect(0, 0, width, height, radius)
@@ -32,21 +32,21 @@ export const cardImage = (cardAttr: CardOptions, image: Texture): Container => {
     return component;
 };
 
-export const shadowCard = (background: CardOptions, elevate: number): Graphics => {
-    const shadow = new Graphics()
+export const shadowCard = (background: CardOptions, elevate: number): PIXI.Graphics => {
+    const shadow = new PIXI.Graphics()
         .beginFill(0x000000)
         .drawRoundedRect(elevate, elevate, background.width, background.height, background.radius)
         .endFill();
 
-    shadow.filters = [new filters.BlurFilter(5)];
+    shadow.filters = [new PIXI.filters.BlurFilter(5)];
     return shadow;
 };
 
-const getCenter = (dimensions: Dimensions): Point => {
+const getCenter = (dimensions: Dimensions): PIXI.Point => {
     const { width, height, x, y } = dimensions;
     const newX = x + (width / 2)
     const newY = y + (height / 2)
-    return new Point(newX, newY)
+    return new PIXI.Point(newX, newY)
 }
 
 export interface Dimensions {
@@ -56,14 +56,14 @@ export interface Dimensions {
     y: number;
 }
 
-export const drawBezier = (previous: FlowComponent, dimensions: Dimensions, color: number): Container => {
+export const drawBezier = (previous: FlowComponent, dimensions: Dimensions, color: number): PIXI.Container => {
     const centerStart = getCenter(dimensions);
     const centerEnd = getCenter(previous.pixi.components.card);
     
     const endX = centerEnd.x - centerStart.x
     const endY = centerEnd.y - centerStart.y
 
-    const bezier = new Graphics();
+    const bezier = new PIXI.Graphics();
 
     let count = 0;
     const bezierY1 = (): number => {

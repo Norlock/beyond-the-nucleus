@@ -1,8 +1,8 @@
-import { TextStyle, Texture } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { pixiResources } from 'src/pixi/PixiApp';
 
-export const paragraphStyle = (wordWrapWidth: number): TextStyle => {
-    return new TextStyle({
+export const paragraphStyle = (wordWrapWidth: number): PIXI.TextStyle => {
+    return new PIXI.TextStyle({
         fontSize: 25,
         fontFamily: 'Monaco',
         fill: ['#DDDDDD'],
@@ -18,8 +18,8 @@ export const paragraphStyle = (wordWrapWidth: number): TextStyle => {
     });
 };
 
-export const headerStyle = (): TextStyle => {
-    return new TextStyle({
+export const headerStyle = (): PIXI.TextStyle => {
+    return new PIXI.TextStyle({
         fontSize: 35,
         //fontStyle: "bold",
         fontFamily: 'Monaco',
@@ -36,7 +36,7 @@ export const headerStyle = (): TextStyle => {
     });
 };
 
-export const zendoCardImage = (width: number, height: number): Texture => {
+export const zendoCardImage = (width: number, height: number): PIXI.Texture => {
     //Clone otherwise the same texture is randomised.
     const clone = pixiResources.zendoCard.clone()
     clone.frame.x = Math.random() * (clone.frame.width - width);

@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
 export interface Pixi {
     components: PixiFlowComponents;
@@ -18,9 +18,9 @@ export class PixiParams {
 }
 
 export interface PixiFlowComponents {
-    card: Container;
+    card: PIXI.Container;
     offset: Offset;
-    bezier?: Container;
+    bezier?: PIXI.Container;
 }
 
 export interface CardOptions {

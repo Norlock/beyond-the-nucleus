@@ -1,5 +1,3 @@
-import { Rectangle, Texture } from "pixi.js"
-import { pixiResources } from "src/pixi/PixiApp"
 
 //export const CardStyle = (): Texture => {
     ////const clone = pixiResources.oceanStones.clone()

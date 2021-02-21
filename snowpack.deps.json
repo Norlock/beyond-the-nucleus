@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "gsap": "^3.6.0",
+    "pixi.js": "^5.3.8"
+  },
+  "lock": {
+    "gsap#^3.6.0": "gsap@v3.6.0-Kjw0NtTK2oEKdOqCHsIq",
+    "pixi.js#^5.3.8": "pixi.js@v5.3.8-yf8m1as5TE8pOo4dqNsh"
+  }
+}

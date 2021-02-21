@@ -14,7 +14,8 @@
     "baseUrl": "./",
     "paths": {
       "public/*": ["public/*"],
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "*": [".snowpack/types/*"]
     },
     "typeRoots": [ "./src/typings", "./node_modules/@types"]
   },

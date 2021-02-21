@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import { Component } from 'src/components/base/Component';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { pixiApp } from 'src/pixi/PixiApp';
@@ -65,7 +66,7 @@ const scrollToComponent = (components: PixiFlowComponents) => {
     let xSpeed: number, ySpeed: number, deltaSpeed: number;
     let amplify = 10;
 
-    const pos = card.getGlobalPosition();
+    const pos = card.getBounds();
     let newX = pos.x - offset.x;
     let newY = pos.y - offset.y;
 

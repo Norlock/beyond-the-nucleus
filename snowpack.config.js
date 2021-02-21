@@ -12,7 +12,9 @@ module.exports = {
         '@snowpack/plugin-sass'
     ],
     packageOptions: {
-        polyfillNode: true
+        polyfillNode: true,
+        source: 'remote',
+        types: true
     },
     devOptions: {
         hmrDelay: 50

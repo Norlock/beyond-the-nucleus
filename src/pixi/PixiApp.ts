@@ -27,8 +27,8 @@ export const preload = (callback: Function) => {
         .add('oceanAnthozoa', 'ocean/Anthozoa.jpg')
         .add('zendoCard', 'zendo/card-background.jpg');
 
-    pixiApp.loader.onError.add((err) => console.error(err));
-    pixiApp.loader.load((loader, res) => {
+    pixiApp.loader.onError.add((err: any) => console.error(err));
+    pixiApp.loader.load((loader, res: any) => {
         pixiResources = {
             oceanBubble: res.oceanBubble.texture,
             oceanStart: res.oceanStart.texture,

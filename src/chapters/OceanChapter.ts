@@ -163,7 +163,7 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
     const video = document.createElement('video');
     video.preload = 'auto';
     video.loop = true;
-    video.src = 'http://localhost:8765/Coral.mp4';
+    video.src = 'src/assets/ocean/Coral.mp4';
     const videoSprite = PIXI.Sprite.from(PIXI.Texture.from(video));
     videoSprite.width = pixiApp.screen.width;
     videoSprite.height = pixiApp.screen.height;
