@@ -1,0 +1,6 @@
+node_modules/
+build/
+public/dist/
+public/wasm/
+tags
+yarn-error.log

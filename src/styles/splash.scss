@@ -1,0 +1,113 @@
+:root {
+    --shadow-color: #FF9E9E;
+    --shadow-color-light: white;
+}
+
+#splash-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: black;
+    
+    #splash-header {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 27%;
+        z-index: 1;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        font-size: 70px;
+        font-weight: 400;
+        font-family: "Archivo Black", "Archivo", sans-serif;
+        display: block;
+        color: #ffddbb;
+        animation: neon 0s forwards;
+
+        &.fadeOut {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s, visibility 0s;
+        }
+    }
+
+    .splash-image {
+        background-color: black;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        visibility: hidden;
+        margin-left: auto;
+        margin-right: auto;
+        height: 100%;
+        width: 100%;
+
+        &.fadeIn {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 1s, visibility 0s;
+        }
+    }
+
+
+    #splash-image-bridge {
+        -webkit-mask-image: radial-gradient(circle at 50% 50%, #00ff00 40%, rgba(0, 0, 0, 0.70) 65%);
+        mask-image: radial-gradient(circle at 50% 50%, #00ff00 62%, rgba(0, 100, 0, 0.77) 65%);
+        background-size: contain;
+    }
+
+    #splash-image-earth {
+        object-fit: contain;
+    }
+
+    #splash-button {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        bottom: 100px;
+        text-align: center;
+        width: 200px;
+        height: 70px;
+        border-radius: 5px;
+        background-color: black;
+        color: #66fbfb;
+        font-family: inherited;
+        font-size: 20px;
+        border: 1px solid #0ef8f8;
+        box-shadow: 3px 3px 3px black;
+        visibility: hidden;
+
+        &:hover {
+            transform: scale(1.1); 
+            font-size: 1.33em;
+            box-shadow: 7px 7px 7px black;
+        }
+    }
+}
+
+@keyframes neon {
+    0% {
+        text-shadow: -1px -1px 1px var(--shadow-color-light), -1px 1px 1px var(--shadow-color-light), 1px -1px 1px var(--shadow-color-light), 1px 1px 1px var(--shadow-color-light),
+        0 0 3px var(--shadow-color-light), 0 0 10px var(--shadow-color-light), 0 0 20px var(--shadow-color-light),
+        0 0 30px var(--shadow-color), 0 0 40px var(--shadow-color), 0 0 50px var(--shadow-color), 0 0 70px var(--shadow-color), 0 0 100px var(--shadow-color), 0 0 200px var(--shadow-color);
+    }
+    50% {
+        text-shadow: -1px -1px 1px var(--shadow-color-light), -1px 1px 1px var(--shadow-color-light), 1px -1px 1px var(--shadow-color-light), 1px 1px 1px var(--shadow-color-light),
+        0 0 5px var(--shadow-color-light), 0 0 15px var(--shadow-color-light), 0 0 25px var(--shadow-color-light),
+        0 0 40px var(--shadow-color), 0 0 50px var(--shadow-color), 0 0 60px var(--shadow-color), 0 0 80px var(--shadow-color), 0 0 110px var(--shadow-color), 0 0 210px var(--shadow-color);
+    }
+    100% {
+        text-shadow: -1px -1px 1px var(--shadow-color-light), -1px 1px 1px var(--shadow-color-light), 1px -1px 1px var(--shadow-color-light), 1px 1px 1px var(--shadow-color-light),
+        0 0 3px var(--shadow-color-light), 0 0 10px var(--shadow-color-light), 0 0 20px var(--shadow-color-light),
+        0 0 30px var(--shadow-color), 0 0 40px var(--shadow-color), 0 0 50px var(--shadow-color), 0 0 70px var(--shadow-color), 0 0 100px var(--shadow-color), 0 0 200px var(--shadow-color);
+    }
+}

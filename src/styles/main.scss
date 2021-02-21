@@ -1,0 +1,107 @@
+html, body {
+    margin: 0; 
+    height: 100%; 
+    overflow: hidden;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-family: 'furacode_nerd_font_monoRg';
+}
+
+body {
+    background: black;
+    margin: 0;
+}
+
+p, ul {
+    font-size: 20px;
+}
+
+#pixi-canvas {
+    &.blur {
+        filter: grayscale(0.7) blur(3px) drop-shadow(10px 10px 5px black);
+        transition: 1s;
+    }
+}
+
+#toolbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: #111;
+    color: bisque;
+    font-size: 22px;
+    justify-content: center;
+    align-items: center;
+
+    &.hide {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s linear 0.33s, opacity 0.33s linear;
+    }
+
+    &.show {
+        visibility: visible;
+        opacity: 1;
+        transition-delay: 0s;
+    }
+}
+
+#toolbar-controls {
+    display: flex;
+    justify-content: end; 
+    align-items: center;
+    right: 10px;
+    bottom: 10px;
+    position: fixed;
+    z-index: 10;
+    background: bisque;
+    border-radius: 30px;
+    padding: 4px;
+
+    .info-control {
+        color: azure;
+        background-color: #332000;
+        width: 38px;
+        height: 38px;
+        font-size: 22px;
+        font-weight: bold;
+        display: flex;
+        z-index: 2;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        border: black 1px solid;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+        margin-right: 15px;
+
+        @keyframes controlAdded {
+            0% {
+                background-color: #332000;
+            }
+            100% {
+                background-color: black;
+            }
+        }
+
+        &.hide {
+            position: absolute;
+            opacity: 0;
+        }
+
+        &.show {
+            position: relative;
+            opacity: 1;
+            animation: controlAdded 1s ease-in-out infinite alternate;
+        }
+    }
+
+    #page-number {
+        background-color: darkred;
+        margin-right: 0px;
+    }
+}
