@@ -18,6 +18,10 @@ export const initComponentManager = (): void => {
 
     pixiCanvas.appendChild(pixiApp.view);
 
+    //pixiApp.ticker.add(() => {
+        //pixiApp.render();
+    //});
+
     const initial = PartChainer(new OceanPart1()).component;
     currentComponent = initial;
     currentComponent.chapter.selector.select(initial.pixi.containerName);
@@ -51,7 +55,7 @@ export const initComponentManager = (): void => {
         const action = ActionUtil.getType(event.key);
         if (!action) return;
 
-        if (ActionUtil.isMove(action)) {
+        if (ActionUtil.isSelector(action)) {
             move(action as ActionSelector);
         } else if (action === ActionUI.TOGGLE_TOOLBAR) {
             UIUtils.toggleToolbar();

@@ -14,8 +14,8 @@ export class OceanPart6 extends PartChain {
     }
 
     getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[] {
-        //return [ new ZendoPart1(partToLink) ];
-        return [];
+        return [ new ZendoPart1(partToLink) ];
+        //return [];
     }
 }
 

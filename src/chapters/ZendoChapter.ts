@@ -21,7 +21,7 @@ const blurfilterLeft = new PIXI.filters.BlurFilter(blurSize);
 const blurfilterRight = new PIXI.filters.BlurFilter(blurSize);
 
 export const ZendoChapter = (): Chapter => {
-    const intro = GetAudio('assets/zendo/bell.wav', false, 0.2);
+    const intro = GetAudio('src/assets/zendo/bell.wav', false, 0.2);
     const factory = ChapterFactory(ChapterType.ZEN, 7000, 7000)
         .addContainer(background1())
         .addAudio(intro, AudioTag.INTRO);
@@ -33,12 +33,12 @@ export const ZendoChapter = (): Chapter => {
 
 const background1 = (): ContainerData => {
     const container = new PIXI.Container();
-    const left = PIXI.Sprite.from('assets/zendo/zendo-left.jpg');
+    const left = PIXI.Sprite.from('src/assets/zendo/zendo-left.jpg');
     left.width = 4856;
     left.height = 3238;
     left.filters = [blurfilterLeft];
 
-    const right = PIXI.Sprite.from('assets/zendo/zendo-right.jpg');
+    const right = PIXI.Sprite.from('src/assets/zendo/zendo-right.jpg');
     right.width = 5857;
     right.height = 3905;
     right.x = 4856 + 50;

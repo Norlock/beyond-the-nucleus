@@ -1,6 +1,6 @@
 import { Component } from '../../components/base/Component';
 import { FlowComponent } from '../../components/base/FlowComponent';
-import { ActionPrevious, ActionSelector, ActionUtil } from '../../utils/ActionTypes';
+import { ActionSelector } from '../../utils/ActionTypes';
 import { UI } from '../ui/UI';
 
 export const MergeFlowMover = (self: FlowComponent, previous: FlowComponent): void => {
@@ -27,7 +27,7 @@ export const MergeFlowMover = (self: FlowComponent, previous: FlowComponent): vo
         nextNodes,
         previous,
         isRoot,
-        move: (action: ActionSelector | ActionPrevious) => move(self, action),
+        move: (action: ActionSelector) => move(self, action),
         updateControls: () => updateControls(self.ui, index, nextNodes)
     };
 };
@@ -43,12 +43,12 @@ const updateControls = (ui: UI, index: number, nextNodes: Component[]): void => 
     });
 };
 
-const move = (self: FlowComponent, action: ActionSelector | ActionPrevious): Component => {
-    //if (self.mover.blocked) {
-        //return;
-    //}
+const move = (self: FlowComponent, action: ActionSelector): Component => {
+    if (self.mover.blocked) {
+        return self;
+    }
 
-    if (ActionUtil.isPrevious(action)) {
+    if (action === ActionSelector.PREVIOUS) {
         return self.mover.isRoot() ? self : self.mover.previous;
     }
 

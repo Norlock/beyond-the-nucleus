@@ -47,7 +47,8 @@ const getBackground1 = (): ContainerData => {
     const displacementWater = PIXI.Sprite.from('src/assets/ocean/displacement.png');
     displacementWater.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.MIRRORED_REPEAT;
     const displacementFilter = new PIXI.filters.DisplacementFilter(displacementWater);
-    displacementWater.scale.set(12);
+    const scale = (pixiApp.screen.width / 1920) * 12;
+    displacementWater.scale.set(scale);
 
     background.width = imageWidth;
     background.height = imageHeight;
@@ -89,6 +90,10 @@ const getBackground1 = (): ContainerData => {
 const getBackground2 = (): ContainerData => {
     const displacementWater = PIXI.Sprite.from('src/assets/ocean/displacement.png');
 
+    displacementWater.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.MIRRORED_REPEAT;
+    const displacementFilter = new PIXI.filters.DisplacementFilter(displacementWater);
+    displacementWater.scale.set(20);
+
     const container = new PIXI.Container();
     container.x = 2200;
     container.y = 2200;
@@ -101,10 +106,6 @@ const getBackground2 = (): ContainerData => {
     const background = new PIXI.Sprite(pixiResources.oceanTurtle);
     background.width = 3975;
     background.height = 2650;
-
-    displacementWater.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.MIRRORED_REPEAT;
-    const displacementFilter = new PIXI.filters.DisplacementFilter(displacementWater);
-    displacementWater.scale.set(20);
 
     const circle = new PIXI.Graphics()
         .beginFill(0xff0000)

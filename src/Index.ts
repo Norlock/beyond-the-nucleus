@@ -1,10 +1,8 @@
 import './styles/Index';
-import * as _ from 'lodash';
 import './Global';
 import { initComponentManager } from './components/base/ComponentManager';
 import { preload } from './pixi/PixiApp';
 
-console.log('hallo?');
 const initSplash = () => {
     const button = document.getElementById('splash-button');
     const splash = document.getElementById('splash-container');
@@ -16,10 +14,13 @@ const initSplash = () => {
     const fadeIn = 'fadeIn';
     const fadeOut = 'fadeOut';
 
-    preload(initComponentManager);
+    const promise = preload();
 
     button.addEventListener('click', () => {
         splash.remove();
+        promise.then(() => {
+            initComponentManager();
+        });
     });
 
     hover.volume = 0.2;

@@ -1,6 +1,6 @@
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { SelectorFactory } from 'src/factories/SelectorFactory';
-import { ActionSelector, ActionType, ActionUtil } from 'src/utils/ActionTypes';
+import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
 import { GetAudio } from '../audio/GetAudio';
 import { Selector } from './Selector';
 
@@ -31,6 +31,12 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
             if (action === ActionSelector.NEXT) {
                 component.pixi.load(LOAD_COUNT);
             }
+
+            // Blocker is set because you can bork the render processes by quick scrolling
+            // And you want to wait for component animations to finish before allowing to continue
+            setTimeout(() => {
+                component.mover.blocked = false;
+            }, 500);
         }
     };
 
@@ -40,7 +46,7 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
 
             await selector.next?.unselect();
 
-            if (ActionUtil.isPrevious(action)) {
+            if (action === ActionSelector.PREVIOUS) {
                 component.pixi.hideComponents();
             }
         }

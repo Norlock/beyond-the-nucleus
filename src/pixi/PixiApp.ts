@@ -18,7 +18,7 @@ interface resourceNames {
     zendoCard: PIXI.Texture;
 }
 
-export const preload = (callback: Function) => {
+export const preload = (): Promise<void> => {
     pixiApp.loader.baseUrl = 'src/assets';
     pixiApp.loader
         .add('oceanStart', 'ocean/ocean.jpg')
@@ -28,15 +28,18 @@ export const preload = (callback: Function) => {
         .add('zendoCard', 'zendo/card-background.jpg');
 
     pixiApp.loader.onError.add((err: any) => console.error(err));
-    pixiApp.loader.load((loader, res: any) => {
-        pixiResources = {
-            oceanBubble: res.oceanBubble.texture,
-            oceanStart: res.oceanStart.texture,
-            oceanTurtle: res.oceanTurtle.texture,
-            oceanAnthozoa: res.oceanAnthozoa.texture,
-            zendoCard: res.zendoCard.texture
-        };
-        callback();
+
+    return new Promise(resolve => {
+        pixiApp.loader.load((loader, res: any) => {
+            pixiResources = {
+                oceanBubble: res.oceanBubble.texture,
+                oceanStart: res.oceanStart.texture,
+                oceanTurtle: res.oceanTurtle.texture,
+                oceanAnthozoa: res.oceanAnthozoa.texture,
+                zendoCard: res.zendoCard.texture
+            };
+            resolve();
+        });
     });
 };
 

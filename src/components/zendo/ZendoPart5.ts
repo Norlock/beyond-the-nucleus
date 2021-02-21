@@ -35,7 +35,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
 
     const hdStyle = headerStyle();
     hdStyle.fontSize = 42;
-    hdStyle.fill = '#DDD'
+    hdStyle.fill = '#777'
     const header = new PIXI.Text('Zazen', hdStyle);
     header.x = cardOptions.width / 2;
     header.y = 50;
@@ -45,8 +45,8 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
     const paragraphStyle = new PIXI.TextStyle({
         fontSize: 32,
         fontFamily: 'Monaco',
-        fill: '#579F33',
-        stroke: '#552211',
+        fill: '#DDD',
+        stroke: '#000',
         strokeThickness: 1,
         dropShadow: true,
         dropShadowColor: '#000',
@@ -80,13 +80,13 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
 };
 
 const logo = (): PIXI.Container => {
-    const buddhaLogo = PIXI.Sprite.from('assets/zendo/Buddha-logo.png');
+    const buddhaLogo = PIXI.Sprite.from('src/assets/zendo/Buddha-logo.png');
     buddhaLogo.x = 250;
     buddhaLogo.y  = 72;
     buddhaLogo.width = 125;
     buddhaLogo.height = 150;
 
-    const buddhaLogoShadow = PIXI.Sprite.from('assets/zendo/Buddha-logo.png');
+    const buddhaLogoShadow =  PIXI.Sprite.from(buddhaLogo.texture.clone());
     buddhaLogoShadow.x = 255;
     buddhaLogoShadow.y  = 76;
     buddhaLogoShadow.width = 125;
@@ -125,7 +125,7 @@ const selector = (component: FlowComponent): Selector => {
         .drawRoundedRect(0, 0, 600, 800, 20)
         .endFill();
 
-    const zazenSprite = PIXI.Sprite.from('assets/zendo/zazen.jpg');
+    const zazenSprite = PIXI.Sprite.from('src/assets/zendo/zazen.jpg');
     zazenSprite.addChild(graphic);
     zazenSprite.mask = graphic;
     zazenSprite.x = 5;

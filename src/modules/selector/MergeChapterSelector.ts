@@ -39,7 +39,6 @@ const hideAnimation = (root: PIXI.Container, resolve: Function) => {
     const hideChapter = (): void => {
         if (root.alpha > 0) {
             root.alpha -= 0.05;
-            root.render(pixiApp.renderer);
         } else {
             pixiApp.ticker.remove(hideChapter);
             root.visible = false;

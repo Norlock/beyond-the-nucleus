@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js';
 import { Component } from 'src/components/base/Component';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { pixiApp } from 'src/pixi/PixiApp';

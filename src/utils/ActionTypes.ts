@@ -1,9 +1,6 @@
-export enum ActionPrevious {
-    STANDARD = 'b'
-}
-
 export enum ActionSelector {
     NEXT = 's',
+    PREVIOUS = 'b',
     VIDEO = 'v',
     INFO = 'i'
 }
@@ -13,19 +10,11 @@ export enum ActionUI {
     TOGGLE_MUTE_UNMUTE = 'a'
 }
 
-export type ActionType = ActionSelector | ActionPrevious | ActionUI;
+export type ActionType = ActionSelector | ActionUI;
 
 class ActionUtil {
-    isMove(action: ActionType) {
-        return this.isSelector(action) || this.isPrevious(action);
-    }
-
     isSelector(action: ActionType) {
         return this.isType(ActionSelector, action);
-    }
-
-    isPrevious(action: ActionType) {
-        return this.isType(ActionPrevious, action);
     }
 
     isNext(action: ActionType) {
@@ -48,9 +37,6 @@ class ActionUtil {
     getType(key: string): ActionType {
         const next = Object.values(ActionSelector).find((v) => v === key);
         if (next) return next;
-
-        const previous = Object.values(ActionPrevious).find((v) => v === key);
-        if (previous) return previous;
 
         const ui = Object.values(ActionUI).find((v) => v === key);
         if (ui) return ui;
