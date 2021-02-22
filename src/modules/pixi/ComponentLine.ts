@@ -1,69 +1,63 @@
 import { FlowComponent } from "src/components/base/FlowComponent";
+import { SelectorFactory } from "src/factories/SelectorFactory";
 import { pixiApp } from "src/pixi/PixiApp";
 import { ActionSelector } from "src/utils/ActionTypes";
 import { Selector } from "../selector/Selector";
 import { Dimensions } from "./PixiShapes";
 
-export class ComponentLine extends Selector {
-    count = 0;
-    curve = new PIXI.Graphics();
-    endX: number;
-    endY: number;
-    color: number;
+export const ComponentLine = (previous: FlowComponent, dimensions: Dimensions, color: number): Selector => {
+    let count = 0;
+    const curve = new PIXI.Graphics();
 
-    constructor(previous: FlowComponent, dimensions: Dimensions, color: number) {
-        super();
-        this.color = color;
+    const centerStart = getCenter(dimensions);
+    const centerEnd = getCenter(previous.pixi.components.card);
 
-        const centerStart = getCenter(dimensions);
-        const centerEnd = getCenter(previous.pixi.components.card);
+    const endX = centerEnd.x - centerStart.x
+    const endY = centerEnd.y - centerStart.y
 
-        this.endX = centerEnd.x - centerStart.x
-        this.endY = centerEnd.y - centerStart.y
-
-        this.curve.position.set(centerStart.x, centerStart.y);
-        this.curve.visible = false;
-
-        const select = (): Promise<void> => {
-            this.count = 0;
-            pixiApp.ticker.add(delta => this.animate(delta));
-            return;
-        }
-
-        const unselect = (action: ActionSelector): Promise<void> => {
-            pixiApp.ticker.remove(this.animate);
-
-            if (action === ActionSelector.PREVIOUS) {
-                this.curve.visible = false;
-            }
-            return;
-        }
-
-        this.select = select;
-        this.unselect = unselect;
-    }
-
+    curve.position.set(centerStart.x, centerStart.y);
+    curve.visible = false;
 
     // TODO create scale 
     // The bigger the distance the bigger the offset can be
-    curveX1(): number {
-        return this.endX / 2 + 50 + (50 * Math.sin(this.count))
+    const curveX1 = (): number => {
+        return endX / 2 + 50 + (50 * Math.sin(count))
     }
 
-    curveY1(): number {
-        return this.endY / 2 + 50 + (50 * Math.sin(this.count))
+    const curveY1 = (): number => {
+        return endY / 2 + 50 + (50 * Math.sin(count))
     }
 
-    animate(delta: number) {
-        this.count += (0.02 * delta)
-        this.curve
+    const animate = (delta: number) => {
+        count += (0.02 * delta)
+        curve
             .clear()
             .lineTextureStyle({ 
                 width: 4,
-                color: this.color
+                color
             })
-            .quadraticCurveTo(this.curveX1(), this.curveY1(), this.endX, this.endY);
+            .quadraticCurveTo(curveX1(), curveY1(), endX, endY);
     }
+
+    const select = (): Promise<void> => {
+        count = 0;
+        pixiApp.ticker.add(delta => animate(delta));
+        return;
+    }
+
+    const unselect = (action: ActionSelector): Promise<void> => {
+        pixiApp.ticker.remove(animate);
+
+        if (action === ActionSelector.PREVIOUS) {
+            curve.visible = false;
+        }
+        return;
+    }
+
+    return SelectorFactory(new Selector())
+        .setSelect(select)
+        .setUnselect(unselect)
+        .build();
 }
 
 const getCenter = (dimensions: Dimensions): PIXI.Point => {
