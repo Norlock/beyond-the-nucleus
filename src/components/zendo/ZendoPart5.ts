@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Chapter } from "src/chapters/base/Chapter";
 import { ZendoName } from "src/chapters/ZendoChapter";
 import { FlowComponentFactory } from "src/factories/FlowComponentFactory";
-import { PixiFactory } from "src/factories/PixiFactory";
+import { PixiCardFactory } from "src/factories/PixiCardFactory";
 import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { CardOptions } from "src/modules/pixi/Pixi";
 import { Selector } from 'src/modules/selector/Selector';
@@ -61,20 +61,19 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
     paragraph.x = 30;
     paragraph.y = 90;
 
-    const components = PixiFactory(cardOptions, chapter, ZendoName.START)
+    const components = PixiCardFactory(cardOptions, chapter, ZendoName.START)
         .setImageCard(zendoCardImage(cardOptions.width, cardOptions.height))
         .addChild(header, paragraph, logo())
         .setOffset(150, 150)
         .elevate(12)
-        .setBezier(previous, BEZIER_COLOR)
+        .setLine(previous, BEZIER_COLOR)
         .build();
 
-    components.components.card.rotation = -0.1;
-    const factory = FlowComponentFactory(chapter, 'zendo5')
+    const factory = FlowComponentFactory(chapter, 'zendo5');
+    factory
         .mergeMover(previous)
-        .mergePixi(components);
-
-    factory.appendSelector(selector(factory.component));
+        .mergePixi(components)
+        .appendSelector(selector(factory.component));
 
     return factory.component;
 };
@@ -110,7 +109,7 @@ const logo = (): PIXI.Container => {
 
 const selector = (component: FlowComponent): Selector => {
     const { root } = component.chapter;
-    const { card } = component.pixi.components;
+    const { card } = component.pixi;
 
     const outer = new PIXI.Graphics()
         .beginFill(0x000000)
@@ -136,17 +135,20 @@ const selector = (component: FlowComponent): Selector => {
     outer.addChild(zazenSprite);
     outer.alpha = 0;
 
-    const animate = (): void => {
+    const animate = (resolve: Function): void => {
         outer.alpha += 0.01;
 
         if (outer.alpha === 1) {
             pixiApp.ticker.remove(animate);
+            resolve();
         }
     }
 
-    const select = async () => {
-        setTimeout(() => pixiApp.ticker.add(animate), 2000)
-        root.addChild(outer);
+    const select = async (): Promise<void> => {
+        return new Promise(resolve => {
+            setTimeout(() => pixiApp.ticker.add(() => animate(resolve)), 2000)
+            root.addChild(outer);
+        });
     }
 
     const unselect = async () => {
@@ -154,7 +156,7 @@ const selector = (component: FlowComponent): Selector => {
         root.removeChild(outer);
     }
     
-    return SelectorFactory(new Selector())
+    return SelectorFactory(new Selector("Zazen image part 5"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();

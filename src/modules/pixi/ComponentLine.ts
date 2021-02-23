@@ -1,16 +1,18 @@
+import * as PIXI from 'pixi.js';
 import { FlowComponent } from "src/components/base/FlowComponent";
 import { SelectorFactory } from "src/factories/SelectorFactory";
 import { pixiApp } from "src/pixi/PixiApp";
 import { ActionSelector } from "src/utils/ActionTypes";
 import { Selector } from "../selector/Selector";
+import { PixiSelector } from "./Pixi";
 import { Dimensions } from "./PixiShapes";
 
-export const ComponentLine = (previous: FlowComponent, dimensions: Dimensions, color: number): Selector => {
+export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimensions, color: number): PixiSelector => {
     let count = 0;
     const curve = new PIXI.Graphics();
 
     const centerStart = getCenter(dimensions);
-    const centerEnd = getCenter(previous.pixi.components.card);
+    const centerEnd = getCenter(previous.pixi.card);
 
     const endX = centerEnd.x - centerStart.x
     const endY = centerEnd.y - centerStart.y
@@ -41,6 +43,7 @@ export const ComponentLine = (previous: FlowComponent, dimensions: Dimensions, c
 
     const select = (): Promise<void> => {
         count = 0;
+        curve.visible = true;
         pixiApp.ticker.add(delta => animate(delta));
         return;
     }
@@ -50,14 +53,17 @@ export const ComponentLine = (previous: FlowComponent, dimensions: Dimensions, c
 
         if (action === ActionSelector.PREVIOUS) {
             curve.visible = false;
-        }
+        }  
+
         return;
     }
 
-    return SelectorFactory(new Selector())
+    const selector = SelectorFactory(new Selector("Line selector"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();
+
+    return { component: curve, selector };
 }
 
 const getCenter = (dimensions: Dimensions): PIXI.Point => {

@@ -1,26 +1,25 @@
 import * as PIXI from 'pixi.js';
-
-export interface Pixi {
-    components: PixiFlowComponents;
-    containerName: string;
-    hideComponents(): void;
-    scrollToComponent(): void;
-    load(loadCount: number): void;
-}
+import { Selector } from '../selector/Selector';
 
 export interface PixiModule {
-    pixi: Pixi;
+    pixi: FlowPixi;
 }
 
-export class PixiParams {
+export class FlowPixi {
     containerName: string;
-    components: PixiFlowComponents;
+    card: PIXI.Container;
+    line?: PIXI.Container;
 }
 
-export interface PixiFlowComponents {
-    card: PIXI.Container;
-    offset: Offset;
-    bezier?: PIXI.Container;
+export interface PixiParams {
+    containerName: string;
+    card: PixiSelector;
+    line?: PixiSelector;
+}
+
+export interface PixiSelector { 
+    component: PIXI.Container; 
+    selector: Selector;
 }
 
 export interface CardOptions {

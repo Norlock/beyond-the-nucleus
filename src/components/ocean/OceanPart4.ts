@@ -2,11 +2,12 @@ import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
-import { PixiFactory } from 'src/factories/PixiFactory';
+import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { OceanPart5 } from './OceanPart5';
+import { oceanStyles } from './OceanStyles';
 
 export class OceanPart4 extends PartChain {
     buildComponent(chapter: Chapter, previous: FlowComponent): FlowComponent {
@@ -61,11 +62,11 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
     paragraph.x = 20;
     paragraph.y = 65;
 
-    const pixiParams = PixiFactory(cardOptions, chapter, OceanName.TURTLE)
+    const pixiParams = PixiCardFactory(cardOptions, chapter, OceanName.TURTLE)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(600, 150)
-        .setBezier(previous, 0xFFFFFF)
+        .setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
     const factory = FlowComponentFactory(chapter, 'ocean4')

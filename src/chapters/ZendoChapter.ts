@@ -81,7 +81,7 @@ const selector = (self: Chapter): Selector => {
         self.audio.stop();
     };
 
-    return SelectorFactory(new Selector())
+    return SelectorFactory(new Selector("Blur Zendo intro"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();

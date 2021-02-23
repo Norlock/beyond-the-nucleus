@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { OceanChapter, OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
-import { PixiFactory } from 'src/factories/PixiFactory';
+import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
@@ -61,7 +61,7 @@ const component = (chapter: Chapter): FlowComponent => {
     paragraph.x = 30;
     paragraph.y = 80;
 
-    const components = PixiFactory(cardOptions, chapter, OceanName.START)
+    const param = PixiCardFactory(cardOptions, chapter, OceanName.START)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(200, 200)
@@ -69,7 +69,7 @@ const component = (chapter: Chapter): FlowComponent => {
 
     const factory = FlowComponentFactory(chapter, 'ocean1')
         .mergeMover(undefined)
-        .mergePixi(components);
+        .mergePixi(param);
 
     return factory.component;
 };

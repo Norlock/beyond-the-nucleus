@@ -2,9 +2,14 @@ import { ContainerSelector } from 'src/chapters/base/ContainerSelector';
 import { ActionType } from 'src/utils/ActionTypes';
 
 abstract class BaseSelector {
+    tag: string; // Tag for debug readability
     isSelected: boolean;
     unselect: Unselect;
     next: Selector;
+
+    constructor(tag: string) {
+        this.tag = tag;
+    }
 
     appendSelector(selector: Selector): void {
         if (!this.next) {

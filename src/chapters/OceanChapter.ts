@@ -75,10 +75,10 @@ const getBackground1 = (): ContainerData => {
         pixiApp.ticker.remove(animateWater);
     };
 
-    const selector = SelectorFactory(new Selector())
-    .setSelect(select)
-    .setUnselect(unselect)
-    .build();
+    const selector = SelectorFactory(new Selector("Displacement background 1"))
+        .setSelect(select)
+        .setUnselect(unselect)
+        .build();
 
     return {
         container,
@@ -144,7 +144,7 @@ const getBackground2 = (): ContainerData => {
         bubbleSelector.unselect();
     };
 
-    const selector = SelectorFactory(new Selector())
+    const selector = SelectorFactory(new Selector("Displacement background 1"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();
@@ -177,7 +177,7 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
         container.removeChild(videoSprite);
     };
 
-    const selector = SelectorFactory(new Selector())
+    const selector = SelectorFactory(new Selector("Coral video"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();
@@ -200,7 +200,7 @@ const chapterSelector = (self: Chapter): Selector => {
         self.audio.selected.fadeOut();
     };
 
-    const selector = SelectorFactory(new Selector())
+    const selector = SelectorFactory(new Selector("Chapter audio"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();
@@ -252,7 +252,7 @@ const bubbleAnimation = (background: PIXI.Container): Selector => {
             .to(bubbleContainer, { pixi: { x: 1550 + offset, y: 125, scale: 1.5, alpha: 0.6 } }, 1));
     }
 
-    return SelectorFactory(new Selector())
+    return SelectorFactory(new Selector("Bubbles background 3"))
         .setSelect(select)
         .setUnselect(unselect)
         .build();

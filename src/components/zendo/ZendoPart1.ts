@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { ZendoChapter, ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
-import { CustomPixiFactory } from 'src/factories/CustomPixiFactory';
+import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
@@ -88,7 +88,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
     paragraph2.y = radius + 80;
     paragraph2.anchor.set(0.5, 0);
 
-    const components = CustomPixiFactory(background, ZendoName.START)
+    const components = CustomPixiCardFactory(background, ZendoName.START)
         .setCard(container)
         .addChild(header, paragraph, paragraph2)
         .setOffset(pixiApp.screen.width / 2 - radius, pixiApp.screen.height / 2 - radius)

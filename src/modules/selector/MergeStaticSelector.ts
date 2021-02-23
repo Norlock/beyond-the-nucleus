@@ -3,7 +3,7 @@ import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { Selector } from './Selector';
 
 export const MergeStaticSelector = (self: StaticComponent): void => {
-    const selector = new Selector();
+    const selector = new Selector("Static selector base");
 
     const select = async () => {
         if (!selector.isSelected) {

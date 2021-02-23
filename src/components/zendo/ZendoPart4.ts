@@ -1,7 +1,7 @@
 import { Chapter } from 'src/chapters/base/Chapter';
 import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
-import { PixiFactory } from 'src/factories/PixiFactory';
+import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
@@ -31,7 +31,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
     const offsetX = (pixiApp.screen.width / 2) 
     const offsetY = (pixiApp.screen.height / 2) 
 
-    const components = PixiFactory(cardOptions, chapter, ZendoName.START)
+    const components = PixiCardFactory(cardOptions, chapter, ZendoName.START)
         .setColorCard(0x000000)
         .setOffset(offsetX, offsetY)
         .build();

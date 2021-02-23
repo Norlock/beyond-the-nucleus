@@ -1,7 +1,8 @@
 import { Container, DisplayObject } from "pixi.js";
-import { Offset, PixiParams } from "src/modules/pixi/Pixi";
+import { ComponentCardSelector } from "src/modules/pixi/ComponentCard";
+import { Offset, PixiParams, PixiSelector } from "src/modules/pixi/Pixi";
 
-export const CustomPixiFactory = (background: Container, containerName: string) => {
+export const CustomPixiCardFactory = (background: Container, containerName: string) => {
     let card: Container, 
         offset: Offset;
 
@@ -26,10 +27,10 @@ export const CustomPixiFactory = (background: Container, containerName: string) 
     }
 
     const build = (): PixiParams => {
-        const params = new PixiParams();
-        params.containerName = containerName;
-        params.components = { card, offset } 
-        return params;
+        return {
+            card: ComponentCardSelector(card, offset),
+            containerName
+        }
     }
 
     const factory = {

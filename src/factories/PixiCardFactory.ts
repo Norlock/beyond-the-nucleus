@@ -1,14 +1,16 @@
 import { Container, DisplayObject, Point, Texture } from "pixi.js"
 import { Chapter } from "src/chapters/base/Chapter";
 import { FlowComponent } from "src/components/base/FlowComponent";
-import { CardOptions, Offset, PixiParams } from "src/modules/pixi/Pixi";
-import { cardColor, cardImage, drawBezier, shadowCard } from "src/modules/pixi/PixiShapes";
+import { ComponentCardSelector } from "src/modules/pixi/ComponentCard";
+import { ComponentLineSelector } from "src/modules/pixi/ComponentLine";
+import { CardOptions, Offset, PixiParams, PixiSelector } from "src/modules/pixi/Pixi";
+import { cardColor, cardImage, Dimensions, shadowCard } from "src/modules/pixi/PixiShapes";
 
-export const PixiFactory = (options: CardOptions, chapter: Chapter, containerName: string) => {
+export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containerName: string) => {
     let innerCard: Container, 
         shadow: Container, 
-        offset: Offset,
-        bezier: Container;
+        line: PixiSelector,
+        offset: Offset;
 
     const containerPosition = chapter.getContainer(containerName).position;
     const card = positionCard(new Container(), options, containerPosition)
@@ -33,21 +35,6 @@ export const PixiFactory = (options: CardOptions, chapter: Chapter, containerNam
         return factory;
     }
 
-    const setBezier = (previous: FlowComponent, color: number) => {
-        if (!innerCard) {
-            throw new Error("You need to set card first before adding bezier");
-        }
-
-        bezier = drawBezier(previous, {
-            x: card.x,
-            y: card.y,
-            width: innerCard.width,
-            height: innerCard.height
-        }, color);
-
-        return factory;
-    }
-
     const elevate = (elevate: number) => {
         shadow = shadowCard(options, elevate)
         return factory;
@@ -58,6 +45,11 @@ export const PixiFactory = (options: CardOptions, chapter: Chapter, containerNam
         return factory;
     }
 
+    const setLine = (previous: FlowComponent, color: number) => {
+        line = ComponentLineSelector(previous, options, color);
+        return factory;
+    }
+
     const build = (): PixiParams => {
         if (shadow) {
             card.addChild(shadow)
@@ -65,32 +57,25 @@ export const PixiFactory = (options: CardOptions, chapter: Chapter, containerNam
 
         card.addChild(innerCard);
 
-        const params = new PixiParams();
-        params.containerName = containerName;
-
-        if (bezier) {
-            params.components = { card, bezier, offset }
-        } else {
-            params.components = { card, offset }
+        return {
+            card: ComponentCardSelector(card, offset),
+            containerName,
+            line
         }
-
-        return params;
     }
 
     const factory = {
         setColorCard,
         setImageCard,
         addChild,
-        setBezier,
         elevate,
         setOffset,
+        setLine,
         build
     }
  
     return factory;
 }
-
-
 
 const positionCard = (self: Container, options: CardOptions, containerPosition: Point): Container => {
     const { pivotCenter, x, y, width, height } = options;

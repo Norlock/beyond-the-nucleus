@@ -6,7 +6,7 @@ import { ActionType } from 'src/utils/ActionTypes';
 import { ChapterSelector } from './Selector';
 
 export const MergeChapterSelector = (self: Chapter): void => {
-    const selector = new ChapterSelector();
+    const selector = new ChapterSelector("Chapter selector base");
 
     const select = async (containerName: string) => {
         if (!selector.isSelected) {

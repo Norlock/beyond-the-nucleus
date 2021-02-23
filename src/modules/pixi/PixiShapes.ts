@@ -58,7 +58,7 @@ export interface Dimensions {
 
 export const drawBezier = (previous: FlowComponent, dimensions: Dimensions, color: number): PIXI.Container => {
     const centerStart = getCenter(dimensions);
-    const centerEnd = getCenter(previous.pixi.components.card);
+    const centerEnd = getCenter(previous.pixi.card);
     
     const endX = centerEnd.x - centerStart.x
     const endY = centerEnd.y - centerStart.y

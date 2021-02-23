@@ -4,36 +4,32 @@ import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
 import { GetAudio } from '../audio/GetAudio';
 import { Selector } from './Selector';
 
-const audio = GetAudio('/src/assets/audio/woosh.wav', false, 0.3);
+const audio = GetAudio('/src/assets/audio/woosh.wav', false, 0.3).element;
 const ctx = new AudioContext();
 const filter = ctx.createBiquadFilter();
 filter.frequency.value = 2020;
-const media = ctx.createMediaElementSource(audio.element);
+const media = ctx.createMediaElementSource(audio);
 media.connect(filter);
 filter.connect(ctx.destination);
 
-const LOAD_COUNT = 5;
-
 export const MergeFlowSelector = (component: FlowComponent): void => {
-    const selector = new Selector();
+    const selector = new Selector("Flow selector");
 
     const select = async (action: ActionType) => {
         if (!selector.isSelected) {
             selector.isSelected = true;
             component.mover.blocked = true;
 
-            component.pixi.scrollToComponent();
             component.mover.updateControls();
-            audio.element.play();
+            audio.play();
 
-            await selector.next?.select();
-
-            if (action === ActionSelector.NEXT) {
-                component.pixi.load(LOAD_COUNT);
+            let nextSelector = selector.next;
+            while(nextSelector) {
+                await nextSelector.select(action);
+                nextSelector = nextSelector.next;
             }
 
-            // Blocker is set because you can bork the render processes by quick scrolling
-            // And you want to wait for component animations to finish before allowing to continue
+            // Blocker is to avoid too quick scrolling
             setTimeout(() => {
                 component.mover.blocked = false;
             }, 500);
@@ -44,10 +40,10 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
         if (selector.isSelected) {
             selector.isSelected = false;
 
-            await selector.next?.unselect();
-
-            if (action === ActionSelector.PREVIOUS) {
-                component.pixi.hideComponents();
+            let nextSelector = selector.next;
+            while(nextSelector) {
+                await nextSelector.unselect(action);
+                nextSelector = nextSelector.next;
             }
         }
     };

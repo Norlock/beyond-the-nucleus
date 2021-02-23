@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
-import { PixiFactory } from 'src/factories/PixiFactory';
+import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
@@ -42,12 +42,12 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
     paragraph.x = 20;
     paragraph.y = 75;
 
-    const components = PixiFactory(cardOptions, chapter, ZendoName.START)
+    const components = PixiCardFactory(cardOptions, chapter, ZendoName.START)
         .setImageCard(zendoCardImage(400, 180))
         .addChild(header, paragraph)
         .setOffset(300, 200)
         .elevate(12)
-        .setBezier(previous, BEZIER_COLOR)
+        .setLine(previous, BEZIER_COLOR)
         .build();
 
     const factory = FlowComponentFactory(chapter, 'zendo2')
