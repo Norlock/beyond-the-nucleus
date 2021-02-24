@@ -21,14 +21,14 @@ export class Selector {
     }
 
     // Select first one first
-    async recursivelySelect(action: ActionSelector) {
+    async recursivelySelect(action: ActionSelector): Promise<void> {
         await this.select(action);
-        this.next?.select(action);
+        await this.next?.recursivelySelect(action);
     }
 
     // Unselect last one first
-    async recursivelyUnselect(action: ActionSelector) {
-        this.next?.recursivelyUnselect(action);
+    async recursivelyUnselect(action: ActionSelector): Promise<void> {
+        await this.next?.recursivelyUnselect(action);
         await this.unselect(action);
     }
 }

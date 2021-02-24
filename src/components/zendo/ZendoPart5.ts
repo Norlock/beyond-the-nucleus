@@ -35,7 +35,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
 
     const hdStyle = headerStyle();
     hdStyle.fontSize = 42;
-    hdStyle.fill = '#777'
+    hdStyle.fill = '#999'
     const header = new PIXI.Text('Zazen', hdStyle);
     header.x = cardOptions.width / 2;
     header.y = 50;
@@ -85,12 +85,6 @@ const logo = (): PIXI.Container => {
     buddhaLogo.width = 125;
     buddhaLogo.height = 150;
 
-    const buddhaLogoShadow =  PIXI.Sprite.from(buddhaLogo.texture.clone());
-    buddhaLogoShadow.x = 255;
-    buddhaLogoShadow.y  = 76;
-    buddhaLogoShadow.width = 125;
-    buddhaLogoShadow.height = 150;
-
     const filter = new PIXI.filters.ColorMatrixFilter();
     filter.negative(true);
 
@@ -103,7 +97,7 @@ const logo = (): PIXI.Container => {
     buddhaLogo.filters = [ filter, filter3, filter2 ]
 
     const container = new PIXI.Container();
-    container.addChild(buddhaLogoShadow, buddhaLogo);
+    container.addChild(buddhaLogo);
     return container;
 }
 
@@ -135,23 +129,24 @@ const selector = (component: FlowComponent): Selector => {
     outer.addChild(zazenSprite);
     outer.alpha = 0;
 
-    const animate = (resolve: Function): void => {
-        outer.alpha += 0.01;
-
-        if (outer.alpha === 1) {
-            pixiApp.ticker.remove(animate);
-            resolve();
-        }
-    }
-
     const select = async (): Promise<void> => {
         return new Promise(resolve => {
-            setTimeout(() => pixiApp.ticker.add(() => animate(resolve)), 2000)
             root.addChild(outer);
+
+            const show = (delta: number): void => {
+                outer.alpha += (0.01 * delta);
+
+                if (outer.alpha >= 1) {
+                    pixiApp.ticker.remove(show);
+                    resolve();
+                }
+            }
+
+            setTimeout(() => pixiApp.ticker.add(show), 1000);
         });
     }
 
-    const unselect = async () => {
+    const unselect = async (): Promise<void> => {
         outer.alpha = 0;
         root.removeChild(outer);
     }

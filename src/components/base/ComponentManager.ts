@@ -3,7 +3,6 @@ import { UIUtils } from 'src/modules/ui/GetUI';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
 import { OceanPart1 } from '../ocean/OceanPart1';
-import { ZendoPart1 } from '../zendo/ZendoPart1';
 import { ZendoPart4 } from '../zendo/ZendoPart4';
 import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
@@ -17,10 +16,6 @@ export const initComponentManager = (): void => {
     let keyDown: boolean;
 
     pixiCanvas.appendChild(pixiApp.view);
-
-    //pixiApp.ticker.add(() => {
-        //pixiApp.render();
-    //});
 
     const initial = PartChainer(new OceanPart1()).component;
     currentComponent = initial;
@@ -74,8 +69,8 @@ export const initComponentManager = (): void => {
                 await currentComponent.chapter.selector.unselect(action);
             }
 
-            newComponent.selector.select(action);
-            currentComponent.selector.unselect(action);
+            await newComponent.selector.select(action);
+            await currentComponent.selector.unselect(action);
 
             currentComponent = newComponent;
         }

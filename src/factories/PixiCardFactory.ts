@@ -46,7 +46,14 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
     }
 
     const setLine = (previous: FlowComponent, color: number) => {
-        line = ComponentLineSelector(previous, options, color);
+        const dimensions: Dimensions = {
+            width: options.width,
+            height: options.height,
+            x: containerPosition.x + options.x,
+            y: containerPosition.y + options.y
+        }
+
+        line = ComponentLineSelector(previous, dimensions, color);
         return factory;
     }
 

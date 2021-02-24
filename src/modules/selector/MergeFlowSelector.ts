@@ -1,6 +1,6 @@
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { SelectorFactory } from 'src/factories/SelectorFactory';
-import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
+import { ActionSelector } from 'src/utils/ActionTypes';
 import { GetAudio } from '../audio/GetAudio';
 import { Selector } from './Selector';
 
@@ -35,7 +35,6 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
     const unselect = async (action: ActionSelector) => {
         if (selector.isSelected) {
             selector.isSelected = false;
-
 
             await selector.next?.recursivelyUnselect(action);
         }
