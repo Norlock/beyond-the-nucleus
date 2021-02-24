@@ -41,21 +41,18 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
             .quadraticCurveTo(curveX1(), curveY1(), endX, endY);
     }
 
-    const select = (): Promise<void> => {
+    const select = async (): Promise<void> => {
         count = 0;
         curve.visible = true;
-        pixiApp.ticker.add(delta => animate(delta));
-        return;
+        pixiApp.ticker.add(animate);
     }
 
-    const unselect = (action: ActionSelector): Promise<void> => {
+    const unselect = async (action: ActionSelector): Promise<void> => {
         pixiApp.ticker.remove(animate);
 
         if (action === ActionSelector.PREVIOUS) {
             curve.visible = false;
         }  
-
-        return;
     }
 
     const selector = SelectorFactory(new Selector("Line selector"))

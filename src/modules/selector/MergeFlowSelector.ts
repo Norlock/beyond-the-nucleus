@@ -15,7 +15,7 @@ filter.connect(ctx.destination);
 export const MergeFlowSelector = (component: FlowComponent): void => {
     const selector = new Selector("Flow selector");
 
-    const select = async (action: ActionType) => {
+    const select = async (action: ActionSelector) => {
         if (!selector.isSelected) {
             selector.isSelected = true;
             component.mover.blocked = true;
@@ -23,11 +23,7 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
             component.mover.updateControls();
             audio.play();
 
-            let nextSelector = selector.next;
-            while(nextSelector) {
-                await nextSelector.select(action);
-                nextSelector = nextSelector.next;
-            }
+            await selector.next?.recursivelySelect(action);
 
             // Blocker is to avoid too quick scrolling
             setTimeout(() => {
@@ -36,15 +32,12 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
         }
     };
 
-    const unselect = async (action: ActionType) => {
+    const unselect = async (action: ActionSelector) => {
         if (selector.isSelected) {
             selector.isSelected = false;
 
-            let nextSelector = selector.next;
-            while(nextSelector) {
-                await nextSelector.unselect(action);
-                nextSelector = nextSelector.next;
-            }
+
+            await selector.next?.recursivelyUnselect(action);
         }
     };
 

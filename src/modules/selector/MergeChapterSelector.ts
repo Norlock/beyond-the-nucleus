@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterSelectorFactory } from 'src/factories/ChapterSelectorFactory';
 import { pixiApp } from 'src/pixi/PixiApp';
-import { ActionType } from 'src/utils/ActionTypes';
+import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
 import { ChapterSelector } from './Selector';
 
 export const MergeChapterSelector = (self: Chapter): void => {
@@ -20,7 +20,7 @@ export const MergeChapterSelector = (self: Chapter): void => {
         selector.containerSelector.select(containerName);
     };
 
-    const unselect = async (action: ActionType) => {
+    const unselect = async (action: ActionSelector) => {
         if (selector.isSelected) {
             selector.isSelected = false;
             selector.next?.unselect(action);
