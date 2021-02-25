@@ -1,4 +1,5 @@
 import { Chapter } from "src/chapters/base/Chapter";
+import { LOG } from "src/utils/Logger";
 import { FlowComponent } from "./FlowComponent";
 
 export abstract class PartChain {
@@ -19,52 +20,29 @@ export abstract class PartChain {
 
     init() {
         try {
-            this.component = this.buildComponent(this.chapter, this.previous?.component);
-            this.isSuccessful = true;            
+            this.component = this.buildComponent(this.chapter, this.previousValid?.component);
             this.nextParts = this.getNextParts(this.chapter, this);
+            this.isSuccessful = true;            
         } catch (error) {
             this.isSuccessful = false;
-            this.nextParts = this.getNextParts(this.chapter, this.previousValid());
-        }
+            this.nextParts = this.getNextParts(this.chapter, this.previousValid);
+            LOG.error('Part chain broke', error, this);
+        }  
     }
 
-    nextValid(): PartChain {
-        if (this.isSuccessful) {
-            return this;
-        }
-
-        // In case of branches (TODO) you can have multiple next parts.
-        for (let next of this.nextParts) {
-            const nextValid = next.nextValid();
-            if (nextValid) {
-                return nextValid;
-            }
-        }
+    get index(): number {
+        return this.component.mover.index;
     }
 
-    previousValid(): PartChain {
+    get previousValid(): PartChain {
         if(this.isSuccessful) {
             return this;
         }
 
         if (!this.isRoot()) {
-            return this.previous.previousValid();
+            return this.previous.previousValid;
         } else {
             return undefined;
-        }
-    }
-
-    nextInvalid(): PartChain {
-        if (!this.isSuccessful) {
-            return this;
-        }
-
-        // In case of branches (TODO) you can have multiple next parts.
-        for (let next of this.nextParts) {
-            const nextInvalid = next.nextInvalid();
-            if (nextInvalid) {
-                return nextInvalid;
-            }
         }
     }
 

@@ -1,7 +1,7 @@
 const collision = String.fromCodePoint(0x1f310);
 const stacktrace = String.fromCodePoint(0x1f6e4);
 const scientist = String.fromCodePoint(0x1f469);
-const firecracker = String.fromCodePoint(0x1f438);
+const frog = String.fromCodePoint(0x1f438);
 
 class Log {
     log(tag: string, ...args: any[]) {
@@ -20,9 +20,9 @@ class Log {
         );
     }
 
-    error(tag: string, data: any) {
+    error(tag: string, ...data: any[]) {
         console.error(
-            `%c ${firecracker} ${tag} `,
+            `%c ${frog} ${tag} `,
             'color: black; font-size: 14px; background-color: #B23A38; font-weight: bold; padding: 5px; border-radius: 5px;',
             data
         );
