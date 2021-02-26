@@ -94,9 +94,8 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setOffset(pixiApp.screen.width / 2 - radius, pixiApp.screen.height / 2 - radius)
         .build();
 
-    const factory = FlowComponentFactory(chapter, 'zendo1')
+    return FlowComponentFactory(chapter, 'zendo1')
         .mergeMover(previous)
-        .mergePixi(components);
-
-    return factory.component;
+        .mergePixi(components)
+        .build();
 };

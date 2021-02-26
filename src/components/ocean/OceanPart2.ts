@@ -72,9 +72,8 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
-    const factory = FlowComponentFactory(chapter, 'ocean2')
+    return FlowComponentFactory(chapter, 'ocean2')
         .mergeMover(previous)
-        .mergePixi(components);
-
-    return factory.component;
+        .mergePixi(components)
+        .build();
 };

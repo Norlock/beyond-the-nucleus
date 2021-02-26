@@ -9,6 +9,7 @@ import { ChapterFactory } from 'src/factories/ChapterFactory';
 import { ChapterType } from './base/ChapterType';
 import { SelectState } from 'src/modules/audio/AudioComponent';
 import { SelectorFactory } from 'src/factories/SelectorFactory';
+import { Promiser } from 'src/utils/Promiser';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -63,12 +64,13 @@ const getBackground1 = (): ContainerData => {
     };
 
     const select = async () => {
-        return new Promise<void>(resolve => {
-            setTimeout(() => {
-                pixiApp.ticker.add(animateWater);
-                resolve();
-            }, 200);
-        });
+        const promiser = Promiser<void>();
+        setTimeout(() => {
+            pixiApp.ticker.add(animateWater);
+            promiser.resolve();
+        }, 200);
+
+        return promiser.promise;
     };
 
     const unselect = async () => {

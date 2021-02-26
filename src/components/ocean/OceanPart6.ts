@@ -69,9 +69,8 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setOffset(100, 100)
         .build();
 
-    const factory = FlowComponentFactory(chapter, 'ocean6')
+    return FlowComponentFactory(chapter, 'ocean6')
         .mergeMover(previous)
-        .mergePixi(components);
-
-    return factory.component;
+        .mergePixi(components)
+        .build();
 };

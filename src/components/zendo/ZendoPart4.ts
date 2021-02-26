@@ -7,6 +7,7 @@ import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { Selector } from 'src/modules/selector/Selector';
 import { pixiApp } from 'src/pixi/PixiApp';
+import { Promiser } from 'src/utils/Promiser';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { ZendoPart5 } from './ZendoPart5';
@@ -38,6 +39,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
 
     let video: PIXI.Sprite; 
     const select = async () => {
+        const promise = Promiser<void>();
         video = PIXI.Sprite.from("http://localhost:8765/what-is-zen.mp4");
         video.width = cardOptions.width - 10
         video.height = cardOptions.height - 10
@@ -46,7 +48,10 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
 
         setTimeout(() => {
             components.card.component.addChild(video);
-        }, 500);
+            promise.resolve();
+        }, 1000);
+
+        return promise.promise;
     };
 
     const unselect = async () => {
@@ -59,11 +64,12 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setUnselect(unselect)
         .build();
 
-    const factory = FlowComponentFactory(chapter, 'zendo4')
+    const component = FlowComponentFactory(chapter, 'zendo4')
         .mergeMover(previous)
-        .appendSelector(selector)
-        .mergePixi(components);
+        .mergePixi(components)
+        .build();
 
-    return factory.component;
+    component.selector.appendSelector(selector);
+    return component;
 };
 

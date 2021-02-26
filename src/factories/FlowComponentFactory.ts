@@ -28,16 +28,14 @@ export const FlowComponentFactory = (chapter: Chapter, tag: string) => {
         return factory
     };
 
-    const appendSelector = (selector: Selector) => {
-        self.selector.appendSelector(selector);
-        return factory;
-    };
+    const build = (): FlowComponent => {
+        return self;
+    }
 
     const factory = {
-        component: self,
         mergeMover,
         mergePixi,
-        appendSelector
+        build
     };
 
     return factory;

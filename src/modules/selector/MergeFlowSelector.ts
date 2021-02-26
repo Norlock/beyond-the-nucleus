@@ -23,7 +23,9 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
             component.mover.updateControls();
             audio.play();
 
+            console.time();
             await selector.next?.recursivelySelect(action);
+            console.timeEnd();
 
             // Blocker is to avoid too quick scrolling
             setTimeout(() => {

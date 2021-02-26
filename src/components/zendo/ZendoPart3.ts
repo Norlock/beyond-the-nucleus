@@ -60,9 +60,8 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setLine(previous, BEZIER_COLOR)
         .build();
 
-    const factory = FlowComponentFactory(chapter, 'zendo3')
+    return FlowComponentFactory(chapter, 'zendo3')
         .mergeMover(previous)
-        .mergePixi(components);
-
-    return factory.component;
+        .mergePixi(components)
+        .build();
 };

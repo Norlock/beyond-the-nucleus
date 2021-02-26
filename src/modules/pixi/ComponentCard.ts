@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { SelectorFactory } from "src/factories/SelectorFactory";
 import { pixiApp } from "src/pixi/PixiApp";
 import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
+import { Promiser } from 'src/utils/Promiser';
 import { Selector } from "../selector/Selector";
 import { Offset, PixiSelector } from "./Pixi";
 
@@ -45,6 +46,8 @@ const scrollToCard = async (card: PIXI.Container, offset: Offset) => {
     const absXSpeed = Math.abs(xSpeed);
     const absYSpeed = Math.abs(ySpeed);
 
+    const promiser = Promiser<void>();
+
     const scrollAnimation = (): void => {
         if (absXSpeed < Math.abs(newX) && absYSpeed < Math.abs(newY)) {
             pixiApp.stage.setTransform(pixiApp.stage.x - xSpeed, pixiApp.stage.y - ySpeed);
@@ -58,10 +61,12 @@ const scrollToCard = async (card: PIXI.Container, offset: Offset) => {
         } else {
             pixiApp.stage.setTransform(pixiApp.stage.x - newX, pixiApp.stage.y - newY);
             pixiApp.ticker.remove(scrollAnimation);
+            promiser.resolve();
         }
     };
 
     pixiApp.ticker.add(scrollAnimation);
+    return promiser.promise;
 };
 
 const hideCard = async (card: PIXI.Container, action: ActionType) => {

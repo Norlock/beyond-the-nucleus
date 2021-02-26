@@ -7,6 +7,7 @@ import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { CardOptions } from "src/modules/pixi/Pixi";
 import { Selector } from 'src/modules/selector/Selector';
 import { pixiApp } from 'src/pixi/PixiApp';
+import { Promiser } from 'src/utils/Promiser';
 import { FlowComponent } from "../base/FlowComponent";
 import { PartChain } from "../base/PartChain";
 import { BEZIER_COLOR, headerStyle, zendoCardImage } from "./ZendoStyles";
@@ -69,13 +70,13 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setLine(previous, BEZIER_COLOR)
         .build();
 
-    const factory = FlowComponentFactory(chapter, 'zendo5');
-    factory
+    const component = FlowComponentFactory(chapter, 'zendo5')
         .mergeMover(previous)
         .mergePixi(components)
-        .appendSelector(selector(factory.component));
+        .build();
 
-    return factory.component;
+    component.selector.appendSelector(selector(component));
+    return component;
 };
 
 const logo = (): PIXI.Container => {
@@ -139,20 +140,20 @@ const selector = (component: FlowComponent): Selector => {
     bonsai.alpha = outer.alpha = 0;
 
     const select = async (): Promise<void> => {
-        return new Promise(resolve => {
-            root.addChild(outer, bonsai);
+        const promise = Promiser<void>();
+        root.addChild(outer, bonsai);
 
-            const show = (delta: number): void => {
-                bonsai.alpha = outer.alpha += (0.01 * delta);
+        const show = (delta: number): void => {
+            bonsai.alpha = outer.alpha += (0.01 * delta);
 
-                if (outer.alpha >= 1) {
-                    pixiApp.ticker.remove(show);
-                    resolve();
-                }
+            if (outer.alpha >= 1) {
+                pixiApp.ticker.remove(show);
+                promise.resolve();
             }
+        }
 
-            setTimeout(() => pixiApp.ticker.add(show), 1000);
-        });
+        setTimeout(() => pixiApp.ticker.add(show), 1000);
+        return promise.promise;
     }
 
     const unselect = async (): Promise<void> => {
