@@ -110,7 +110,7 @@ const selector = (component: FlowComponent): Selector => {
         .drawRoundedRect(0, 0, 410, 542, 20)
         .endFill();
 
-    outer.x = card.x + card.width + 300;
+    outer.x = card.x + card.width + 200;
     outer.y = card.y - 100;
 
     const graphic = new PIXI.Graphics()
@@ -125,16 +125,25 @@ const selector = (component: FlowComponent): Selector => {
     zazenSprite.y = 5;
     zazenSprite.width = 400;
     zazenSprite.height = 532;
+
+    const bonsai = PIXI.Sprite.from('src/assets/zendo/bonsai.jpg');
+    const filter = new PIXI.filters.ColorMatrixFilter();
+    filter.vintage(true);
+    bonsai.filters = [ filter ]
+    bonsai.width = 400;
+    bonsai.height = 532;
+    bonsai.x = outer.x + outer.width + 200
+    bonsai.y = outer.y
     
     outer.addChild(zazenSprite);
-    outer.alpha = 0;
+    bonsai.alpha = outer.alpha = 0;
 
     const select = async (): Promise<void> => {
         return new Promise(resolve => {
-            root.addChild(outer);
+            root.addChild(outer, bonsai);
 
             const show = (delta: number): void => {
-                outer.alpha += (0.01 * delta);
+                bonsai.alpha = outer.alpha += (0.01 * delta);
 
                 if (outer.alpha >= 1) {
                     pixiApp.ticker.remove(show);
@@ -147,8 +156,8 @@ const selector = (component: FlowComponent): Selector => {
     }
 
     const unselect = async (): Promise<void> => {
-        outer.alpha = 0;
-        root.removeChild(outer);
+        bonsai.alpha = outer.alpha = 0;
+        root.removeChild(outer, bonsai);
     }
     
     return SelectorFactory(new Selector("Zazen image part 5"))

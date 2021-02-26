@@ -3,6 +3,7 @@ import { UIUtils } from 'src/modules/ui/GetUI';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
 import { OceanPart1 } from '../ocean/OceanPart1';
+import { ZendoPart1 } from '../zendo/ZendoPart1';
 import { ZendoPart4 } from '../zendo/ZendoPart4';
 import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
@@ -19,13 +20,13 @@ export const initComponentManager = (): void => {
 
     pixiCanvas.appendChild(pixiApp.view);
 
-    const root = new OceanPart1();
+    const root = new ZendoPart1(undefined);
+    //const root = new OceanPart1();
     const partChainer = PartChainer(root, LOAD_COUNT);
 
     currentComponent = root.component;
     currentComponent.chapter.selector.select(root.component.pixi.containerName);
     currentComponent.selector.select(ActionSelector.NEXT);
-
 
     const scroll = (): void => {
         if (keyDown) {

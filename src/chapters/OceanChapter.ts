@@ -161,20 +161,22 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
     container.x = container2.x - pixiApp.screen.width - 1000;
     container.y = 2500;
 
-    const video = document.createElement('video');
-    video.preload = 'auto';
-    video.loop = true;
-    video.src = 'src/assets/ocean/Coral.mp4';
-    const videoSprite = PIXI.Sprite.from(PIXI.Texture.from(video));
-    videoSprite.width = pixiApp.screen.width;
-    videoSprite.height = pixiApp.screen.height;
+    let videoSprite: PIXI.Sprite;
 
     const select = async () => {
+        const video = document.createElement('video');
+        video.preload = 'auto';
+        video.loop = true;
+        video.src = 'src/assets/ocean/Coral.mp4';
+        videoSprite = PIXI.Sprite.from(PIXI.Texture.from(video));
+        videoSprite.width = pixiApp.screen.width;
+        videoSprite.height = pixiApp.screen.height;
         container.addChild(videoSprite);
     };
 
     const unselect = async () => {
         container.removeChild(videoSprite);
+        videoSprite.texture.baseTexture.destroy()
     };
 
     const selector = SelectorFactory(new Selector("Coral video"))

@@ -20,7 +20,7 @@ Some test app for ideas
 - [x] lazy loading of components 
 - [x] Ability to pass a sub module to a module (selector in fn style)
 - [ ] Test component before adding to the chain
-- [ ] Mover lazy loading over to PartChain and outide MergePixiFlow
+- [x] Mover lazy loading over to PartChain and outide MergePixiFlow
 - [ ] Show hotkeys overlay (panning etc).
 - [ ] Deep see fish with light + https://pixijs.io/examples/#/gsap3-interaction/gsap3-filters.js
 - [ ] Graphical effects (fire, stars, rain, movement)
