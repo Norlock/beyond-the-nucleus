@@ -3,6 +3,7 @@ const stacktrace = String.fromCodePoint(0x1f6e4);
 const scientist = String.fromCodePoint(0x1f469);
 const frog = String.fromCodePoint(0x1f438);
 
+// Maybe in the future send to a backend to analyse.
 class Log {
     log(tag: string, ...args: any[]) {
         console.group(
@@ -29,5 +30,4 @@ class Log {
     }
 }
 
-const LOG = new Log();
-export { LOG };
+export const LOG = new Log();

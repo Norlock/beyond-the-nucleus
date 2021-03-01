@@ -48,6 +48,8 @@ const move = (self: FlowComponent, action: ActionSelector): Component => {
         return self;
     }
 
+    self.mover.blocked = true;
+
     if (action === ActionSelector.PREVIOUS) {
         return self.mover.isRoot() ? self : self.mover.previous;
     }

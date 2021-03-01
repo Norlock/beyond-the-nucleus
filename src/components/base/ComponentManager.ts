@@ -64,6 +64,10 @@ export const initComponentManager = (): void => {
     });
 
     const move = async (action: ActionSelector) => {
+        if (currentComponent.mover.blocked) {
+            return;
+        }
+
         const newComponent = currentComponent.mover.move(action);
 
         if (currentComponent !== newComponent) {

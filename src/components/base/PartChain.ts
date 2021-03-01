@@ -1,10 +1,12 @@
 import { Chapter } from "src/chapters/base/Chapter";
 import { LOG } from "src/utils/Logger";
 import { FlowComponent } from "./FlowComponent";
+import { defaultTestFlags, TestFlags } from "./PartTester";
 
 export abstract class PartChain {
     readonly previous: PartChain;
     readonly chapter: Chapter;
+    readonly testFlags: TestFlags;
 
     abstract buildComponent(chapter: Chapter, previous: FlowComponent): FlowComponent;
     abstract getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[];
@@ -16,6 +18,7 @@ export abstract class PartChain {
     constructor(chapter: Chapter, previous: PartChain) {
         this.previous = previous;
         this.chapter = chapter;
+        this.testFlags = defaultTestFlags();
     }
 
     init() {
