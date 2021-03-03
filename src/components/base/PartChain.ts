@@ -1,36 +1,54 @@
 import { Chapter } from "src/chapters/base/Chapter";
+import { ChapterProvider } from "src/chapters/base/ChapterProvider";
+import { ChapterType } from "src/chapters/base/ChapterType";
 import { LOG } from "src/utils/Logger";
 import { FlowComponent } from "./FlowComponent";
-import { defaultTestFlags, TestFlags } from "./PartTester";
+import { defaultTestFlags, PartTester, TestFlags } from "./PartTester";
 
+/* Partchain will immediately connect the complete chain
+* @init will be used for lazy loading
+    */
 export abstract class PartChain {
     readonly previous: PartChain;
-    readonly chapter: Chapter;
     readonly testFlags: TestFlags;
+    readonly chapterType: ChapterType;
+    readonly tag: string;
+    readonly debug: () => void;
 
-    abstract buildComponent(chapter: Chapter, previous: FlowComponent): FlowComponent;
-    abstract getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[];
+    abstract buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent;
+    abstract getNextParts(): PartChain[];
+    abstract getTestFlags(standard: TestFlags): TestFlags;
 
     isSuccessful: boolean;
+    initialized: boolean;
     component: FlowComponent;
-    nextParts: PartChain[]; 
+    nextParts: PartChain[] = []; 
 
-    constructor(chapter: Chapter, previous: PartChain) {
+    constructor(tag: string, chapterType: ChapterType, previous: PartChain) {
+        this.tag = tag;
         this.previous = previous;
-        this.chapter = chapter;
-        this.testFlags = defaultTestFlags();
+        this.chapterType = chapterType;
+        this.nextParts = this.getNextParts();
+
+        this.debug = () => debugChain(this);
     }
 
     init() {
+        // Get chapter 
+        const chapter = ChapterProvider.get(this.chapterType);
+        const previous = this.previousValid?.component;
+
         try {
-            this.component = this.buildComponent(this.chapter, this.previousValid?.component);
-            this.nextParts = this.getNextParts(this.chapter, this);
-            this.isSuccessful = true;            
+            this.component = this.buildComponent(chapter, previous, this.tag);
+
+            const flags = this.getTestFlags(defaultTestFlags());
+            this.isSuccessful = PartTester(this.component, flags);
         } catch (error) {
             this.isSuccessful = false;
-            this.nextParts = this.getNextParts(this.chapter, this.previousValid);
-            LOG.error('Part chain broke', error, this);
-        }  
+            LOG.error('Component not added', error, this);
+        } finally {
+            this.initialized = true;
+        }
     }
 
     get index(): number {
@@ -38,18 +56,40 @@ export abstract class PartChain {
     }
 
     get previousValid(): PartChain {
-        if(this.isSuccessful) {
-            return this;
-        }
+        if (this.previous) {
+            if (this.previous.isSuccessful) {
+                return this.previous;
+            }
 
-        if (!this.isRoot()) {
             return this.previous.previousValid;
-        } else {
-            return undefined;
+        }  
+    }
+}
+
+
+const debugChain = (self: PartChain): void => {
+    const previousParts = (current: PartChain): PartChain [] => {
+        const list: PartChain[] = [];
+        while (current.previous) {
+            list.push(current.previous);
+            current = current.previous;
         }
+        return list;
     }
 
-    isRoot(): boolean {
-        return typeof this.previous === 'undefined';
+    const nextParts = (current: PartChain, list: PartChain[][]): PartChain [][] => {
+        if (current.nextParts.length > 0) {
+            list.push(current.nextParts);
+
+            for (let next of current.nextParts) {
+                nextParts(next, list);
+            }
+        }
+
+        return list;
     }
+
+    LOG.log('Previous', previousParts(self));
+    LOG.log('Current', self);
+    LOG.log('Next', nextParts(self, []));
 }

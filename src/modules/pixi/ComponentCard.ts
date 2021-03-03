@@ -70,6 +70,7 @@ const scrollToCard = async (card: PIXI.Container, offset: Offset) => {
 };
 
 const hideCard = async (card: PIXI.Container, action: ActionType) => {
+    console.log('action', action);
     if (action === ActionSelector.PREVIOUS) {
         card.visible = false;
     }

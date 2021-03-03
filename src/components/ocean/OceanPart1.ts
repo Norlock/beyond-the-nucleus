@@ -1,28 +1,36 @@
 import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
-import { OceanChapter, OceanName } from 'src/chapters/OceanChapter';
+import { ChapterType } from 'src/chapters/base/ChapterType';
+import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
+import { TestFlags } from '../base/PartTester';
 import { OceanPart2 } from './OceanPart2';
 
 export class OceanPart1 extends PartChain {
     constructor() {
-        super(OceanChapter(), undefined);
+        super("Ocean1", ChapterType.OCEAN, undefined);
     }
 
-    buildComponent(chapter: Chapter): FlowComponent {
-        return component(chapter);
+    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
+        return component(chapter, tag);
     }
 
-    getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[] {
-        return [ new OceanPart2(chapter, partToLink) ];
+    getNextParts(): PartChain[] {
+        return [ new OceanPart2(this) ];
+    }
+
+    getTestFlags(standard: TestFlags): TestFlags {
+        standard.hasPrevious = false;
+        standard.hasLine = false;
+        return standard;
     }
 }
 
-const component = (chapter: Chapter): FlowComponent => {
+const component = (chapter: Chapter, tag: string): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -67,7 +75,7 @@ const component = (chapter: Chapter): FlowComponent => {
         .setOffset(200, 200)
         .build();
 
-    return FlowComponentFactory(chapter, 'ocean1')
+    return FlowComponentFactory(chapter, tag)
         .mergeMover(undefined)
         .mergePixi(param)
         .build();

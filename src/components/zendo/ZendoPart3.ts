@@ -1,27 +1,35 @@
 import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
+import { ChapterType } from 'src/chapters/base/ChapterType';
 import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
+import { TestFlags } from '../base/PartTester';
 import { ZendoPart4 } from './ZendoPart4';
 import { BEZIER_COLOR, headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles';
 
 export class ZendoPart3 extends PartChain {
-    buildComponent(chapter: Chapter, previous: FlowComponent): FlowComponent {
-        return component(chapter, previous);
+    constructor(previous: PartChain) {
+        super("Zendo3", ChapterType.ZEN, previous)
     }
 
-    getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[] {
-        return [
-            new ZendoPart4(chapter, partToLink)
-        ];
+    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
+        return component(chapter, previous, tag);
+    }
+
+    getNextParts(): PartChain[] {
+        return [ new ZendoPart4(this) ];
+    }
+
+    getTestFlags(standard: TestFlags): TestFlags {
+        return standard;
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => {
+const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x200900,
         alpha: 1,
@@ -60,7 +68,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setLine(previous, BEZIER_COLOR)
         .build();
 
-    return FlowComponentFactory(chapter, 'zendo3')
+    return FlowComponentFactory(chapter, tag)
         .mergeMover(previous)
         .mergePixi(components)
         .build();

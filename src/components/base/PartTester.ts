@@ -1,58 +1,60 @@
 import { FLOW_SELECTOR_TAG } from "src/modules/selector/MergeFlowSelector";
 import { Selector } from "src/modules/selector/Selector";
-import { assert } from "src/utils/Assertions";
 import { LOG } from "src/utils/Logger";
 import { FlowComponent } from "./FlowComponent";
 
 export interface TestFlags {
     hasPrevious: boolean;
     hasLine: boolean;
-
-    // If strict it will throw an error
-    strict: boolean;
+    nextCount: number;
 }
 
 export const defaultTestFlags = (): TestFlags => {
     return {
         hasPrevious: true,
         hasLine: true,
-        strict: false
+        nextCount: 0
     }
 }
 
-// TODO check if nextparts ook echt next parts
+// TODO complete readonly object
 export const PartTester = (component: Readonly<FlowComponent>, flags: TestFlags): boolean => {
     const { hasPrevious, hasLine } = flags;
+    let success = true;
 
     if (hasPrevious) {
-        if(assert.isDefined(component.mover.previous)) {
+        if(!component.mover.previous) {
             LOG.error('No previous', component);
-            return false;
+            success = false;
         }   
     }
 
-    component.selector.tag = "juustem";
     if (!component.chapter) {
         LOG.error('No chapter', component);
+        success = false;
     }
 
     if (hasLine) {
+        if (!component.pixi.line) {
+            LOG.error('No line', component);
+            success = false;
+        }
 
     }
 
-    return true;
+    const testSelectors = (selector: Readonly<Selector>): boolean => {
+        if (!selector) {
+            LOG.error('No selector', component);
+            return false;
+        }
+
+        if (selector.tag !== FLOW_SELECTOR_TAG) {
+            LOG.error('Expects flow selector', component);
+            return false;
+        }
+    }
+    testSelectors(component.selector);
+
+    return success;
 }
 
-const testSelectors = (component: Readonly<FlowComponent>): boolean => {
-    if (!component.selector) {
-        LOG.error('No selector', component);
-        return false;
-    }
-    const selector: Readonly<Selector> = component.selector;
-
-    if (selector.tag !== FLOW_SELECTOR_TAG) {
-        LOG.error('Expects flow selector', component);
-        return false;
-    }
-
-}

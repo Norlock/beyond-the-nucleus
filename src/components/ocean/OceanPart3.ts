@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
+import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
@@ -7,20 +8,29 @@ import { CardOptions } from 'src/modules/pixi/Pixi';
 import { pixiResources } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
+import { TestFlags } from '../base/PartTester';
 import { OceanPart4 } from './OceanPart4';
 import { oceanStyles } from './OceanStyles';
 
 export class OceanPart3 extends PartChain {
-    buildComponent(chapter: Chapter, previous: FlowComponent): FlowComponent {
-        return component(chapter, previous);
+    constructor(previous: PartChain) {
+        super("Ocean3", ChapterType.OCEAN, previous);
     }
 
-    getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[] {
-        return [new OceanPart4(chapter, partToLink)];
+    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
+        return component(chapter, previous, tag);
+    }
+
+    getNextParts(): PartChain[] {
+        return [ new OceanPart4(this) ];
+    }
+
+    getTestFlags(standard: TestFlags): TestFlags {
+        return standard;
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => {
+const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
     const width = 800;
     const leftX = 40;
     const rightX = width / 2;
@@ -84,7 +94,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
-    return FlowComponentFactory(chapter, 'ocean3')
+    return FlowComponentFactory(chapter, tag)
         .mergeMover(previous)
         .mergePixi(components)
         .build();

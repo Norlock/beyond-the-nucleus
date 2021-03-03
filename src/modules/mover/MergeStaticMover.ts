@@ -4,7 +4,6 @@ import { FlowComponent } from 'src/components/base/FlowComponent';
 import { ActionSelector, ActionUtil } from '../../utils/ActionTypes';
 
 export const MergeStaticMover = (self: StaticComponent, parent: FlowComponent, action: ActionSelector): void => {
-    const initialized = false;
     parent.mover.nextNodes.push(self);
 
     const move = (nextAction: ActionSelector): Component => {
@@ -17,7 +16,6 @@ export const MergeStaticMover = (self: StaticComponent, parent: FlowComponent, a
 
     self.mover = {
         action,
-        initialized,
         move,
         parent,
         blocked: false

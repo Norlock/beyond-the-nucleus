@@ -1,12 +1,11 @@
 import { pixiResources } from "src/pixi/PixiApp";
 import { Chapter, ContainerData } from "./base/Chapter";
 
-export enum NativeName {
+export enum Indigenous {
     MAP = 'map',
 }
 
-export const NativeAmericansChapter = (): Chapter => {
-    // The new world
+export const IndigenousChapter = (): Chapter => {
     return undefined;
 }
 

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ZendoChapter, ZendoName } from 'src/chapters/ZendoChapter';
+import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory';
 import { pixiApp } from 'src/pixi/PixiApp';
@@ -7,24 +7,31 @@ import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { ZendoPart2 } from './ZendoPart2';
+import { ChapterType } from 'src/chapters/base/ChapterType';
+import { TestFlags } from '../base/PartTester';
 
 export class ZendoPart1 extends PartChain {
     constructor(previous: PartChain) {
-        super(ZendoChapter(), previous)
+        super("Zendo1", ChapterType.ZEN, previous)
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent): FlowComponent {
-        return component(chapter, previous);
+    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
+        return component(chapter, previous, tag);
     }
 
-    getNextParts(chapter: Chapter, partToLink: PartChain): PartChain[] {
+    getNextParts(): PartChain[] {
         return [
-            new ZendoPart2(chapter, partToLink)
+            new ZendoPart2(this)
         ];
+    }
+
+    getTestFlags(standard: TestFlags): TestFlags {
+        standard.hasLine = false;
+        return standard;
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => {
+const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
     const background = chapter.getContainer(ZendoName.START);
     const left = background.getChildAt(0) as PIXI.Sprite;
 
@@ -94,7 +101,7 @@ const component = (chapter: Chapter, previous: FlowComponent): FlowComponent => 
         .setOffset(pixiApp.screen.width / 2 - radius, pixiApp.screen.height / 2 - radius)
         .build();
 
-    return FlowComponentFactory(chapter, 'zendo1')
+    return FlowComponentFactory(chapter, tag)
         .mergeMover(previous)
         .mergePixi(components)
         .build();

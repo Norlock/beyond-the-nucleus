@@ -20,8 +20,7 @@ export const initComponentManager = (): void => {
 
     pixiCanvas.appendChild(pixiApp.view);
 
-    const root = new ZendoPart1(undefined);
-    //const root = new OceanPart1();
+    const root = new OceanPart1();
     const partChainer = PartChainer(root, LOAD_COUNT);
 
     currentComponent = root.component;

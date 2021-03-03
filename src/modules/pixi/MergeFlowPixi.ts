@@ -17,28 +17,4 @@ export const MergeFlowPixi = (self: FlowComponent, params: PixiParams): void => 
         self.pixi.line = line.component;
         self.selector.appendSelector(line.selector)
     }
-
-    self.mover.initialized = true;
 };
-
-//const load = (self: FlowComponent, loadCount: number) => {
-    //if (loadCount === 0) {
-        //return;
-    //}
-
-    //if (self.mover.initialized) {
-        //loadNextNodes(self.mover.nextNodes, loadCount);
-        //return;
-    //}
-
-    //const { card, line } = self.pixi;
-    //loadNextNodes(self.mover.nextNodes, loadCount);
-//}
-
-//const loadNextNodes = (nextNodes: Component[], loadCount: number) => {
-    //nextNodes.forEach(node => {
-        //if (node instanceof FlowComponent) {
-            //node.pixi.load(loadCount-1);
-        //}
-    //});
-//}
