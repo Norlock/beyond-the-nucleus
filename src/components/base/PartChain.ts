@@ -34,7 +34,6 @@ export abstract class PartChain {
     }
 
     init() {
-        // Get chapter 
         const chapter = ChapterProvider.get(this.chapterType);
         const previous = this.previousValid?.component;
 
@@ -42,10 +41,15 @@ export abstract class PartChain {
             this.component = this.buildComponent(chapter, previous, this.tag);
 
             const flags = this.getTestFlags(defaultTestFlags());
-            this.isSuccessful = PartTester(this.component, flags);
+            PartTester(this.component, flags);
+
+            this.isSuccessful = true;
         } catch (error) {
             this.isSuccessful = false;
+            previous.mover.nextNodes.remove(this.component);
+
             LOG.error('Component not added', error, this);
+            this.debug();
         } finally {
             this.initialized = true;
         }

@@ -13,7 +13,6 @@ export const PartChainer = (root: PartChain, loadCount: number) => {
         }
 
         if (index === 0) {
-            part.debug();
             return;
         }
 

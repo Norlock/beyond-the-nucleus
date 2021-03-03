@@ -13,6 +13,7 @@ import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { TestFlags } from '../base/PartTester';
 import { ZendoPart5 } from './ZendoPart5';
+import { BEZIER_COLOR } from './ZendoStyles';
 
 export class ZendoPart4 extends PartChain {
     constructor(previous: PartChain) {
@@ -24,7 +25,7 @@ export class ZendoPart4 extends PartChain {
     }
 
     getNextParts(): PartChain[] {
-        return [ new ZendoPart5(this)];
+        return [ new ZendoPart5(this) ];
     }
 
     getTestFlags(standard: TestFlags): TestFlags {
@@ -45,6 +46,7 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     const components = PixiCardFactory(cardOptions, chapter, ZendoName.START)
         .setColorCard(0x000000)
         .setOffset(200, 50)
+        .setLine(previous, BEZIER_COLOR)
         .build();
 
     let video: PIXI.Sprite; 

@@ -18,43 +18,36 @@ export const defaultTestFlags = (): TestFlags => {
 }
 
 // TODO complete readonly object
-export const PartTester = (component: Readonly<FlowComponent>, flags: TestFlags): boolean => {
+export const PartTester = (component: Readonly<FlowComponent>, flags: TestFlags): void => {
     const { hasPrevious, hasLine } = flags;
-    let success = true;
 
     if (hasPrevious) {
         if(!component.mover.previous) {
-            LOG.error('No previous', component);
-            success = false;
+            throw new Error("Doesn't have a previous");
         }   
     }
 
     if (!component.chapter) {
-        LOG.error('No chapter', component);
-        success = false;
+        throw new Error("Doesn't have a chapter");
     }
 
     if (hasLine) {
         if (!component.pixi.line) {
-            LOG.error('No line', component);
-            success = false;
+            throw new Error("Doesn't have a line");
         }
 
     }
 
-    const testSelectors = (selector: Readonly<Selector>): boolean => {
+    const testSelectors = (selector: Readonly<Selector>): void => {
         if (!selector) {
-            LOG.error('No selector', component);
-            return false;
+            throw new Error("Doesn't have a selector");
         }
 
         if (selector.tag !== FLOW_SELECTOR_TAG) {
-            LOG.error('Expects flow selector', component);
-            return false;
+            throw new Error('Expects flow selector');
         }
     }
-    testSelectors(component.selector);
 
-    return success;
+    testSelectors(component.selector);
 }
 
