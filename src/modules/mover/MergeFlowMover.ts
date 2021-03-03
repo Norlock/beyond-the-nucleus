@@ -19,7 +19,6 @@ export const MergeFlowMover = (self: FlowComponent, previous: FlowComponent): vo
         index = 1
     }
 
-    console.log('prev', previous);
     self.mover = {
         action: ActionSelector.NEXT,
         blocked,

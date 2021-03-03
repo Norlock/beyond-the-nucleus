@@ -11,19 +11,19 @@ let indigenous: Chapter;
 const get = (type: ChapterType): Chapter => {
     switch (type) {
         case ChapterType.OCEAN:
-            return provide(ocean, OceanChapter);
+            ocean = provide(ocean, OceanChapter);
+            return ocean;
         case ChapterType.ZEN:
-            return provide(zendo, ZendoChapter);
+            zendo = provide(zendo, ZendoChapter);
+            return zendo;
         case ChapterType.INDIGENOUS:
-            return provide(indigenous, IndigenousChapter);
+            indigenous = provide(indigenous, IndigenousChapter);
+            return indigenous;
     }
 }
 
 const provide = (source: Chapter, provider: () => Chapter): Chapter => {
-    if (!source) {
-        source = provider();
-    }
-    return source;
+    return source ?? provider();
 }
 
 export const ChapterProvider = { get }
