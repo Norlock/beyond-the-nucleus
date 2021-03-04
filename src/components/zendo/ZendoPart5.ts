@@ -5,6 +5,7 @@ import { FlowComponentFactory } from "src/factories/FlowComponentFactory";
 import { PixiCardFactory } from "src/factories/PixiCardFactory";
 import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { CardOptions } from "src/modules/pixi/Pixi";
+import { Dimensions, imageFrame } from 'src/modules/pixi/PixiShapes';
 import { Selector } from 'src/modules/selector/Selector';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { Promiser } from 'src/utils/Promiser';
@@ -114,47 +115,39 @@ const selector = (component: FlowComponent): Selector => {
     const { root } = component.chapter;
     const { card } = component.pixi;
 
-    const outer = new PIXI.Graphics()
-        .beginFill(0x000000)
-        .drawRoundedRect(0, 0, 410, 542, 20)
-        .endFill();
+    const zazenTexture = PIXI.Texture.from('src/assets/zendo/zazen.jpg');
+    const zazenDimensions: Dimensions = {
+        width: 400,
+        height: 532,
+        x: card.x + card.width + 200,
+        y: card.y - 100
+    };
 
-    outer.x = card.x + card.width + 200;
-    outer.y = card.y - 100;
+    const zazenFrame = imageFrame(zazenTexture, zazenDimensions, 5)
 
-    const graphic = new PIXI.Graphics()
-        .beginFill(0x000000)
-        .drawRoundedRect(0, 0, 600, 800, 20)
-        .endFill();
+    const bonsaiTexture = PIXI.Texture.from('src/assets/zendo/bonsai.jpg');
+    const colorFilter = new PIXI.filters.ColorMatrixFilter();
+    colorFilter.vintage(true);
 
-    const zazenSprite = PIXI.Sprite.from('src/assets/zendo/zazen.jpg');
-    zazenSprite.addChild(graphic);
-    zazenSprite.mask = graphic;
-    zazenSprite.x = 5;
-    zazenSprite.y = 5;
-    zazenSprite.width = 400;
-    zazenSprite.height = 532;
+    const bonsaiDimensions: Dimensions = {
+        width: 400,
+        height: 532,
+        x: zazenDimensions.x + zazenDimensions.width + 200,
+        y: zazenDimensions.y
+    };
 
-    const bonsai = PIXI.Sprite.from('src/assets/zendo/bonsai.jpg');
-    const filter = new PIXI.filters.ColorMatrixFilter();
-    filter.vintage(true);
-    bonsai.filters = [ filter ]
-    bonsai.width = 400;
-    bonsai.height = 532;
-    bonsai.x = outer.x + outer.width + 200
-    bonsai.y = outer.y
+    const bonsaiFrame = imageFrame(bonsaiTexture, bonsaiDimensions, 5, [ colorFilter ])
     
-    outer.addChild(zazenSprite);
-    bonsai.alpha = outer.alpha = 0;
+    bonsaiFrame.alpha = zazenFrame.alpha = 0;
 
     const select = async (): Promise<void> => {
         const promise = Promiser<void>();
-        root.addChild(outer, bonsai);
+        root.addChild(zazenFrame, bonsaiFrame);
 
         const show = (delta: number): void => {
-            bonsai.alpha = outer.alpha += (0.01 * delta);
+            bonsaiFrame.alpha = zazenFrame.alpha += (0.01 * delta);
 
-            if (outer.alpha >= 1) {
+            if (zazenFrame.alpha >= 1) {
                 pixiApp.ticker.remove(show);
                 promise.resolve();
             }
@@ -165,8 +158,8 @@ const selector = (component: FlowComponent): Selector => {
     }
 
     const unselect = async (): Promise<void> => {
-        bonsai.alpha = outer.alpha = 0;
-        root.removeChild(outer, bonsai);
+        bonsaiFrame.alpha = zazenFrame.alpha = 0;
+        root.removeChild(zazenFrame, bonsaiFrame);
     }
     
     return SelectorFactory(new Selector("Zazen image part 5"))

@@ -19,9 +19,10 @@ Some test app for ideas
 - [x] quick way to test chapter/components
 - [x] lazy loading of components 
 - [x] Ability to pass a sub module to a module (selector in fn style)
-- [ ] Test component before adding to the chain
-- [ ] Lazy load also backwards, find a good solution.
+- [+-] Test component before adding to the chain
+- [x] Lazy load also backwards
 - [x] Mover lazy loading over to PartChain and outide MergePixiFlow
+- [ ] Goldray filter for turtle http://filters.pixijs.download/dev/demo/index.html
 - [ ] Show hotkeys overlay (panning etc).
 - [ ] Deep see fish with light + https://pixijs.io/examples/#/gsap3-interaction/gsap3-filters.js
 - [ ] Graphical effects (fire, stars, rain, movement)

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { FlowComponent } from 'src/components/base/FlowComponent';
-import { pixiApp } from 'src/pixi/PixiApp';
 import { CardOptions } from './Pixi';
+import pixiFilters from 'pixi-filters';
+
 
 export const cardColor = (cardAttr: CardOptions, color: number): PIXI.Container => {
     const { width, height, radius, borderColor, alpha } = cardAttr;
@@ -42,13 +42,6 @@ export const shadowCard = (background: CardOptions, elevate: number): PIXI.Graph
     return shadow;
 };
 
-const getCenter = (dimensions: Dimensions): PIXI.Point => {
-    const { width, x, y } = dimensions;
-    const newX = x + (width / 2)
-    const newY = y + 50; //+ (height / 2)
-    return new PIXI.Point(newX, newY)
-}
-
 export interface Dimensions {
     width: number;
     height: number;
@@ -56,41 +49,43 @@ export interface Dimensions {
     y: number;
 }
 
-export const drawBezier = (previous: FlowComponent, dimensions: Dimensions, color: number): PIXI.Container => {
-    const centerStart = getCenter(dimensions);
-    const centerEnd = getCenter(previous.pixi.card);
-    
-    const endX = centerEnd.x - centerStart.x
-    const endY = centerEnd.y - centerStart.y
+export const imageFrame = (imageTexture: PIXI.Texture, dimensions: Dimensions, borderWidth: number, filters?: PIXI.Filter[]): PIXI.Graphics => {
+    const maskWidth = dimensions.width + (borderWidth * 2);
+    const maskHeight = dimensions.height + (borderWidth * 2);
 
-    const bezier = new PIXI.Graphics();
+    imageTexture.baseTexture.setSize(dimensions.width, dimensions.height);
+    const clone = imageTexture.clone();
+    clone.updateUvs();
 
-    let count = 0;
+    const blurFilter = new PIXI.filters.ColorMatrixFilter();
+    blurFilter. = 50;
 
-    // TODO create scale 
-    // The bigger the distance the bigger the offset can be
-    const curveX1 = (): number => {
-        return endX / 2 + 50 + (50 * Math.sin(count))
+    if (filters) {
+        filters.push(blurFilter);
     }
 
-    const curveY1 = (): number => {
-        return endY / 2 + 50 + (50 * Math.sin(count))
-    }
+    const image = PIXI.Sprite.from(clone);
+    image.filters = filters;
 
-    const animate = (delta: number) => {
-        count += (0.02 * delta)
-        bezier
-            .clear()
-            .lineTextureStyle({ 
-                width: 4,
-                color
-            })
-            .quadraticCurveTo(curveX1(), curveY1(), endX, endY);
-    }
-    pixiApp.ticker.add(animate);
-    
-    bezier.position.set(centerStart.x, centerStart.y);
-    bezier.visible = false;
+    const frame = new PIXI.Graphics()
+        .beginFill(0x000000)
+        .drawRoundedRect(0, 0, maskWidth, maskHeight, 20)
+        .endFill();
 
-    return bezier;
+    const mask = new PIXI.Graphics()
+        .beginFill(0xFFFFFF)
+        .drawRoundedRect(0, 0, dimensions.width, dimensions.height, 20)
+        .endFill();
+
+    frame.x = dimensions.x;
+    frame.y = dimensions.y;
+
+    image.x = borderWidth;
+    image.y = borderWidth;
+
+    image.addChild(mask);
+    image.mask = mask;
+
+    frame.addChild(image);
+    return frame;
 }

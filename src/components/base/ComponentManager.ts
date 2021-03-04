@@ -1,4 +1,3 @@
-import { ZendoChapter } from 'src/chapters/ZendoChapter';
 import { UIUtils } from 'src/modules/ui/GetUI';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
@@ -16,7 +15,7 @@ export const initComponentManager = (): void => {
     pixiCanvas.appendChild(pixiApp.view);
 
     const partChainer = PartChainer();
-    const initial = partChainer.init("Ocean5");
+    const initial = partChainer.init("Zendo3");
 
     currentComponent = initial.component;
     currentComponent.chapter.selector.select(initial.component.pixi.containerName);
