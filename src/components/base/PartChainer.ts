@@ -1,50 +1,76 @@
+import { OceanPart1 } from "../ocean/OceanPart1";
 import { PartChain } from "./PartChain";
 
-export const PartChainer = (root: PartChain, loadCount: number) => {
-    let lastPartChain: PartChain;
+const LOAD_COUNT = 4;
+
+export const PartChainer = () => {
+    const head: PartChain = new OceanPart1();
+    let initializedPartTail: PartChain;
+    let initializedPartHead: PartChain;
 
     // Initialises the chain
-    const initRecursively = (part: PartChain, index: number) => {
-        lastPartChain = part;
-        part.init();
+    const initRecursively = (part: PartChain, remainCount: number) => {
+        initializedPartTail = part;
+
+        if (!part.initialized) {
+            part.init();
+        }
 
         if (part.isSuccessful) {
-            index--;
+            remainCount--;
         }
 
-        if (index === 0) {
-            return;
+        if (remainCount > 0) {
+            part.nextParts.forEach(next => {
+                initRecursively(next, remainCount);
+            });
         }
-
-        part.nextParts.forEach(next => {
-            initRecursively(next, index);
-        });
     }
 
-    const initRecursivelyBackward = (part: PartChain, index: number) => {
+    const initRecursivelyBackwards = (part: PartChain, remainCount: number) => {
+        if (remainCount > 0 && part.hasPrevious) {
+            remainCount--;
+            initRecursivelyBackwards(part.previous, remainCount)
+        } else {
+            initializedPartHead = part;
+        }
+
         if (!part.initialized) {
             part.init();
         } 
-
-        if (part.isSuccessful) {
-            index--;
-        }
-
-        if (part.previous) {
-            initRecursivelyBackward(part.previous, index); 
-        }
     }
 
     const load = (currentIndex: number) => {
-        const difference = lastPartChain.index - currentIndex;
-        if (difference < loadCount && 0 < lastPartChain.nextParts.length) {
-            initRecursively(lastPartChain.nextParts[0], loadCount - difference);
+        const remainTail = initializedPartTail.index - currentIndex;
+        const remainHead = currentIndex - initializedPartHead.index;
+        
+        if (remainHead < LOAD_COUNT && initializedPartHead.hasPrevious) {
+            // if current = 5, tail = 6,  remainer = 1, so need to load 4.
+            initRecursivelyBackwards(initializedPartHead, LOAD_COUNT - remainHead);
+        }
+
+        if (remainTail < LOAD_COUNT && initializedPartTail.hasNext) {
+            // if current = 6, head = 5, remainer = 1, so need to load 4.
+            initRecursively(initializedPartTail, LOAD_COUNT - remainTail);
         }
     }
 
-    initRecursively(root, loadCount);
+    const init = (tag: string, part: PartChain): PartChain => {
+        if (part.tag === tag) {
+            part.debug();
+            initRecursivelyBackwards(part, LOAD_COUNT);
+            initRecursively(part, LOAD_COUNT);
+            return part;
+        }
+
+        for (let node of part.nextParts) {
+            return init(tag, node);
+        }
+    }
+
 
     return {
-        load
+        load,
+        init: (tag: string) => init(tag, head),
     };
 }

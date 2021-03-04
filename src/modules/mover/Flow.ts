@@ -10,7 +10,6 @@ export interface Flow extends Move {
     readonly previous?: FlowComponent;
     readonly index: number;
 
-    isRoot(): boolean;
     updateControls(): void;
 }
 

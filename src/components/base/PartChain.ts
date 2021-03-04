@@ -5,6 +5,8 @@ import { LOG } from "src/utils/Logger";
 import { FlowComponent } from "./FlowComponent";
 import { defaultTestFlags, PartTester, TestFlags } from "./PartTester";
 
+const componentTags: Set<string> = new Set();
+
 /* Partchain will immediately connect the complete chain
 * @init will be used for lazy loading
     */
@@ -25,6 +27,11 @@ export abstract class PartChain {
     nextParts: PartChain[] = []; 
 
     constructor(tag: string, chapterType: ChapterType, previous: PartChain) {
+        if (componentTags.has(tag)) {
+            throw new Error('component already linked ' + tag);
+        }
+        componentTags.add(tag);
+
         this.tag = tag;
         this.previous = previous;
         this.chapterType = chapterType;
@@ -45,10 +52,10 @@ export abstract class PartChain {
 
             this.isSuccessful = true;
         } catch (error) {
+            LOG.error('Component not added', error, this);
             this.isSuccessful = false;
             previous.mover.nextNodes.remove(this.component);
 
-            LOG.error('Component not added', error, this);
             this.debug();
         } finally {
             this.initialized = true;
@@ -57,6 +64,18 @@ export abstract class PartChain {
 
     get index(): number {
         return this.component.mover.index;
+    }
+
+    get hasPrevious(): boolean {
+        if (this.previous) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    get hasNext(): boolean {
+        return this.nextParts.length > 0;
     }
 
     get previousValid(): PartChain {

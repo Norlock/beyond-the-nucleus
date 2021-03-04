@@ -8,11 +8,7 @@ export const MergeFlowMover = (self: FlowComponent, previous: FlowComponent): vo
     let index: number;  
     let blocked = false;
 
-    const isRoot = (): boolean => {
-        return previous === undefined;
-    };
-
-    if (!isRoot()) {
+    if (previous) {
         previous.mover.nextNodes.push(self);
         index = previous?.mover.index + 1
     } else {
@@ -25,7 +21,6 @@ export const MergeFlowMover = (self: FlowComponent, previous: FlowComponent): vo
         index,
         nextNodes,
         previous,
-        isRoot,
         move: (action: ActionSelector) => move(self, action),
         updateControls: () => updateControls(self.ui, index, nextNodes)
     };
@@ -50,7 +45,7 @@ const move = (self: FlowComponent, action: ActionSelector): Component => {
     self.mover.blocked = true;
 
     if (action === ActionSelector.PREVIOUS) {
-        return self.mover.isRoot() ? self : self.mover.previous;
+        return self.mover.previous ?? self;
     }
 
     for (const node of self.mover.nextNodes) {

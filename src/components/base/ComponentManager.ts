@@ -9,8 +9,6 @@ import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
 import { PartChainer } from './PartChainer';
 
-const LOAD_COUNT = 4;
-
 export const initComponentManager = (): void => {
     let currentComponent: Component;
 
@@ -20,11 +18,11 @@ export const initComponentManager = (): void => {
 
     pixiCanvas.appendChild(pixiApp.view);
 
-    const root = new OceanPart1();
-    const partChainer = PartChainer(root, LOAD_COUNT);
+    const partChainer = PartChainer();
+    const initial = partChainer.init("Zendo1");
 
-    currentComponent = root.component;
-    currentComponent.chapter.selector.select(root.component.pixi.containerName);
+    currentComponent = initial.component;
+    currentComponent.chapter.selector.select(initial.component.pixi.containerName);
     currentComponent.selector.select(ActionSelector.NEXT);
 
     const scroll = (): void => {
