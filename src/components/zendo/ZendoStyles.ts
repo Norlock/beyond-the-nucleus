@@ -45,4 +45,4 @@ export const zendoCardImage = (width: number, height: number): PIXI.Texture => {
     return clone
 }
 
-export const BEZIER_COLOR = 0x000000;
+export const LINE_COLOR = 0x000000;

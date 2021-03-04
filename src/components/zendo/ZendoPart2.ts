@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
@@ -9,19 +8,24 @@ import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { TestFlags } from '../base/PartTester';
 import { ZendoPart3 } from './ZendoPart3';
-import { BEZIER_COLOR, headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles';
+import { LINE_COLOR, headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles';
 
 export class ZendoPart2 extends PartChain {
     constructor(previous: PartChain) {
         super("Zendo2", ChapterType.ZEN, previous)
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
-        return component(chapter, previous, tag);
+    buildComponent(factory: FlowComponentFactory): void {
+        component(factory);
     }
 
     getNextParts(): PartChain[] {
         return [ new ZendoPart3(this) ];
+    }
+
+    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
+        factory.mergePrevious(previous)
+            .mergePixiLine(previous, LINE_COLOR);
     }
 
     getTestFlags(standard: TestFlags): TestFlags {
@@ -29,7 +33,7 @@ export class ZendoPart2 extends PartChain {
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
+const component = (factory: FlowComponentFactory): void => {
     const cardOptions: CardOptions = {
         borderColor: 0x200900,
         alpha: 1,
@@ -50,16 +54,12 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     paragraph.x = 20;
     paragraph.y = 75;
 
-    const components = PixiCardFactory(cardOptions, chapter, ZendoName.START)
+    const cardData = PixiCardFactory(cardOptions, factory.component.chapter, ZendoName.START)
         .setImageCard(zendoCardImage(400, 180))
         .addChild(header, paragraph)
         .setOffset(300, 200)
         .elevate(12)
-        .setLine(previous, BEZIER_COLOR)
         .build();
 
-    return FlowComponentFactory(chapter, tag)
-        .mergeMover(previous)
-        .mergePixi(components)
-        .build();
+    factory.mergePixiCard(cardData.containerName, cardData.card);
 };

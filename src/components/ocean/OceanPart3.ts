@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
@@ -17,12 +16,14 @@ export class OceanPart3 extends PartChain {
         super("Ocean3", ChapterType.OCEAN, previous);
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
-        return component(chapter, previous, tag);
+    buildComponent(factory: FlowComponentFactory): void {
+        component(factory);
     }
 
-    setPreviousComponent(previous: FlowComponent): void {
-
+    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
+        factory
+            .mergePrevious(previous)
+            .mergePixiLine(previous, oceanStyles.LINE_COLOR);
     }
 
     getNextParts(): PartChain[] {
@@ -34,7 +35,7 @@ export class OceanPart3 extends PartChain {
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
+const component = (factory: FlowComponentFactory): void => {
     const width = 800;
     const leftX = 40;
     const rightX = width / 2;
@@ -91,16 +92,11 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     image.width = columnWidth + 40;
     image.height = columnWidth + 30;
 
-    const components = PixiCardFactory(cardOptions, chapter, OceanName.START)
+    const cardData = PixiCardFactory(cardOptions, factory.component.chapter, OceanName.START)
         .setColorCard(0x000000)
         .addChild(header, paragraph, image)
         .setOffset(400, 200)
-        //.setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
-    return FlowComponentFactory(chapter, tag)
-        .mergeMover(previous)
-        .mergePixi(components)
-        .build();
-
+    factory.mergePixiCard(cardData.containerName, cardData.card)
 };

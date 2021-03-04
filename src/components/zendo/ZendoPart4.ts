@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
@@ -13,19 +12,24 @@ import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { TestFlags } from '../base/PartTester';
 import { ZendoPart5 } from './ZendoPart5';
-import { BEZIER_COLOR } from './ZendoStyles';
+import { LINE_COLOR } from './ZendoStyles';
 
 export class ZendoPart4 extends PartChain {
     constructor(previous: PartChain) {
         super("Zendo4", ChapterType.ZEN, previous)
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
-        return component(chapter, previous, tag);
+    buildComponent(factory: FlowComponentFactory): void {
+        component(factory);
     }
 
     getNextParts(): PartChain[] {
         return [ new ZendoPart5(this) ];
+    }
+
+    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
+        factory.mergePrevious(previous)
+            .mergePixiLine(previous, LINE_COLOR);
     }
 
     getTestFlags(standard: TestFlags): TestFlags {
@@ -33,7 +37,7 @@ export class ZendoPart4 extends PartChain {
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
+const component = (factory: FlowComponentFactory): void => {
     const cardOptions: CardOptions = {
         alpha: 1,
         x: 2200,
@@ -43,10 +47,9 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
         pivotCenter: false,
     };
 
-    const components = PixiCardFactory(cardOptions, chapter, ZendoName.START)
+    const cardData = PixiCardFactory(cardOptions, factory.component.chapter, ZendoName.START)
         .setColorCard(0x000000)
         .setOffset(200, 50)
-        .setLine(previous, BEZIER_COLOR)
         .build();
 
     let video: PIXI.Sprite; 
@@ -59,7 +62,7 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
         video.y = 5
 
         setTimeout(() => {
-            components.card.component.addChild(video);
+            cardData.card.component.addChild(video);
             promise.resolve();
         }, 1000);
 
@@ -67,7 +70,7 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     };
 
     const unselect = async () => {
-        components.card.component.removeChild(video);
+        cardData.card.component.removeChild(video);
         video.texture.baseTexture.destroy();
     };
 
@@ -76,12 +79,7 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
         .setUnselect(unselect)
         .build();
 
-    const component = FlowComponentFactory(chapter, tag)
-        .mergeMover(previous)
-        .mergePixi(components)
-        .build();
-
-    component.selector.appendSelector(selector);
-    return component;
+    factory.mergePixiCard(cardData.containerName, cardData.card);
+    factory.component.selector.append(selector);
 };
 

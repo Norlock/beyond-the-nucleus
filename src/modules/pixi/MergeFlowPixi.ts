@@ -17,7 +17,5 @@ export const MergePixiFlowLine = (self: FlowComponent, previous: FlowComponent, 
     const line = ComponentLineSelector(previous, self.pixi.card, color);
     self.chapter.root.addChild(line.component);
     self.pixi.line = line.component;
-    //self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
-    self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
-    console.log('selector', self.selector, line);
+    self.selector.insertAfter(line.selector, StandardSelectorTag.CARD)
 };

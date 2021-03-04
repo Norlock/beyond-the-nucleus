@@ -5,7 +5,6 @@ import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
-import { Chapter } from 'src/chapters/base/Chapter';
 import { ZendoPart2 } from './ZendoPart2';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { TestFlags } from '../base/PartTester';
@@ -15,14 +14,16 @@ export class ZendoPart1 extends PartChain {
         super("Zendo1", ChapterType.ZEN, previous)
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
-        return component(chapter, previous, tag);
+    buildComponent(factory: FlowComponentFactory): void {
+        component(factory);
     }
 
     getNextParts(): PartChain[] {
-        return [
-            new ZendoPart2(this)
-        ];
+        return [ new ZendoPart2(this) ];
+    }
+
+    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
+        factory.mergePrevious(previous);
     }
 
     getTestFlags(standard: TestFlags): TestFlags {
@@ -31,7 +32,8 @@ export class ZendoPart1 extends PartChain {
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
+const component = (factory: FlowComponentFactory): void => {
+    const { chapter } = factory.component;
     const background = chapter.getContainer(ZendoName.START);
     const left = background.getChildAt(0) as PIXI.Sprite;
 
@@ -95,14 +97,11 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     paragraph2.y = radius + 80;
     paragraph2.anchor.set(0.5, 0);
 
-    const components = CustomPixiCardFactory(background, ZendoName.START)
+    const cardData = CustomPixiCardFactory(background, ZendoName.START)
         .setCard(container)
         .addChild(header, paragraph, paragraph2)
         .setOffset(pixiApp.screen.width / 2 - radius, pixiApp.screen.height / 2 - radius)
         .build();
 
-    return FlowComponentFactory(chapter, tag)
-        .mergeMover(previous)
-        .mergePixi(components)
-        .build();
+    factory.mergePixiCard(cardData.containerName, cardData.card);
 };

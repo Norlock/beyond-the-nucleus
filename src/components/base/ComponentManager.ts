@@ -16,7 +16,7 @@ export const initComponentManager = (): void => {
     pixiCanvas.appendChild(pixiApp.view);
 
     const partChainer = PartChainer();
-    const initial = partChainer.init("Ocean1");
+    const initial = partChainer.init("Ocean5");
 
     currentComponent = initial.component;
     currentComponent.chapter.selector.select(initial.component.pixi.containerName);

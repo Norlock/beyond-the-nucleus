@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
@@ -16,8 +15,14 @@ export class OceanPart4 extends PartChain {
         super("Ocean4", ChapterType.OCEAN, previous);
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
-        return component(chapter, previous, tag);
+    buildComponent(factory: FlowComponentFactory): void {
+        component(factory);
+    }
+
+    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
+        factory
+            .mergePrevious(previous)
+            .mergePixiLine(previous, oceanStyles.LINE_COLOR);
     }
 
     getNextParts(): PartChain[] {
@@ -29,7 +34,7 @@ export class OceanPart4 extends PartChain {
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
+const component = (factory: FlowComponentFactory): void => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         x: 800,
@@ -70,15 +75,11 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     paragraph.x = 20;
     paragraph.y = 65;
 
-    const pixiParams = PixiCardFactory(cardOptions, chapter, OceanName.TURTLE)
+    const cardData = PixiCardFactory(cardOptions, factory.component.chapter, OceanName.TURTLE)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(600, 150)
-        .setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
-    return FlowComponentFactory(chapter, tag)
-        .mergeMover(previous)
-        .mergePixi(pixiParams)
-        .build();
+     factory.mergePixiCard(cardData.containerName, cardData.card);
 };

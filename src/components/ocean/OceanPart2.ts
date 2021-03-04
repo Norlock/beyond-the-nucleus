@@ -20,12 +20,13 @@ export class OceanPart2 extends PartChain {
     }
 
     attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
-        attachPrevious(factory, previous);
+        factory
+            .mergePrevious(previous)
+            .mergePixiLine(previous, oceanStyles.LINE_COLOR);
     }
 
     getNextParts(): PartChain[] {
-        return [ ]
-        //return [ new OceanPart3(this) ]
+        return [ new OceanPart3(this) ]
     }
 
     getTestFlags(standard: TestFlags): TestFlags {
@@ -88,10 +89,3 @@ const component = (factory: FlowComponentFactory): void => {
 
     factory.mergePixiCard(cardData.containerName, cardData.card)
 };
-
-const attachPrevious = (factory: FlowComponentFactory, previous: FlowComponent): void => {
-    factory
-        .mergePrevious(previous)
-        .mergePixiLine(previous, oceanStyles.LINE_COLOR);
-
-}

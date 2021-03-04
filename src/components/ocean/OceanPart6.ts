@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
@@ -15,12 +14,16 @@ export class OceanPart6 extends PartChain {
         super("Ocean6", ChapterType.OCEAN, previous);
     }
 
-    buildComponent(chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent {
-        return component(chapter, previous, tag);
+    buildComponent(factory: FlowComponentFactory): void {
+        component(factory);
     }
 
     getNextParts(): PartChain[] {
         return [ new ZendoPart1(this) ];
+    }
+
+    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
+        factory.mergePrevious(previous);
     }
     
     getTestFlags(standard: TestFlags): TestFlags {
@@ -29,7 +32,7 @@ export class OceanPart6 extends PartChain {
     }
 }
 
-const component = (chapter: Chapter, previous: FlowComponent, tag: string): FlowComponent => {
+const component = (factory: FlowComponentFactory): void => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -73,14 +76,11 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
     paragraph.x = 20;
     paragraph.y = 75;
 
-    const components = PixiCardFactory(cardOptions, chapter, OceanName.CORAL)
+    const cardData = PixiCardFactory(cardOptions, factory.component.chapter, OceanName.CORAL)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(100, 100)
         .build();
 
-    return FlowComponentFactory(chapter, tag)
-        .mergeMover(previous)
-        .mergePixi(components)
-        .build();
+    factory.mergePixiCard(cardData.containerName, cardData.card);
 };

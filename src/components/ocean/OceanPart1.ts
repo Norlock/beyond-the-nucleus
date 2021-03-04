@@ -17,9 +17,8 @@ export class OceanPart1 extends PartChain {
         component(factory);
     }
 
-    attachPreviousComponent(): void {
-        // Initial part so never has previous
-    }
+    // Initial part so never has previous
+    attachPreviousComponent(): void {}
 
     getNextParts(): PartChain[] {
         return [ new OceanPart2(this) ];
