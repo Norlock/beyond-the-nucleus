@@ -1,36 +1,38 @@
 import { Chapter } from 'src/chapters/base/Chapter';
 import { FlowComponent } from 'src/components/base/FlowComponent';
-import { MergeFlowMover } from 'src/modules/mover/MergeFlowMover';
-import { MergeFlowPixi } from 'src/modules/pixi/MergeFlowPixi';
-import { PixiParams } from 'src/modules/pixi/Pixi';
+import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
+import { MergePixiFlowCard, MergePixiFlowLine } from 'src/modules/pixi/MergeFlowPixi';
+import { PixiSelector } from 'src/modules/pixi/Pixi';
 import { MergeFlowSelector } from 'src/modules/selector/MergeFlowSelector';
 import { MergeUI } from 'src/modules/ui/GetUI';
 
-export const FlowComponentFactory = (chapter: Chapter, tag: string) => {
-    const self = new FlowComponent(chapter);
-    self.tag = tag;
-    MergeUI(self);
-    MergeFlowSelector(self);
+export class FlowComponentFactory {
+    readonly component: FlowComponent
 
-    const mergeMover = (previous: FlowComponent) => {
-        MergeFlowMover(self, previous);
-        return factory
-    };
-
-    const mergePixi = (params: PixiParams) => {
-        MergeFlowPixi(self, params);
-        return factory
-    };
-
-    const build = (): FlowComponent => {
-        return self;
+    constructor(chapter: Chapter, tag: string) {
+        this.component = new FlowComponent(chapter);
+        this.component.tag = tag;
+        MergeUI(this.component);
+        MergeFlowSelector(this.component);
     }
 
-    const factory = {
-        mergeMover,
-        mergePixi,
-        build
-    };
+    mergeMover(index: number): FlowComponentFactory  {
+        MergeFlowMover(this.component, index);
+        return this;
+    }
 
-    return factory;
-};
+    mergePrevious(previous: FlowComponent): FlowComponentFactory {
+        MergeFlowMoverPrevious(this.component, previous)
+        return this;
+    }
+
+    mergePixiCard(containerName: string, card: PixiSelector): FlowComponentFactory {
+        MergePixiFlowCard(this.component, containerName, card);
+        return this;
+    }
+
+    mergePixiLine(previous: FlowComponent, color: number): FlowComponentFactory {
+        MergePixiFlowLine(this.component, previous, color);
+        return this;
+    }
+}

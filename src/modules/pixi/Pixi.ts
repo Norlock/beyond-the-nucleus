@@ -14,7 +14,6 @@ export class FlowPixi {
 export interface PixiParams {
     containerName: string;
     card: PixiSelector;
-    line?: PixiSelector;
 }
 
 export interface PixiSelector { 

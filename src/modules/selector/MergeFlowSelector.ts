@@ -2,7 +2,7 @@ import { FlowComponent } from 'src/components/base/FlowComponent';
 import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { ActionSelector } from 'src/utils/ActionTypes';
 import { GetAudio } from '../audio/GetAudio';
-import { Selector } from './Selector';
+import { Selector, StandardSelectorTag } from './Selector';
 
 const audio = GetAudio('/src/assets/audio/woosh.wav', false, 0.3).element;
 const ctx = new AudioContext();
@@ -12,10 +12,8 @@ const media = ctx.createMediaElementSource(audio);
 media.connect(filter);
 filter.connect(ctx.destination);
 
-export const FLOW_SELECTOR_TAG = "Flow selector";
-
 export const MergeFlowSelector = (component: FlowComponent): void => {
-    const selector = new Selector(FLOW_SELECTOR_TAG);
+    const selector = new Selector(StandardSelectorTag.FLOW);
 
     const select = async (action: ActionSelector) => {
         try {

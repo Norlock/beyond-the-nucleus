@@ -1,22 +1,46 @@
 import { ContainerSelector } from 'src/chapters/base/ContainerSelector';
 import { ActionSelector } from 'src/utils/ActionTypes';
 
+export enum StandardSelectorTag {
+    FLOW = 'flow',
+    CARD = 'card',
+    LINE = 'line'
+}
+
 export class Selector {
     tag: string; // Tag for debug readability
     isSelected: boolean;
-    unselect: Unselect;
     next: Selector;
     select: Select;
+    unselect: Unselect;
 
     constructor(tag: string) {
         this.tag = tag;
     }
 
-    appendSelector(selector: Selector): void {
+    append(selector: Selector): void {
         if (!this.next) {
             this.next = selector;
         } else {
-            this.next.appendSelector(selector);
+            this.next.append(selector);
+        }
+    }
+
+    insertBefore(selector: Selector, tag: string): void {
+        if (this.next?.tag === tag) {
+            selector.next = this.next;
+            this.next = selector;
+        } else {
+            this.next?.insertBefore(selector, tag)
+        }
+    }
+
+    insertAfter(selector: Selector, tag: string): void {
+        if (this.tag === tag) {
+            selector.next = this.next;
+            this.next = selector;
+        } else {
+            this.next?.insertAfter(selector, tag)
         }
     }
 

@@ -3,7 +3,7 @@ import { FlowComponent } from "src/components/base/FlowComponent";
 import { SelectorFactory } from "src/factories/SelectorFactory";
 import { pixiApp } from "src/pixi/PixiApp";
 import { ActionSelector } from "src/utils/ActionTypes";
-import { Selector } from "../selector/Selector";
+import { Selector, StandardSelectorTag } from "../selector/Selector";
 import { PixiSelector } from "./Pixi";
 import { Dimensions } from "./PixiShapes";
 
@@ -55,7 +55,7 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
         }  
     }
 
-    const selector = SelectorFactory(new Selector("Line selector"))
+    const selector = SelectorFactory(new Selector(StandardSelectorTag.LINE))
         .setSelect(select)
         .setUnselect(unselect)
         .build();

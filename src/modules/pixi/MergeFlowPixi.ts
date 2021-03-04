@@ -1,20 +1,23 @@
 import { FlowComponent } from 'src/components/base/FlowComponent';
-import { FlowPixi, PixiParams } from './Pixi';
+import { StandardSelectorTag } from '../selector/Selector';
+import { ComponentLineSelector } from './ComponentLine';
+import { FlowPixi, PixiSelector } from './Pixi';
 
-export const MergeFlowPixi = (self: FlowComponent, params: PixiParams): void => {
-    const { card, line, containerName } = params;
-
+export const MergePixiFlowCard = (self: FlowComponent, containerName: string, card: PixiSelector): void => {
     self.chapter.root.addChild(card.component);
 
     self.pixi = new FlowPixi();
     self.pixi.containerName = containerName; 
     self.pixi.card = card.component; 
 
-    self.selector.appendSelector(card.selector)
+    self.selector.append(card.selector)
+};
 
-    if (line) {
-        self.chapter.root.addChild(line.component);
-        self.pixi.line = line.component;
-        self.selector.appendSelector(line.selector)
-    }
+export const MergePixiFlowLine = (self: FlowComponent, previous: FlowComponent, color: number): void => {
+    const line = ComponentLineSelector(previous, self.pixi.card, color);
+    self.chapter.root.addChild(line.component);
+    self.pixi.line = line.component;
+    //self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
+    self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
+    console.log('selector', self.selector, line);
 };

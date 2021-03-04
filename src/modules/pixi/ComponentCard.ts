@@ -3,11 +3,11 @@ import { SelectorFactory } from "src/factories/SelectorFactory";
 import { pixiApp } from "src/pixi/PixiApp";
 import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
 import { Promiser } from 'src/utils/Promiser';
-import { Selector } from "../selector/Selector";
+import { Selector, StandardSelectorTag } from "../selector/Selector";
 import { Offset, PixiSelector } from "./Pixi";
 
 export const ComponentCardSelector = (card: PIXI.Container, offset: Offset): PixiSelector => {
-    const selector = SelectorFactory(new Selector("Card selector"))
+    const selector = SelectorFactory(new Selector(StandardSelectorTag.CARD))
         .setSelect(() => scrollToCard(card, offset))
         .setUnselect((action: ActionType) => hideCard(card, action))
         .build();

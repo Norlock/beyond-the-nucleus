@@ -7,7 +7,8 @@ export interface Flow extends Move {
     nextNodes: Component[];
 
     // Previous is always flow
-    readonly previous?: FlowComponent;
+    previous?: FlowComponent;
+
     readonly index: number;
 
     updateControls(): void;

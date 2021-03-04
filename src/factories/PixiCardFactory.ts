@@ -1,15 +1,12 @@
 import { Container, DisplayObject, Point, Texture } from "pixi.js"
 import { Chapter } from "src/chapters/base/Chapter";
-import { FlowComponent } from "src/components/base/FlowComponent";
 import { ComponentCardSelector } from "src/modules/pixi/ComponentCard";
-import { ComponentLineSelector } from "src/modules/pixi/ComponentLine";
-import { CardOptions, Offset, PixiParams, PixiSelector } from "src/modules/pixi/Pixi";
-import { cardColor, cardImage, Dimensions, shadowCard } from "src/modules/pixi/PixiShapes";
+import { CardOptions, Offset, PixiParams } from "src/modules/pixi/Pixi";
+import { cardColor, cardImage, shadowCard } from "src/modules/pixi/PixiShapes";
 
 export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containerName: string) => {
     let innerCard: Container, 
         shadow: Container, 
-        line: PixiSelector,
         offset: Offset;
 
     const containerPosition = chapter.getContainer(containerName).position;
@@ -45,18 +42,6 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
         return factory;
     }
 
-    const setLine = (previous: FlowComponent, color: number) => {
-        const dimensions: Dimensions = {
-            width: options.width,
-            height: options.height,
-            x: containerPosition.x + options.x,
-            y: containerPosition.y + options.y
-        }
-
-        line = ComponentLineSelector(previous, dimensions, color);
-        return factory;
-    }
-
     const build = (): PixiParams => {
         if (shadow) {
             card.addChild(shadow)
@@ -67,7 +52,6 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
         return {
             card: ComponentCardSelector(card, offset),
             containerName,
-            line
         }
     }
 
@@ -77,7 +61,6 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
         addChild,
         elevate,
         setOffset,
-        setLine,
         build
     }
  

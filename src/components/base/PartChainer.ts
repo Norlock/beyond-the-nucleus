@@ -10,20 +10,19 @@ export const PartChainer = () => {
 
     // Initialises the chain
     const initRecursively = (part: PartChain, remainCount: number) => {
-        initializedPartTail = part;
-
-        if (!part.initialized) {
-            part.init();
-        }
+        part.init();
+        part.attachPrevious();
 
         if (part.isSuccessful) {
             remainCount--;
         }
 
-        if (remainCount > 0) {
+        if (remainCount > 0 && part.hasNext) {
             part.nextParts.forEach(next => {
                 initRecursively(next, remainCount);
             });
+        } else {
+            initializedPartTail = part;
         }
     }
 
@@ -35,9 +34,8 @@ export const PartChainer = () => {
             initializedPartHead = part;
         }
 
-        if (!part.initialized) {
-            part.init();
-        } 
+        part.init();
+        part.attachPrevious();
     }
 
     const load = (currentIndex: number) => {
@@ -58,6 +56,7 @@ export const PartChainer = () => {
     const init = (tag: string, part: PartChain): PartChain => {
         if (part.tag === tag) {
             part.debug();
+            // Overwrite default testflags 
             initRecursivelyBackwards(part, LOAD_COUNT);
             initRecursively(part, LOAD_COUNT);
             return part;
@@ -67,7 +66,6 @@ export const PartChainer = () => {
             return init(tag, node);
         }
     }
-
 
     return {
         load,

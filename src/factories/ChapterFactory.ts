@@ -43,7 +43,7 @@ export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) =
     };
 
     const appendSelector = (selector: Selector) => {
-        self.selector.appendSelector(selector);
+        self.selector.append(selector);
         return factory;
     };
 

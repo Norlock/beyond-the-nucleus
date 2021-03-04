@@ -3,28 +3,28 @@ import { FlowComponent } from '../../components/base/FlowComponent';
 import { ActionSelector } from '../../utils/ActionTypes';
 import { UI } from '../ui/UI';
 
-export const MergeFlowMover = (self: FlowComponent, previous: FlowComponent): void => {
+export const MergeFlowMover = (self: FlowComponent, index: number) => {
     const nextNodes: Component[] = [];
-    let index: number;  
-    let blocked = false;
-
-    if (previous) {
-        previous.mover.nextNodes.push(self);
-        index = previous?.mover.index + 1
-    } else {
-        index = 1
-    }
 
     self.mover = {
         action: ActionSelector.NEXT,
-        blocked,
+        blocked: false,
         index,
         nextNodes,
-        previous,
+        previous: undefined,
         move: (action: ActionSelector) => move(self, action),
         updateControls: () => updateControls(self.ui, index, nextNodes)
     };
 };
+
+export const MergeFlowMoverPrevious = (self: FlowComponent, previous: FlowComponent) => {
+        if (self.mover.previous) {
+            throw Error("Previous has already been set");
+        }
+
+        previous.mover.nextNodes.push(self);
+        self.mover.previous = previous;
+}
 
 const updateControls = (ui: UI, index: number, nextNodes: Component[]): void => {
     ui.hideAllControls();

@@ -21,6 +21,10 @@ export class OceanPart3 extends PartChain {
         return component(chapter, previous, tag);
     }
 
+    setPreviousComponent(previous: FlowComponent): void {
+
+    }
+
     getNextParts(): PartChain[] {
         return [ new OceanPart4(this) ];
     }
@@ -91,7 +95,7 @@ const component = (chapter: Chapter, previous: FlowComponent, tag: string): Flow
         .setColorCard(0x000000)
         .addChild(header, paragraph, image)
         .setOffset(400, 200)
-        .setLine(previous, oceanStyles.LINE_COLOR)
+        //.setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
     return FlowComponentFactory(chapter, tag)
