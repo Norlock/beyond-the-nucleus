@@ -1,13 +1,17 @@
+import { ActionType } from "src/utils/ActionTypes";
+
 export interface UI {
-    toggleToolbar(): void;
     updateStep(index: number): void;
-    isToolbarHidden(): boolean;
-    showToolbar(): void;
-    hideToolbar(): void;
+    hideAllControls(): void;
     showVideoControl(): void;
     hideVideoControl(): void;
-    hideAllControls(): void;
     toggleCanvasBlur(): void;
+    showPreviousControl(): void;
+    hidePreviousControl(): void;
+    showNextControl(): void;
+    hideNextControl(): void;
+    activateUIControl(action: ActionType): void;
+    deactivateUIControl(action: ActionType): void;
 }
 
 export interface UIModule {

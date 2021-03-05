@@ -1,7 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { CardOptions } from './Pixi';
-import pixiFilters from 'pixi-filters';
-
 
 export const cardColor = (cardAttr: CardOptions, color: number): PIXI.Container => {
     const { width, height, radius, borderColor, alpha } = cardAttr;
@@ -58,11 +56,8 @@ export const imageFrame = (imageTexture: PIXI.Texture, dimensions: Dimensions, b
     clone.updateUvs();
 
     const blurFilter = new PIXI.filters.ColorMatrixFilter();
-    blurFilter. = 50;
 
-    if (filters) {
-        filters.push(blurFilter);
-    }
+    filters?.push(blurFilter);
 
     const image = PIXI.Sprite.from(clone);
     image.filters = filters;

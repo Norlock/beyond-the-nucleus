@@ -1,6 +1,6 @@
 import { UIUtils } from 'src/modules/ui/GetUI';
 import { pixiApp } from 'src/pixi/PixiApp';
-import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
+import { ActionSelector, ActionType, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
 import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
 import { PartChainer } from './PartChainer';
@@ -11,11 +11,12 @@ export const initComponentManager = (): void => {
     const pixiCanvas = document.getElementById('pixi-canvas');
     let keyPressed: string;
     let keyDown: boolean;
+    let action: ActionType;
 
     pixiCanvas.appendChild(pixiApp.view);
 
     const partChainer = PartChainer();
-    const initial = partChainer.init("Zendo3");
+    const initial = partChainer.init("Ocean1");
 
     currentComponent = initial.component;
     currentComponent.chapter.selector.select(initial.component.pixi.containerName);
@@ -24,16 +25,16 @@ export const initComponentManager = (): void => {
     const scroll = (): void => {
         if (keyDown) {
             switch (keyPressed) {
-                case 'ArrowLeft':
+                case ActionUI.LEFT:
                     pixiApp.stage.x += 10;
                     break;
-                case 'ArrowRight':
+                case ActionUI.RIGHT:
                     pixiApp.stage.x -= 10;
                     break;
-                case 'ArrowUp':
+                case ActionUI.UP:
                     pixiApp.stage.y += 10;
                     break;
-                case 'ArrowDown':
+                case ActionUI.DOWN:
                     pixiApp.stage.y -= 10;
                     break;
             }
@@ -43,17 +44,29 @@ export const initComponentManager = (): void => {
     pixiApp.ticker.add(scroll);
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-        keyPressed = event.key;
-        keyDown = true;
+        if (keyDown && !(event.key !== keyPressed)) {
+            return;
+        }
 
-        const action = ActionUtil.getType(event.key);
+        keyDown = true;
+        keyPressed = event.key;
+
+        action = ActionUtil.getType(event.key);
         if (!action) return;
+
+        UIUtils.activateUIControl(action);
 
         if (ActionUtil.isSelector(action)) {
             move(action as ActionSelector);
-        } else if (action === ActionUI.TOGGLE_TOOLBAR) {
-            UIUtils.toggleToolbar();
-        }
+        }  
+    });
+
+    document.addEventListener('keyup', () => {
+        keyDown = false;
+
+        if (!action) return;
+
+        UIUtils.deactivateUIControl(action);
     });
 
     const move = async (action: ActionSelector) => {

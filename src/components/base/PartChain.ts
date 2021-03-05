@@ -32,11 +32,11 @@ export abstract class PartChain {
 
     constructor(tag: string, chapterType: ChapterType, previous: PartChain) {
         if (componentTags.has(tag)) {
-            throw new Error('component already linked ' + tag);
+            throw new Error('Component with this tag is already linked ' + tag);
         }
         componentTags.add(tag);
 
-        this.index = previous?.initialized ? previous.index + 1 : 1;
+        this.index = previous?.index ? previous.index + 1 : 1;
         this.tag = tag;
         this.previous = previous;
         this.chapterType = chapterType;

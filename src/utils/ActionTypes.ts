@@ -2,12 +2,16 @@ export enum ActionSelector {
     NEXT = 's',
     PREVIOUS = 'b',
     VIDEO = 'v',
-    INFO = 'i'
+    INFO = 'i',
 }
 
 export enum ActionUI {
-    TOGGLE_TOOLBAR = 't',
-    TOGGLE_MUTE_UNMUTE = 'a'
+    TOGGLE_HELP = '?',
+    TOGGLE_MUTE_UNMUTE = 'm',
+    LEFT = 'ArrowLeft',
+    RIGHT = 'ArrowRight',
+    UP = 'ArrowUp',
+    DOWN = 'ArrowDown'
 }
 
 export type ActionType = ActionSelector | ActionUI;

@@ -1,4 +1,4 @@
-import './styles/Index';
+import './styles/index.scss';
 import './Global';
 import { initComponentManager } from './components/base/ComponentManager';
 import { preload } from './pixi/PixiApp';

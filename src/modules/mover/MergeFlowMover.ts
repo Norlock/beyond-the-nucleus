@@ -30,9 +30,14 @@ const updateControls = (ui: UI, index: number, nextNodes: Component[]): void => 
     ui.hideAllControls();
     ui.updateStep(index);
 
-    nextNodes.forEach((node) => {
-        if (node.mover.action === ActionSelector.VIDEO) {
-            ui.showVideoControl();
+    nextNodes.forEach(node => {
+        switch (node.mover.action) {
+            case ActionSelector.VIDEO:
+                ui.showVideoControl();
+            case ActionSelector.NEXT:
+                ui.showNextControl();
+            case ActionSelector.PREVIOUS:
+                ui.showPreviousControl();
         }
     });
 };
