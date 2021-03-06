@@ -17,35 +17,17 @@ export enum ActionUI {
 export type ActionType = ActionSelector | ActionUI;
 
 class ActionUtil {
-    isSelector(action: ActionType) {
-        return this.isType(ActionSelector, action);
+    isSelector(key: string) {
+        return Object.values(ActionSelector).includes(key as ActionSelector);
     }
 
-    isNext(action: ActionType) {
-        return action === ActionSelector.NEXT;
-    }
-
-    isUI(action: ActionType): boolean {
-        return this.isType(ActionUI, action);
-    }
-
-    private isType(constructor: any, action: ActionType): boolean {
-        return <any>Object.values(constructor).includes(action);
+    isUI(key: string): boolean {
+        return Object.values(ActionUI).includes(key as ActionUI);
     }
 
     isBranch(): boolean {
         // TODO
         return false;
-    }
-
-    getType(key: string): ActionType {
-        const next = Object.values(ActionSelector).find((v) => v === key);
-        if (next) return next;
-
-        const ui = Object.values(ActionUI).find((v) => v === key);
-        if (ui) return ui;
-
-        return null;
     }
 }
 

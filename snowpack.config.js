@@ -20,6 +20,7 @@ module.exports = {
         hmrDelay: 50
     },
     buildOptions: {
+        htmlFragments: true
     },
     alias: {
         "src": "./src",

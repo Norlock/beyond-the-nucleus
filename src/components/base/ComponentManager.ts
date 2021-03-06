@@ -1,17 +1,17 @@
 import { UIUtils } from 'src/modules/ui/GetUI';
 import { pixiApp } from 'src/pixi/PixiApp';
-import { ActionSelector, ActionType, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
+import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
 import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
 import { PartChainer } from './PartChainer';
 
+const pixiCanvas = document.getElementById('pixi-canvas');
+
 export const initComponentManager = (): void => {
     let currentComponent: Component;
 
-    const pixiCanvas = document.getElementById('pixi-canvas');
     let keyPressed: string;
     let keyDown: boolean;
-    let action: ActionType;
 
     pixiCanvas.appendChild(pixiApp.view);
 
@@ -44,29 +44,27 @@ export const initComponentManager = (): void => {
     pixiApp.ticker.add(scroll);
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (keyDown && !(event.key !== keyPressed)) {
-            return;
-        }
+        if (keyDown && event.key !== keyPressed) return;
 
         keyDown = true;
         keyPressed = event.key;
 
-        action = ActionUtil.getType(event.key);
-        if (!action) return;
-
-        UIUtils.activateUIControl(action);
-
-        if (ActionUtil.isSelector(action)) {
-            move(action as ActionSelector);
-        }  
+        UIUtils.highlightUIControl(event.key);
     });
 
     document.addEventListener('keyup', () => {
         keyDown = false;
 
-        if (!action) return;
+        UIUtils.unhighlightUIControl(keyPressed);
+    });
 
-        UIUtils.deactivateUIControl(action);
+
+    document.addEventListener('keypress', (event: KeyboardEvent) => {
+        if (ActionUtil.isSelector(event.key)) {
+            move(event.key as ActionSelector);
+        }  else if (ActionUtil.isUI(event.key)) {
+            UIUtils.doUIAction(event.key as ActionUI);
+        }
     });
 
     const move = async (action: ActionSelector) => {

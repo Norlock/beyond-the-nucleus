@@ -1,4 +1,5 @@
 export enum Visibility {
     SHOW = 'show',
-    HIDE = 'hide'
+    HIDE = 'hide',
+    DISABLE = 'disable'
 }

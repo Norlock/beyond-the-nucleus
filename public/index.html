@@ -9,7 +9,7 @@
     <link href="src/assets/furacode-webfontkit/stylesheet.css" rel="stylesheet">
   </head>
 
-  <body>
+  <body class="blur">
     <div id="splash-container"> 
       <h1 id="splash-header">Beyond the Nucleus</h1>
       <img id="splash-image-bridge" class="splash-image fadeIn" 
@@ -18,18 +18,19 @@
         src="src/assets/splash2.jpg" loading="lazy" alt="splash-green">
       <button id="splash-button" type="button">Enter the zone</button>
     </div>
-    <div id="page-container"></div>
+
+    <div id="fragment-container"></div>
     <div id="pixi-canvas"></div>
 
     <div id="video-container" class="hide"></div>
-    <div id="help-container" class="hide"></div>
-    <div id="help-container">
+
+    <div id="help-control-wrapper">
       <span id="help-control" class="info-control">?</span>
     </div>
     <div id="toolbar-controls">
-      <span id="next-control" class="info-control hide">S</span>
-      <span id="previous-control" class="info-control hide">B</span>
       <span id="video-control" class="info-control hide">V</span>
+      <span id="next-control" class="info-control disable">S</span>
+      <span id="previous-control" class="info-control disable">B</span>
       <span id="page-number" class="info-control">1</span>
     </div>
   </body>

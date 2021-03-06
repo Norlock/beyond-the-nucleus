@@ -18,40 +18,21 @@ p, ul {
     font-size: 20px;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
 #pixi-canvas {
+    transition: 1s;
+
     &.blur {
         filter: grayscale(0.7) blur(3px) drop-shadow(10px 10px 5px black);
         transition: 1s;
     }
 }
 
-#toolbar {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background: #111;
-    color: bisque;
-    font-size: 22px;
-    justify-content: center;
-    align-items: center;
-
-    &.hide {
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0s linear 0.33s, opacity 0.33s linear;
-    }
-
-    &.show {
-        visibility: visible;
-        opacity: 1;
-        transition-delay: 0s;
-    }
-}
-
-#help-container {
+#help-control-wrapper {
     z-index: 2;
     display: flex;
     justify-content: center;
@@ -104,19 +85,23 @@ p, ul {
     border-radius: 50%;
     box-shadow: 0 0 2px 1px black;
 
-    @keyframes controlAdded {
+    @keyframes disableControl {
         0% {
-            background-color: #663220;
+            background-color: #994c30;
         }
         100% {
             background-color: black;
+            opacity: 0.5;
+            color: #444;
         }
     }
 
+    &.disable {
+        animation: disableControl 1s forwards; 
+    }
+
     &.hide {
-        visibility: hidden;
-        position: absolute;
-        opacity: 0;
+        display: none;
     }
 
     &.show {

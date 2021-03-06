@@ -13,7 +13,7 @@ export const MergeFlowMover = (self: FlowComponent, index: number) => {
         nextNodes,
         previous: undefined,
         move: (action: ActionSelector) => move(self, action),
-        updateControls: () => updateControls(self.ui, index, nextNodes)
+        updateControls: () => updateControls(self)
     };
 };
 
@@ -26,18 +26,23 @@ export const MergeFlowMoverPrevious = (self: FlowComponent, previous: FlowCompon
         self.mover.previous = previous;
 }
 
-const updateControls = (ui: UI, index: number, nextNodes: Component[]): void => {
+const updateControls = (self: FlowComponent): void => {
+    const { ui, mover } = self;
     ui.hideAllControls();
-    ui.updateStep(index);
+    ui.updateStep(mover.index);
 
-    nextNodes.forEach(node => {
+    if (mover.previous) {
+        ui.showPreviousControl();
+    }
+
+    mover.nextNodes.forEach(node => {
         switch (node.mover.action) {
             case ActionSelector.VIDEO:
                 ui.showVideoControl();
+                break;
             case ActionSelector.NEXT:
                 ui.showNextControl();
-            case ActionSelector.PREVIOUS:
-                ui.showPreviousControl();
+                break;
         }
     });
 };
