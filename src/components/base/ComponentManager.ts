@@ -73,8 +73,9 @@ export const initComponentManager = (): void => {
         }
 
         const newComponent = currentComponent.mover.move(action);
+        const isDifferent = currentComponent.tag !== newComponent.tag;
 
-        if (currentComponent !== newComponent) {
+        if (isDifferent) {
             if (newComponent instanceof FlowComponent) {
                 await newComponent.chapter.selector.select(newComponent.pixi.containerName);
                 partChainer.load(newComponent.mover.index);
@@ -88,7 +89,6 @@ export const initComponentManager = (): void => {
             await currentComponent.selector.unselect(action);
 
             currentComponent = newComponent;
-
-        }
+        }  
     };
 };

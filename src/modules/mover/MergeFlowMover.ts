@@ -52,18 +52,18 @@ const move = (self: FlowComponent, action: ActionSelector): Component => {
         return self;
     }
 
-    self.mover.blocked = true;
+    let result: Component;
 
     if (action === ActionSelector.PREVIOUS) {
-        return self.mover.previous ?? self;
+        result = self.mover.previous ?? self;
+    } else {
+        result = self.mover.nextNodes.find(x => x.mover.action === action) ?? self;
     }
 
-    for (const node of self.mover.nextNodes) {
-        if (node.mover.action === action) {
-            return node;
-        }
-    }
+    // Don't block if the next one is self.
+    // You can't move otherwise anymore.
+    self.mover.blocked = (result !== self);
+    return result;
 
-    return self;
 };
 

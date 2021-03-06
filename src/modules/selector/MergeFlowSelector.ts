@@ -12,7 +12,7 @@ const media = ctx.createMediaElementSource(audio);
 media.connect(filter);
 filter.connect(ctx.destination);
 
-export const MergeFlowSelector = (component: FlowComponent): void => {
+export const MergeFlowSelector = (self: FlowComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW);
 
     const select = async (action: ActionSelector) => {
@@ -20,14 +20,14 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
             if (!selector.isSelected) {
                 selector.isSelected = true;
 
-                component.mover.updateControls();
+                self.mover.updateControls();
                 audio.play();
 
                 await selector.next?.recursivelySelect(action);
             }
         } finally {
             // Blocker is to avoid async components from being interrupted.
-            component.mover.blocked = false;
+            self.mover.blocked = false;
         }
     };
 
@@ -39,7 +39,7 @@ export const MergeFlowSelector = (component: FlowComponent): void => {
         }
     };
 
-    component.selector = SelectorFactory(selector)
+    self.selector = SelectorFactory(selector)
         .setSelect(select)
         .setUnselect(unselect)
         .build();
