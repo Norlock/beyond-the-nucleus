@@ -26,16 +26,16 @@ enum AudioTag {
 }
 
 export const OceanChapter = (): Chapter => {
-    const factory = ChapterFactory(ChapterType.OCEAN, 0, 0);
     const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1);
 
     const background2 = getBackground2();
-    factory.addContainer(getBackground1())
+    const factory = ChapterFactory(ChapterType.OCEAN, 0, 0, "Ocean")
+        .addContainer(getBackground1())
         .addContainer(background2)
         .addContainer(getBackground3(background2.container))
-        .appendSelector(chapterSelector(factory.chapter))
         .addAudio(audio, AudioTag.AMBIENCE);
 
+    factory.chapter.selector.append(chapterSelector(factory.chapter))
     return factory.chapter;
 };
 

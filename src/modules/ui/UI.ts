@@ -14,6 +14,7 @@ export interface UI {
     highlightUIControl(action: string): void;
     unhighlightUIControl(action: string): void;
     doUIAction(action: ActionUI): void;
+    setChapterTitle(title: string): void;
 }
 
 export interface UIModule {

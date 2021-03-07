@@ -9,7 +9,7 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
         shadow: Container, 
         offset: Offset;
 
-    const containerPosition = chapter.getContainer(containerName).position;
+    const containerPosition = chapter.find(containerName).position;
     const card = positionCard(new Container(), options, containerPosition)
     card.zIndex = 10;
     card.visible = false;

@@ -6,13 +6,11 @@ import { MergeChapterSelector } from 'src/modules/selector/MergeChapterSelector'
 import { Selector } from 'src/modules/selector/Selector';
 import { pixiApp } from 'src/pixi/PixiApp';
 
-export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) => {
-    const self = new Chapter();
+export const ChapterFactory = (chapterType: ChapterType, x: number, y: number, name: string) => {
+    const self = new Chapter(name);
     self.chapterType = chapterType;
-    self.root.visible = false;
     self.root.x = x;
     self.root.y = y;
-    self.root.sortableChildren = true;
 
     MergeAudioUtility(self);
     MergeChapterSelector(self);
@@ -27,7 +25,7 @@ export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) =
     const addContainer = (data: ContainerData) => {
         const { container, name, selector } = data;
 
-        const nameExists = self.root.children.find(x => x.name === name);
+        const nameExists = self.root.children.some(x => x.name === name);
         if (nameExists) {
             throw new Error(`Container with name: ${name} already exists in chapter`);
         }

@@ -64,6 +64,5 @@ const move = (self: FlowComponent, action: ActionSelector): Component => {
     // You can't move otherwise anymore.
     self.mover.blocked = (result !== self);
     return result;
-
 };
 

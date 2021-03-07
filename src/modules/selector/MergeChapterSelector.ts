@@ -2,7 +2,8 @@ import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterSelectorFactory } from 'src/factories/ChapterSelectorFactory';
 import { pixiApp } from 'src/pixi/PixiApp';
-import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
+import { ActionSelector } from 'src/utils/ActionTypes';
+import { UIUtils } from '../ui/GetUI';
 import { ChapterSelector } from './Selector';
 
 export const MergeChapterSelector = (self: Chapter): void => {
@@ -12,6 +13,7 @@ export const MergeChapterSelector = (self: Chapter): void => {
         if (!selector.isSelected) {
             selector.isSelected = true;
             self.root.visible = true;
+            UIUtils.setChapterTitle(self.title);
 
             selector.next?.select();
             self.root.updateTransform();

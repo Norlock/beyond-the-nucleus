@@ -34,7 +34,7 @@ export class ZendoPart1 extends PartChain {
 
 const component = (factory: FlowComponentFactory): void => {
     const { chapter } = factory.component;
-    const background = chapter.getContainer(ZendoName.START);
+    const background = chapter.find(ZendoName.START);
     const left = background.getChildAt(0) as PIXI.Sprite;
 
     const radius = 288;

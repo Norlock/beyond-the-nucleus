@@ -9,6 +9,7 @@ const nextControl = document.getElementById('next-control');
 const helpControl = document.getElementById('help-control');
 
 const canvas = document.getElementById('pixi-canvas');
+const chapterTitle = document.getElementById('chapter-title');
 const fragmentContainer = document.getElementById('fragment-container');
 
 export const MergeUI = (self: UIModule): void => {
@@ -85,6 +86,10 @@ const hideCanvasBlur = (): void => {
     canvas.classList.remove("blur");
 }
 
+const setChapterTitle = (title: string): void => {
+    chapterTitle.innerText = title;
+}
+
 const toggleHelp = (): void => {
     const helpContainer = document.getElementById('help-container');
 
@@ -116,5 +121,6 @@ export const UIUtils: UI = {
     unhighlightUIControl,
     hideCanvasBlur,
     showCanvasBlur,
-    doUIAction
+    doUIAction,
+    setChapterTitle
 };

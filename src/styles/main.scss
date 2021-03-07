@@ -4,6 +4,13 @@ html, body {
     overflow: hidden;
 }
 
+:root {
+    --color1: #B5DAFF;
+    --color2: #8CC6FF;
+    --color3: dodgerblue;
+    --color4: #05182A;
+}
+
 html {
     scroll-behavior: smooth;
     font-family: 'furacode_nerd_font_monoRg';
@@ -14,13 +21,24 @@ body {
     margin: 0;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
 p, ul {
     font-size: 20px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
+#chapter-title {
+    position: fixed;
+    z-index: 10;
+    left: 80px;
+    bottom: 10px;
+    color: floralwhite;
+    text-shadow: 1px 1px 10px #1e2f40, 2px 2px 20px var(--color2), 2px 2px 30px var(--color3);
+    letter-spacing: 2px;
+    font-size: 46px;
 }
 
 #pixi-canvas {
