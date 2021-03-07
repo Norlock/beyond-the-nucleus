@@ -13,7 +13,7 @@ export const MergeChapterSelector = (self: Chapter): void => {
         if (!selector.isSelected) {
             selector.isSelected = true;
             self.root.visible = true;
-            UIUtils.setChapterTitle(self.title);
+            UIUtils.changeChapter(self);
 
             selector.next?.select();
             self.root.updateTransform();

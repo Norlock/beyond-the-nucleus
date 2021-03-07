@@ -4,13 +4,6 @@ html, body {
     overflow: hidden;
 }
 
-:root {
-    --color1: #B5DAFF;
-    --color2: #8CC6FF;
-    --color3: dodgerblue;
-    --color4: #05182A;
-}
-
 html {
     scroll-behavior: smooth;
     font-family: 'furacode_nerd_font_monoRg';
@@ -36,9 +29,26 @@ p, ul {
     left: 80px;
     bottom: 10px;
     color: floralwhite;
-    text-shadow: 1px 1px 10px #1e2f40, 2px 2px 20px var(--color2), 2px 2px 30px var(--color3);
     letter-spacing: 2px;
     font-size: 46px;
+    opacity: 0;
+    cursor: default;
+    
+    @keyframes showTitle {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    &.animate {
+        animation-name: showTitle; 
+        animation-duration: 1s;
+        animation-delay: 2s;
+        animation-fill-mode: forwards;
+    }
 }
 
 #pixi-canvas {

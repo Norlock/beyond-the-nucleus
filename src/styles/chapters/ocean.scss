@@ -1,0 +1,10 @@
+.ocean {
+    --color1: #B5DAFF;
+    --color2: #8CC6FF;
+    --color3: dodgerblue;
+    --color4: #05182A;
+    #chapter-title {
+        color: floralwhite;
+        text-shadow: 1px 1px 10px var(--color1), 2px 2px 20px var(--color2), 2px 2px 30px var(--color3);
+    }
+}

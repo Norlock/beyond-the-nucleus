@@ -127,7 +127,7 @@ const selector = (component: FlowComponent): Selector => {
 
     const bonsaiTexture = PIXI.Texture.from('src/assets/zendo/bonsai.jpg');
     const colorFilter = new PIXI.filters.ColorMatrixFilter();
-    colorFilter.vintage(true);
+    colorFilter.greyscale(0.3, true);
 
     const bonsaiDimensions: Dimensions = {
         width: 400,

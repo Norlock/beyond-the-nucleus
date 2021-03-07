@@ -1,3 +1,4 @@
+import { Chapter } from "src/chapters/base/Chapter";
 import { ActionUI } from "src/utils/ActionTypes";
 
 export interface UI {
@@ -14,7 +15,7 @@ export interface UI {
     highlightUIControl(action: string): void;
     unhighlightUIControl(action: string): void;
     doUIAction(action: ActionUI): void;
-    setChapterTitle(title: string): void;
+    changeChapter(self: Chapter): void;
 }
 
 export interface UIModule {

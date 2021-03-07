@@ -1,6 +1,7 @@
 import { UI, UIModule } from './UI';
 import { Visibility } from '../../enums/Visibility';
 import { ActionSelector, ActionUI } from 'src/utils/ActionTypes';
+import { Chapter } from 'src/chapters/base/Chapter';
 
 const stepCounterElement = document.getElementById('page-number');
 const videoControl = document.getElementById('video-control');
@@ -86,8 +87,13 @@ const hideCanvasBlur = (): void => {
     canvas.classList.remove("blur");
 }
 
-const setChapterTitle = (title: string): void => {
-    chapterTitle.innerText = title;
+const changeChapter = (self: Chapter): void => {
+    document.body.classList.value = self.chapterType;
+
+    chapterTitle.classList.remove("animate");
+    chapterTitle.innerText = self.title;
+    chapterTitle.offsetHeight; // trigger a DOM reflow
+    chapterTitle.classList.add("animate");
 }
 
 const toggleHelp = (): void => {
@@ -122,5 +128,5 @@ export const UIUtils: UI = {
     hideCanvasBlur,
     showCanvasBlur,
     doUIAction,
-    setChapterTitle
+    changeChapter
 };
