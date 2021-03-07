@@ -1,7 +1,6 @@
 import { Component } from '../../components/base/Component';
 import { FlowComponent } from '../../components/base/FlowComponent';
 import { ActionSelector } from '../../utils/ActionTypes';
-import { UI } from '../ui/UI';
 
 export const MergeFlowMover = (self: FlowComponent, index: number) => {
     const nextNodes: Component[] = [];

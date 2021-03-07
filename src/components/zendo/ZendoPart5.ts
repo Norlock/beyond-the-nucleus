@@ -12,6 +12,7 @@ import { Promiser } from 'src/utils/Promiser';
 import { FlowComponent } from "../base/FlowComponent";
 import { PartChain } from "../base/PartChain";
 import { TestFlags } from '../base/PartTester';
+import { ZendoPart6 } from './ZendoPart6';
 import { LINE_COLOR, headerStyle, zendoCardImage } from "./ZendoStyles";
 
 export class ZendoPart5 extends PartChain {
@@ -24,7 +25,7 @@ export class ZendoPart5 extends PartChain {
     }
 
     getNextParts(): PartChain[] {
-        return [];
+        return [ new ZendoPart6(this) ];
     }
 
     attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {

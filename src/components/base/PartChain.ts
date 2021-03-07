@@ -6,6 +6,7 @@ import { FlowComponent } from "./FlowComponent";
 import { defaultTestFlags, PartTester, TestFlags } from "./PartTester";
 
 const componentTags: Set<string> = new Set();
+type BuildComponent = (factory: FlowComponentFactory) => void;
 
 /* Partchain will immediately connect the complete chain
 * @init / attachPrevious will be used for lazy loading
@@ -19,7 +20,7 @@ export abstract class PartChain {
     readonly debug: () => void;
     private factory: FlowComponentFactory;
 
-    abstract buildComponent(factory: FlowComponentFactory): void;
+    buildComponent: BuildComponent;
     abstract attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void;
 
     abstract getNextParts(): PartChain[];
