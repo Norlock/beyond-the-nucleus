@@ -11,10 +11,7 @@ import { OceanPart2 } from './OceanPart2';
 export class OceanPart1 extends PartChain {
     constructor() {
         super("Ocean1", ChapterType.OCEAN, undefined);
-    }
-
-    buildComponent(factory: FlowComponentFactory): void {
-        component(factory);
+        this.buildComponent = component;
     }
 
     // Initial part so never has previous
