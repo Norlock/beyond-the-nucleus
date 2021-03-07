@@ -1,10 +1,11 @@
+import { LOG } from "src/utils/Logger";
 import { OceanPart1 } from "../ocean/OceanPart1";
 import { PartChain } from "./PartChain";
 
 const LOAD_COUNT = 4;
 
 export const PartChainer = () => {
-    const head: PartChain = new OceanPart1();
+    const head: PartChain = OceanPart1();
     let initializedPartTail: PartChain;
     let initializedPartHead: PartChain;
 
@@ -55,8 +56,7 @@ export const PartChainer = () => {
 
     const init = (tag: string, part: PartChain): PartChain => {
         if (part.tag === tag) {
-            part.debug();
-            // Overwrite default testflags 
+            LOG.debugChain(part);
             initRecursivelyBackwards(part, LOAD_COUNT);
             initRecursively(part, LOAD_COUNT);
             return part;

@@ -2,40 +2,34 @@ import * as PIXI from 'pixi.js';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
+import { PartChainFactory } from 'src/factories/PartChainFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { pixiResources } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
-import { TestFlags } from '../base/PartTester';
+import { defaultTestFlags } from '../base/PartTester';
 import { OceanPart4 } from './OceanPart4';
 import { oceanStyles } from './OceanStyles';
 
-export class OceanPart3 extends PartChain {
-    constructor(previous: PartChain) {
-        super("Ocean3", ChapterType.OCEAN, previous);
-    }
+export const OceanPart3 = (previous: PartChain): PartChain => {
+    const part = PartChainFactory("Ocean3", ChapterType.OCEAN, previous)
+        .setBuildComponent(component)
+        .setAttachPreviousComponent(attachPreviousComponent)
+        .setTestFlags(defaultTestFlags())
+        .build();
 
-    buildComponent(factory: FlowComponentFactory): void {
-        component(factory);
-    }
-
-    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
-        factory
-            .mergePrevious(previous)
-            .mergePixiLine(previous, oceanStyles.LINE_COLOR);
-    }
-
-    getNextParts(): PartChain[] {
-        return [ new OceanPart4(this) ];
-    }
-
-    getTestFlags(standard: TestFlags): TestFlags {
-        return standard;
-    }
+    part.nextParts = [ OceanPart4(part) ];
+    return part;
 }
 
-const component = (factory: FlowComponentFactory): void => {
+const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {
+    factory
+        .mergePrevious(previous)
+        .mergePixiLine(previous, oceanStyles.LINE_COLOR);
+}
+
+const component = (factory: FlowComponentFactory): FlowComponent => {
     const width = 800;
     const leftX = 40;
     const rightX = width / 2;
@@ -99,4 +93,5 @@ const component = (factory: FlowComponentFactory): void => {
         .build();
 
     factory.mergePixiCard(cardData.containerName, cardData.card)
+    return factory.component;
 };

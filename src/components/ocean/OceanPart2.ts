@@ -2,39 +2,40 @@ import * as PIXI from 'pixi.js';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
+import { PartChainFactory } from 'src/factories/PartChainFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
-import { TestFlags } from '../base/PartTester';
+import { defaultTestFlags, TestFlags } from '../base/PartTester';
 import { OceanPart3 } from './OceanPart3';
 import { oceanStyles } from './OceanStyles';
 
-export class OceanPart2 extends PartChain {
-    constructor(previous: PartChain) {
-        super("Ocean2", ChapterType.OCEAN, previous);
-    }
+export const OceanPart2 = (previous: PartChain): PartChain => {
+    const part = PartChainFactory("Ocean2", ChapterType.OCEAN, previous)
+        .setBuildComponent(component)
+        .setAttachPreviousComponent(attachPreviousComponent)
+        .setTestFlags(testFlags())
+        .build();
 
-    buildComponent(factory: FlowComponentFactory): void {
-        component(factory);
-    }
-
-    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
-        factory
-            .mergePrevious(previous)
-            .mergePixiLine(previous, oceanStyles.LINE_COLOR);
-    }
-
-    getNextParts(): PartChain[] {
-        return [ new OceanPart3(this) ]
-    }
-
-    getTestFlags(standard: TestFlags): TestFlags {
-        return standard;
-    }
+    part.nextParts = [ OceanPart3(part) ];
+    return part;
 }
 
-const component = (factory: FlowComponentFactory): void => {
+const testFlags = (): TestFlags  => {
+    const standard = defaultTestFlags();
+    standard.hasPrevious = false;
+    standard.hasLine = false;
+    return standard;
+}
+
+const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {
+    factory
+    .mergePrevious(previous)
+    .mergePixiLine(previous, oceanStyles.LINE_COLOR);
+}
+
+const component = (factory: FlowComponentFactory): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -84,8 +85,9 @@ const component = (factory: FlowComponentFactory): void => {
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(400, 300)
-        //.setLine(previous, oceanStyles.LINE_COLOR)
         .build();
 
-    factory.mergePixiCard(cardData.containerName, cardData.card)
+    return factory
+            .mergePixiCard(cardData.containerName, cardData.card)
+            .component;
 };

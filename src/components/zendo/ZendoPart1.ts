@@ -7,32 +7,28 @@ import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { ZendoPart2 } from './ZendoPart2';
 import { ChapterType } from 'src/chapters/base/ChapterType';
-import { TestFlags } from '../base/PartTester';
+import { defaultTestFlags } from '../base/PartTester';
+import { PartChainFactory } from 'src/factories/PartChainFactory';
 
-export class ZendoPart1 extends PartChain {
-    constructor(previous: PartChain) {
-        super("Zendo1", ChapterType.ZEN, previous)
-    }
+export const ZendoPart1 = (previous: PartChain): PartChain => {
+    const testFlags = defaultTestFlags();
+    testFlags.hasLine = false;
 
-    buildComponent(factory: FlowComponentFactory): void {
-        component(factory);
-    }
+    const part = PartChainFactory("Zendo1", ChapterType.ZEN, previous)
+        .setBuildComponent(component)
+        .setAttachPreviousComponent(attachPreviousComponent)
+        .setTestFlags(testFlags)
+        .build();
 
-    getNextParts(): PartChain[] {
-        return [ new ZendoPart2(this) ];
-    }
-
-    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
-        factory.mergePrevious(previous);
-    }
-
-    getTestFlags(standard: TestFlags): TestFlags {
-        standard.hasLine = false;
-        return standard;
-    }
+    part.nextParts = [ ZendoPart2(part) ];
+    return part;
 }
 
-const component = (factory: FlowComponentFactory): void => {
+const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {
+    factory.mergePrevious(previous);
+}
+
+const component = (factory: FlowComponentFactory): FlowComponent => {
     const { chapter } = factory.component;
     const background = chapter.find(ZendoName.START);
     const left = background.getChildAt(0) as PIXI.Sprite;
@@ -103,5 +99,7 @@ const component = (factory: FlowComponentFactory): void => {
         .setOffset(pixiApp.screen.width / 2 - radius, pixiApp.screen.height / 2 - radius)
         .build();
 
-    factory.mergePixiCard(cardData.containerName, cardData.card);
+    return factory
+        .mergePixiCard(cardData.containerName, cardData.card)
+        .component;
 };

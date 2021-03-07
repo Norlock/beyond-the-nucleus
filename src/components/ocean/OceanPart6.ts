@@ -2,37 +2,33 @@ import * as PIXI from 'pixi.js';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
+import { PartChainFactory } from 'src/factories/PartChainFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
-import { TestFlags } from '../base/PartTester';
+import { defaultTestFlags } from '../base/PartTester';
 import { ZendoPart1 } from '../zendo/ZendoPart1';
 
-export class OceanPart6 extends PartChain {
-    constructor(previous: PartChain) {
-        super("Ocean6", ChapterType.OCEAN, previous);
-    }
+export const OceanPart6 = (previous: PartChain): PartChain => {
+    const testFlags = defaultTestFlags();
+    testFlags.hasLine = false;
 
-    buildComponent(factory: FlowComponentFactory): void {
-        component(factory);
-    }
+    const part = PartChainFactory("Ocean6", ChapterType.OCEAN, previous)
+        .setBuildComponent(component)
+        .setAttachPreviousComponent(attachPreviousComponent)
+        .setTestFlags(testFlags)
+        .build();
 
-    getNextParts(): PartChain[] {
-        return [ new ZendoPart1(this) ];
-    }
-
-    attachPreviousComponent(factory: FlowComponentFactory, previous: FlowComponent): void {
-        factory.mergePrevious(previous);
-    }
-    
-    getTestFlags(standard: TestFlags): TestFlags {
-        standard.hasLine = false;
-        return standard;
-    }
+    part.nextParts = [ ZendoPart1(part) ];
+    return part;
 }
 
-const component = (factory: FlowComponentFactory): void => {
+const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {
+    factory.mergePrevious(previous);
+}
+
+const component = (factory: FlowComponentFactory): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -82,5 +78,6 @@ const component = (factory: FlowComponentFactory): void => {
         .setOffset(100, 100)
         .build();
 
-    factory.mergePixiCard(cardData.containerName, cardData.card);
+    return factory.mergePixiCard(cardData.containerName, cardData.card)
+        .component;
 };
