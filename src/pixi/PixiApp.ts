@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Promiser } from 'src/utils/Promiser';
 
 export const pixiApp = new PIXI.Application({
     width: window.innerWidth,
@@ -29,18 +30,18 @@ export const preload = (): Promise<void> => {
 
     pixiApp.loader.onError.add((err: any) => console.error(err));
 
-    return new Promise(resolve => {
-        pixiApp.loader.load((loader, res: any) => {
-            pixiResources = {
-                oceanBubble: res.oceanBubble.texture,
-                oceanStart: res.oceanStart.texture,
-                oceanTurtle: res.oceanTurtle.texture,
-                oceanAnthozoa: res.oceanAnthozoa.texture,
-                zendoCard: res.zendoCard.texture
-            };
-            resolve();
-        });
+    const promiser = Promiser<void>();
+    pixiApp.loader.load((loader, res) => {
+        pixiResources = {
+            oceanBubble: res.oceanBubble.texture,
+            oceanStart: res.oceanStart.texture,
+            oceanTurtle: res.oceanTurtle.texture,
+            oceanAnthozoa: res.oceanAnthozoa.texture,
+            zendoCard: res.zendoCard.texture
+        };
+        promiser.resolve();
     });
+    return promiser.promise;
 };
 
 export const isInViewport = (container: PIXI.Container): boolean => {

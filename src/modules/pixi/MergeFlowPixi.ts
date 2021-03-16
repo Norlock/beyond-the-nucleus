@@ -4,12 +4,11 @@ import { ComponentLineSelector } from './ComponentLine';
 import { FlowPixi, PixiSelector } from './Pixi';
 
 export const MergePixiFlowCard = (self: FlowComponent, containerName: string, card: PixiSelector): void => {
-    self.chapter.root.addChild(card.component);
-
     self.pixi = new FlowPixi();
     self.pixi.containerName = containerName; 
     self.pixi.card = card.component; 
 
+    self.chapter.root.addChild(card.component);
     self.selector.append(card.selector)
 };
 
