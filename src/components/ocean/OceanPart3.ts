@@ -8,19 +8,16 @@ import { CardOptions } from 'src/modules/pixi/Pixi';
 import { pixiResources } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
-import { defaultTestFlags } from '../base/PartTester';
+import {defaultTestFlags} from '../base/PartTester';
 import { OceanPart4 } from './OceanPart4';
 import { oceanStyles } from './OceanStyles';
 
 export const OceanPart3 = (previous: PartChain): PartChain => {
-    const part = PartChainFactory("Ocean3", ChapterType.OCEAN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
+    return PartChainFactory("Ocean3", ChapterType.OCEAN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
+        .setNextParts(OceanPart4)
         .setTestFlags(defaultTestFlags())
         .build();
-
-    part.nextParts = [ OceanPart4(part) ];
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

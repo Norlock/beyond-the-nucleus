@@ -7,21 +7,16 @@ import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
-import { defaultTestFlags, TestFlags } from '../base/PartTester';
+import { defaultTestFlags } from '../base/PartTester';
 import { ZendoPart3 } from './ZendoPart3';
 import { LINE_COLOR, headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles';
 
 export const ZendoPart2 = (previous: PartChain): PartChain => {
-    const testFlags = defaultTestFlags();
-
-    const part = PartChainFactory("Zendo2", ChapterType.ZEN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
-        .setTestFlags(testFlags)
+    return PartChainFactory("Zendo2", ChapterType.ZEN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
+        .setTestFlags(defaultTestFlags())
+        .setNextParts(ZendoPart3)
         .build();
-
-    part.nextParts = [ ZendoPart3(part) ];
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

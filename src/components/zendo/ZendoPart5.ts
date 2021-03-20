@@ -17,16 +17,10 @@ import { ZendoPart6 } from './ZendoPart6';
 import { LINE_COLOR, headerStyle, zendoCardImage } from "./ZendoStyles";
 
 export const ZendoPart5 = (previous: PartChain): PartChain => {
-    const testFlags = defaultTestFlags();
-
-    const part = PartChainFactory("Zendo5", ChapterType.ZEN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
-        .setTestFlags(testFlags)
+    return PartChainFactory("Zendo5", ChapterType.ZEN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
+        .setTestFlags(defaultTestFlags())
         .build();
-
-    //part.nextParts = [ ZendoPart4(part) ];
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

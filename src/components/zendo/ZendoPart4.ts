@@ -16,16 +16,11 @@ import { ZendoPart5 } from './ZendoPart5';
 import { LINE_COLOR } from './ZendoStyles';
 
 export const ZendoPart4 = (previous: PartChain): PartChain => {
-    const testFlags = defaultTestFlags();
-
-    const part = PartChainFactory("Zendo4", ChapterType.ZEN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
-        .setTestFlags(testFlags)
+    return PartChainFactory("Zendo4", ChapterType.ZEN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
+        .setTestFlags(defaultTestFlags())
+        .setNextParts(ZendoPart5)
         .build();
-
-    part.nextParts = [ ZendoPart5(part) ];
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

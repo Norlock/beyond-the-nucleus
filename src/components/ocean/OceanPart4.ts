@@ -12,15 +12,11 @@ import { OceanPart5 } from './OceanPart5';
 import { oceanStyles } from './OceanStyles';
 
 export const OceanPart4 = (previous: PartChain): PartChain => {
-    const part = PartChainFactory("Ocean4", ChapterType.OCEAN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
+    return PartChainFactory("Ocean4", ChapterType.OCEAN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
+        .setNextParts(OceanPart5)
         .setTestFlags(defaultTestFlags())
         .build();
-
-    part.nextParts = [ OceanPart5(part) ];
-    console.log('kijk', part);
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

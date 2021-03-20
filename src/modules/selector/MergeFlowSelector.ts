@@ -22,6 +22,8 @@ export const MergeFlowSelector = (self: FlowComponent): void => {
                 selector.isSelected = true;
 
                 self.mover.updateControls();
+
+                audio.load();
                 audio.play();
 
                 await selector.next?.recursivelySelect(action);

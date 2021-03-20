@@ -14,14 +14,11 @@ export const ZendoPart1 = (previous: PartChain): PartChain => {
     const testFlags = defaultTestFlags();
     testFlags.hasLine = false;
 
-    const part = PartChainFactory("Zendo1", ChapterType.ZEN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
+    return PartChainFactory("Zendo1", ChapterType.ZEN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
         .setTestFlags(testFlags)
+        .setNextParts(ZendoPart2)
         .build();
-
-    part.nextParts = [ ZendoPart2(part) ];
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

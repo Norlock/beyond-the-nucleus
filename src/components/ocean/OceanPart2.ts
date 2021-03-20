@@ -12,14 +12,11 @@ import { OceanPart3 } from './OceanPart3';
 import { oceanStyles } from './OceanStyles';
 
 export const OceanPart2 = (previous: PartChain): PartChain => {
-    const part = PartChainFactory("Ocean2", ChapterType.OCEAN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
+    return PartChainFactory("Ocean2", ChapterType.OCEAN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
         .setTestFlags(testFlags())
+        .setNextParts(OceanPart3)
         .build();
-
-    part.nextParts = [ OceanPart3(part) ];
-    return part;
 }
 
 const testFlags = (): TestFlags  => {

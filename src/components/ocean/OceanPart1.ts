@@ -11,13 +11,11 @@ import { defaultTestFlags, TestFlags } from '../base/PartTester';
 import { OceanPart2 } from './OceanPart2';
 
 export const OceanPart1 = (): PartChain => {
-    const part = PartChainFactory("Ocean1", ChapterType.OCEAN, undefined)
-        .setBuildComponent(component)
+    return PartChainFactory("Ocean1", ChapterType.OCEAN, undefined)
+        .mergeFlowLoader(component, undefined)
         .setTestFlags(testFlags())
+        .setNextParts(OceanPart2)
         .build();
-
-    part.nextParts = [ OceanPart2(part) ];
-    return part;
 }
 
 const testFlags = (): TestFlags  => {

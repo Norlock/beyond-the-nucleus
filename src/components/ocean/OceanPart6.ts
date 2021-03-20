@@ -14,14 +14,11 @@ export const OceanPart6 = (previous: PartChain): PartChain => {
     const testFlags = defaultTestFlags();
     testFlags.hasLine = false;
 
-    const part = PartChainFactory("Ocean6", ChapterType.OCEAN, previous)
-        .setBuildComponent(component)
-        .setAttachPreviousComponent(attachPreviousComponent)
+    return PartChainFactory("Ocean6", ChapterType.OCEAN, previous)
+        .mergeFlowLoader(component, attachPreviousComponent)
         .setTestFlags(testFlags)
+        .setNextParts(ZendoPart1)
         .build();
-
-    part.nextParts = [ ZendoPart1(part) ];
-    return part;
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {

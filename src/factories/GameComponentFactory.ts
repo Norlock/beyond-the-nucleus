@@ -1,8 +1,8 @@
 import { Chapter } from 'src/chapters/base/Chapter';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { GameComponent } from 'src/components/base/GameComponent';
-import { GameModule } from 'src/modules/game/Game';
-import { KeyboardModule } from 'src/modules/keyboard/Keyboard';
+import { Game, GameModule } from 'src/modules/game/Game';
+import { Keyboard, KeyboardModule } from 'src/modules/keyboard/Keyboard';
 import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
 import { MergePixiFlowCard, MergePixiFlowLine } from 'src/modules/pixi/MergeFlowPixi';
 import { PixiSelector } from 'src/modules/pixi/Pixi';
@@ -30,6 +30,16 @@ export class GameComponentFactory {
 
     mergePixiCard(containerName: string, card: PixiSelector): GameComponentFactory {
         MergePixiFlowCard(this.component, containerName, card);
+        return this;
+    }
+
+    mergeGame(game: Game) {
+        this.component.game = game;
+        return this;
+    }
+
+    mergeInputHandler(keyboard: Keyboard) {
+        this.component.keyboard = keyboard;
         return this;
     }
 }

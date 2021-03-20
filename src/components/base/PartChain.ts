@@ -1,6 +1,7 @@
 import { ChapterType } from "src/chapters/base/ChapterType";
+import {PartLoader} from "src/modules/partChain/PartLoader";
 import { LOG } from "src/utils/Logger";
-import { FlowComponent } from "./FlowComponent";
+import {FlowComponent} from "./FlowComponent";
 import { PartTester, TestFlags } from "./PartTester";
 
 const componentTags: Set<string> = new Set();
@@ -14,8 +15,7 @@ export class PartChain {
     readonly index: number;
 
     // Will be build in the factory.
-    buildComponent: () => FlowComponent;
-    attachPreviousComponent: (previous: FlowComponent) => void;
+    loader: PartLoader;
     testFlags: TestFlags;
     nextParts: PartChain[] = []; 
 
@@ -42,7 +42,7 @@ export class PartChain {
         }
 
         try {
-            this.component = this.buildComponent();
+            this.component = this.loader.buildComponent();
             PartTester(this);
 
             this.isSuccessful = true;
@@ -59,7 +59,7 @@ export class PartChain {
     attachPrevious() {
         const previous = this.previousValid?.component;
         if (previous && this.isSuccessful && !this.hasPreviousAttached) {
-            this.attachPreviousComponent(previous);
+            this.loader.attachPreviousComponent(previous);
             this.hasPreviousAttached = true;
         }
     }
