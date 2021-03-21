@@ -9,13 +9,14 @@ import { ZendoPart2 } from './ZendoPart2';
 import { ChapterType } from 'src/chapters/base/ChapterType';
 import { defaultTestFlags } from '../base/PartTester';
 import { PartChainFactory } from 'src/factories/PartChainFactory';
+import {LoaderType} from 'src/modules/partChain/PartLoader';
 
 export const ZendoPart1 = (previous: PartChain): PartChain => {
     const testFlags = defaultTestFlags();
     testFlags.hasLine = false;
 
     return PartChainFactory("Zendo1", ChapterType.ZEN, previous)
-        .mergeFlowLoader(component, attachPreviousComponent)
+        .mergeLoader(LoaderType.FLOW, component, attachPreviousComponent)
         .setTestFlags(testFlags)
         .setNextParts(ZendoPart2)
         .build();

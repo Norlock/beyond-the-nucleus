@@ -1,6 +1,7 @@
 import { Component } from '../../components/base/Component';
 import { FlowComponent } from '../../components/base/FlowComponent';
 import { ActionSelector } from '../../utils/ActionTypes';
+import {ControlType} from '../ui/GetUI';
 
 export const MergeFlowMover = (self: FlowComponent, index: number) => {
     const nextNodes: Component[] = [];
@@ -31,16 +32,16 @@ const updateControls = (self: FlowComponent): void => {
     ui.updateStep(mover.index);
 
     if (mover.previous) {
-        ui.showPreviousControl();
+        ui.showControl(ControlType.PREVIOUS);
     }
 
     mover.nextNodes.forEach(node => {
         switch (node.mover.action) {
             case ActionSelector.VIDEO:
-                ui.showVideoControl();
+                ui.showControl(ControlType.VIDEO);
                 break;
             case ActionSelector.NEXT:
-                ui.showNextControl();
+                ui.showControl(ControlType.NEXT);
                 break;
         }
     });

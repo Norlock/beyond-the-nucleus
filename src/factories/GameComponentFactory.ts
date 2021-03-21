@@ -1,21 +1,23 @@
 import { Chapter } from 'src/chapters/base/Chapter';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { GameComponent } from 'src/components/base/GameComponent';
-import { Game, GameModule } from 'src/modules/game/Game';
-import { Keyboard, KeyboardModule } from 'src/modules/keyboard/Keyboard';
+import { Game } from 'src/modules/game/Game';
+import { Keyboard } from 'src/modules/keyboard/Keyboard';
 import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
-import { MergePixiFlowCard, MergePixiFlowLine } from 'src/modules/pixi/MergeFlowPixi';
+import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi';
 import { PixiSelector } from 'src/modules/pixi/Pixi';
-import { MergeFlowSelector } from 'src/modules/selector/MergeFlowSelector';
+import {MergeGameSelector} from 'src/modules/selector/MergeGameSelector';
 import { MergeUI } from 'src/modules/ui/GetUI';
 
 export class GameComponentFactory {
     readonly component: GameComponent;
 
     constructor(chapter: Chapter, tag: string) {
+        this.component = new GameComponent(chapter);
         this.component.tag = tag;
+
         MergeUI(this.component);
-        MergeFlowSelector(this.component);
+        MergeGameSelector(this.component);
     }
 
     mergeMover(index: number): GameComponentFactory  {

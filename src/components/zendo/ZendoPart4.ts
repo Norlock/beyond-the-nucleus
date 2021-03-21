@@ -5,6 +5,7 @@ import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { PartChainFactory } from 'src/factories/PartChainFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
 import { SelectorFactory } from 'src/factories/SelectorFactory';
+import { LoaderType } from 'src/modules/partChain/PartLoader';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { Selector } from 'src/modules/selector/Selector';
 import { pixiApp } from 'src/pixi/PixiApp';
@@ -17,7 +18,7 @@ import { LINE_COLOR } from './ZendoStyles';
 
 export const ZendoPart4 = (previous: PartChain): PartChain => {
     return PartChainFactory("Zendo4", ChapterType.ZEN, previous)
-        .mergeFlowLoader(component, attachPreviousComponent)
+        .mergeLoader(LoaderType.FLOW, component, attachPreviousComponent)
         .setTestFlags(defaultTestFlags())
         .setNextParts(ZendoPart5)
         .build();

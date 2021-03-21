@@ -3,15 +3,25 @@ import { Visibility } from '../../enums/Visibility';
 import { ActionSelector, ActionUI } from 'src/utils/ActionTypes';
 import { Chapter } from 'src/chapters/base/Chapter';
 
+const ACTIVATE = "activate";
+
+const helpControl = document.getElementById('help-control');
 const stepCounterElement = document.getElementById('page-number');
-const videoControl = document.getElementById('video-control');
 const previousControl = document.getElementById('previous-control');
 const nextControl = document.getElementById('next-control');
-const helpControl = document.getElementById('help-control');
+const videoControl = document.getElementById('video-control');
+const gameControl = document.getElementById('game-control');
 
 const canvas = document.getElementById('pixi-canvas');
 const chapterTitle = document.getElementById('chapter-title');
 const fragmentContainer = document.getElementById('fragment-container');
+
+export enum ControlType {
+    NEXT,
+    PREVIOUS,
+    VIDEO,
+    GAME
+}
 
 export const MergeUI = (self: UIModule): void => {
     self.ui = UIUtils;
@@ -21,37 +31,46 @@ const updateStep = (index: number): void => {
     stepCounterElement.innerText = '' + index;
 };
 
-const showVideoControl = (): void => {
-    videoControl.classList.remove(Visibility.HIDE);
-};
-
-const hideVideoControl = (): void => {
-    videoControl.classList.add(Visibility.HIDE);
-};
-
-const showPreviousControl = (): void => {
-    previousControl.classList.remove(Visibility.DISABLE);
+const showControl = (controlType: ControlType): void => {
+    switch (controlType) {
+        case ControlType.NEXT:
+            nextControl.classList.remove(Visibility.DISABLE)
+            return;
+        case ControlType.PREVIOUS:
+            previousControl.classList.remove(Visibility.DISABLE)
+            return;
+        case ControlType.VIDEO:
+            videoControl.classList.remove(Visibility.HIDE);
+            return;
+        case ControlType.GAME:
+            gameControl.classList.remove(Visibility.HIDE);
+            return;
+    }
 }
 
-const hidePreviousControl = (): void => {
-    previousControl.classList.add(Visibility.DISABLE);
-}
-
-const showNextControl = (): void => {
-    nextControl.classList.remove(Visibility.DISABLE);
-}
-
-const hideNextControl = (): void => {
-    nextControl.classList.add(Visibility.DISABLE);
+const hideControl = (controlType: ControlType): void => {
+    switch (controlType) {
+        case ControlType.NEXT:
+            nextControl.classList.add(Visibility.DISABLE)
+            return;
+        case ControlType.PREVIOUS:
+            previousControl.classList.add(Visibility.DISABLE)
+            return;
+        case ControlType.VIDEO:
+            videoControl.classList.add(Visibility.HIDE);
+            return;
+        case ControlType.GAME:
+            gameControl.classList.add(Visibility.HIDE);
+            return;
+    }
 }
 
 const hideAllControls = (): void => {
-    hideVideoControl();
-    hideNextControl();
-    hidePreviousControl();
+    hideControl(ControlType.NEXT);
+    hideControl(ControlType.PREVIOUS);
+    hideControl(ControlType.VIDEO);
+    hideControl(ControlType.GAME);
 };
-
-const ACTIVATE = "activate";
 
 const highlightUIControl = (action: string): void => {
     if (action === ActionUI.TOGGLE_HELP) {
@@ -115,12 +134,6 @@ const toggleHelp = (): void => {
 }
 
 export const UIUtils: UI = {
-    hideVideoControl,
-    showVideoControl,
-    showPreviousControl,
-    hideNextControl,
-    hidePreviousControl,
-    showNextControl,
     updateStep,
     hideAllControls,
     highlightUIControl,
@@ -128,5 +141,7 @@ export const UIUtils: UI = {
     hideCanvasBlur,
     showCanvasBlur,
     doUIAction,
-    changeChapter
+    changeChapter,
+    showControl,
+    hideControl
 };

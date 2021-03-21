@@ -16,7 +16,7 @@ export const initComponentManager = (): void => {
     pixiCanvas.appendChild(pixiApp.view);
 
     const partChainer = PartChainer();
-    const initial = partChainer.init("Ocean1");
+    const initial = partChainer.init("Zendo5");
 
     currentComponent = initial.component;
     currentComponent.chapter.selector.select(initial.component.pixi.containerName);
@@ -85,8 +85,8 @@ export const initComponentManager = (): void => {
                 await currentComponent.chapter.selector.unselect(action);
             }
 
-            await newComponent.selector.select(action);
             await currentComponent.selector.unselect(action);
+            await newComponent.selector.select(action);
 
             currentComponent = newComponent;
         }  

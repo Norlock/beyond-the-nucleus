@@ -4,6 +4,7 @@ import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { PartChainFactory } from 'src/factories/PartChainFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
+import {LoaderType} from 'src/modules/partChain/PartLoader';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
@@ -15,7 +16,7 @@ export const OceanPart6 = (previous: PartChain): PartChain => {
     testFlags.hasLine = false;
 
     return PartChainFactory("Ocean6", ChapterType.OCEAN, previous)
-        .mergeFlowLoader(component, attachPreviousComponent)
+        .mergeLoader(LoaderType.FLOW, component, attachPreviousComponent)
         .setTestFlags(testFlags)
         .setNextParts(ZendoPart1)
         .build();

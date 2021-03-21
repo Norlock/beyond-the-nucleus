@@ -12,6 +12,17 @@ html {
 body {
     background: black;
     margin: 0;
+
+    --toolbar-background: coral;
+
+    --toolbar-control-background: #994c30;
+    --toolbar-control-hover: #663220;
+    --toolbar-control-foreground: navajowhite;
+
+    --toolbar-number-background: brown;
+    --toolbar-number-foreground: navajowhite;
+
+    --chapter-title: floralwhite;
 }
 
 * {
@@ -28,7 +39,7 @@ p, ul {
     z-index: 10;
     left: 80px;
     bottom: 10px;
-    color: floralwhite;
+    color: var(--chapter-title);
     letter-spacing: 2px;
     font-size: 46px;
     opacity: 0;
@@ -69,7 +80,7 @@ p, ul {
     left: 10px;
     bottom: 10px;
     position: absolute;
-    background: coral;
+    background: var(--toolbar-background);
     box-shadow: 0 0 4px 1px black;
 }
 
@@ -81,7 +92,7 @@ p, ul {
     bottom: 10px;
     position: fixed;
     z-index: 10;
-    background: coral;
+    background: var(--toolbar-background);
     border-radius: 30px;
     box-shadow: 0 0 4px 1px black;
 
@@ -91,15 +102,15 @@ p, ul {
     }
 
     #page-number {
-        background-color: brown;
-        color: navajowhite;
+        background-color: var(--toolbar-number-background);
+        color: var(--toolbar-number-foreground);
         cursor: default;
     }
 }
 
 .info-control {
-    background: #994c30;
-    color: navajowhite;
+    background: var(--toolbar-control-background);
+    color: var(--toolbar-control-foreground);
     cursor: pointer;
     width: 38px;
     height: 38px;
@@ -115,17 +126,29 @@ p, ul {
 
     @keyframes disableControl {
         0% {
-            background-color: #994c30;
+            background: var(--toolbar-control-background);
         }
         100% {
             background-color: black;
-            opacity: 0.5;
-            color: #444;
+            opacity: 0.45;
+        }
+    }
+
+    @keyframes additional {
+        50% {
+            background: var(--toolbar-control-background);
+        }
+        100% {
+            background-color: black;
         }
     }
 
     &.disable {
         animation: disableControl 1s forwards; 
+    }
+
+    &.additional {
+        animation: additional 1s alternate-reverse infinite; 
     }
 
     &.hide {
@@ -141,6 +164,6 @@ p, ul {
 
     &.activate,
     &:hover {
-        background: #663220;
+        background: var(--toolbar-control-hover);
     }
 }

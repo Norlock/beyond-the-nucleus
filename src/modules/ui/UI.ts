@@ -1,17 +1,14 @@
 import { Chapter } from "src/chapters/base/Chapter";
 import { ActionUI } from "src/utils/ActionTypes";
+import {ControlType} from "./GetUI";
 
 export interface UI {
     updateStep(index: number): void;
     hideAllControls(): void;
-    showVideoControl(): void;
-    hideVideoControl(): void;
+    showControl(controlType: ControlType): void;
+    hideControl(controlType: ControlType): void;
     showCanvasBlur(): void;
     hideCanvasBlur(): void;
-    showPreviousControl(): void;
-    hidePreviousControl(): void;
-    showNextControl(): void;
-    hideNextControl(): void;
     highlightUIControl(action: string): void;
     unhighlightUIControl(action: string): void;
     doUIAction(action: ActionUI): void;

@@ -6,13 +6,15 @@ import {AttachPreviousFunction, BuildFunction} from './PartLoader';
 
 export const MergeGameLoader = (
     self: PartChain, 
-    buildComponentFunction: BuildFunction, 
-    attachPreviousComponentFunction: AttachPreviousFunction) => {
+    buildFunction: BuildFunction, 
+    attachPreviousFunction: AttachPreviousFunction) => {
 
     const chapter = ChapterProvider.get(self.chapterType);
     const factory = new GameComponentFactory(chapter, self.tag)
         .mergeMover(self.index);
 
-    self.loader.buildComponent = () => buildComponentFunction(factory);
-    self.loader.attachPreviousComponent = (previous: FlowComponent) => attachPreviousComponentFunction(factory, previous);
+    self.loader = {
+        buildComponent: () => buildFunction(factory),
+        attachPreviousComponent: (previous: FlowComponent) => attachPreviousFunction(factory, previous)
+    }
 }

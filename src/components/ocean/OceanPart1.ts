@@ -4,6 +4,7 @@ import { OceanName } from 'src/chapters/OceanChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { PartChainFactory } from 'src/factories/PartChainFactory';
 import { PixiCardFactory } from 'src/factories/PixiCardFactory';
+import {LoaderType} from 'src/modules/partChain/PartLoader';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
@@ -12,7 +13,7 @@ import { OceanPart2 } from './OceanPart2';
 
 export const OceanPart1 = (): PartChain => {
     return PartChainFactory("Ocean1", ChapterType.OCEAN, undefined)
-        .mergeFlowLoader(component, undefined)
+        .mergeLoader(LoaderType.FLOW, component, undefined)
         .setTestFlags(testFlags())
         .setNextParts(OceanPart2)
         .build();

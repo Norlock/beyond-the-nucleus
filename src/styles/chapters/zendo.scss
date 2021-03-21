@@ -1,6 +1,19 @@
 .zendo {
     #chapter-title {
-        color: #fedcba;
+        --chapter-title: #fedcba;
         text-shadow: 3px 3px 3px black;
+    }
+
+    &.Kungfu {
+        --toolbar-background: #779955;
+        --toolbar-control-background: #475c33;
+        --toolbar-control-foreground: whitesmoke;
+        --toolbar-number-background: #121416;
+        --toolbar-number-foreground: whitesmoke;
+
+        #chapter-title {
+            --chapter-title: whitesmoke;
+            //text-shadow: unset;
+        }
     }
 }
