@@ -3,6 +3,7 @@ import { pixiApp } from 'src/pixi/PixiApp';
 import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
 import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
+import {GameComponent} from './GameComponent';
 import { PartChainer } from './PartChainer';
 
 const pixiCanvas = document.getElementById('pixi-canvas');
@@ -12,6 +13,7 @@ export const initComponentManager = (): void => {
 
     let keyPressed: string;
     let keyDown: boolean;
+    let blocked = false;
 
     pixiCanvas.appendChild(pixiApp.view);
 
@@ -60,17 +62,23 @@ export const initComponentManager = (): void => {
 
 
     document.addEventListener('keypress', (event: KeyboardEvent) => {
-        if (ActionUtil.isSelector(event.key)) {
-            move(event.key as ActionSelector);
-        }  else if (ActionUtil.isUI(event.key)) {
-            UIUtils.doUIAction(event.key as ActionUI);
-        }
+         if (ActionUtil.isSelector(event.key)) {
+             if (currentComponent instanceof GameComponent && event.key === ActionSelector.GAME) {
+                 console.log('is game');
+             } else {
+                 move(event.key as ActionSelector);
+             }
+         }  else if (ActionUtil.isUI(event.key)) {
+             UIUtils.doUIAction(event.key as ActionUI);
+         }
     });
 
     const move = async (action: ActionSelector) => {
-        if (currentComponent.mover.blocked) {
+        if (blocked) {
             return;
-        }
+        } 
+
+        blocked = true;
 
         const newComponent = currentComponent.mover.move(action);
         const isDifferent = currentComponent.tag !== newComponent.tag;
@@ -85,10 +93,11 @@ export const initComponentManager = (): void => {
                 await currentComponent.chapter.selector.unselect(action);
             }
 
-            await currentComponent.selector.unselect(action);
-            await newComponent.selector.select(action);
-
-            currentComponent = newComponent;
+            Promise.allSettled([
+                currentComponent.selector.unselect(action),
+                newComponent.selector.select(action),
+                currentComponent = newComponent
+            ]).then(() => blocked = false);
         }  
     };
 };

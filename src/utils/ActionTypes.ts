@@ -3,6 +3,7 @@ export enum ActionSelector {
     PREVIOUS = 'b',
     VIDEO = 'v',
     INFO = 'i',
+    GAME = 'p',
 }
 
 export enum ActionUI {

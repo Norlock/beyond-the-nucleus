@@ -4,7 +4,6 @@ import { ActionSelector } from '../../utils/ActionTypes';
 export interface Move {
     move(action: ActionSelector): Component;
     action: ActionSelector;
-    blocked: boolean;
 }
 
 export interface MoveModule {

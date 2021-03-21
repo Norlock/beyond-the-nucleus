@@ -63,7 +63,7 @@ const component = (factory: GameComponentFactory): FlowComponent => {
     const cardData = PixiCardFactory(cardOptions, factory.component.chapter, ZendoName.START)
         .setImageCard(zendoCardImage(400, 400))
         .addChild(header, paragraph, logoContainer)
-        .setOffset(500, 300)
+        .setOffset(150, 130)
         .elevate(12)
         .build();
 

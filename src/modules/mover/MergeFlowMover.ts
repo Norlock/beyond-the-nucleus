@@ -8,7 +8,6 @@ export const MergeFlowMover = (self: FlowComponent, index: number) => {
 
     self.mover = {
         action: ActionSelector.NEXT,
-        blocked: false,
         index,
         nextNodes,
         previous: undefined,
@@ -48,21 +47,10 @@ const updateControls = (self: FlowComponent): void => {
 };
 
 const move = (self: FlowComponent, action: ActionSelector): Component => {
-    if (self.mover.blocked) {
-        return self;
-    }
-
-    let result: Component;
-
     if (action === ActionSelector.PREVIOUS) {
-        result = self.mover.previous ?? self;
+        return self.mover.previous ?? self;
     } else {
-        result = self.mover.nextNodes.find(x => x.mover.action === action) ?? self;
+        return self.mover.nextNodes.find(x => x.mover.action === action) ?? self;
     }
-
-    // Don't block if the next one is self.
-    // You can't move otherwise anymore.
-    self.mover.blocked = (result !== self);
-    return result;
 };
 

@@ -17,20 +17,15 @@ export const MergeFlowSelector = (self: FlowComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW);
 
     const select = async (action: ActionSelector) => {
-        try {
-            if (!selector.isSelected) {
-                selector.isSelected = true;
+        if (!selector.isSelected) {
+            selector.isSelected = true;
 
-                self.mover.updateControls();
+            self.mover.updateControls();
 
-                audio.load();
-                audio.play();
+            audio.load();
+            audio.play();
 
-                await selector.next?.recursivelySelect(action);
-            }
-        } finally {
-            // Blocker is to avoid async components from being interrupted.
-            self.mover.blocked = false;
+            await selector.next?.recursivelySelect(action);
         }
     };
 

@@ -17,7 +17,6 @@ export const MergeStaticMover = (self: StaticComponent, parent: FlowComponent, a
     self.mover = {
         action,
         move,
-        parent,
-        blocked: false
+        parent
     };
 };
