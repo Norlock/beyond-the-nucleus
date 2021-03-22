@@ -9,7 +9,7 @@ import {LoaderType} from 'src/modules/partChain/PartLoader';
 import { CardOptions } from "src/modules/pixi/Pixi";
 import { Dimensions, imageFrame } from 'src/modules/pixi/PixiShapes';
 import { Selector } from 'src/modules/selector/Selector';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 import { Promiser } from 'src/utils/Promiser';
 import { FlowComponent } from "../base/FlowComponent";
 import { PartChain } from "../base/PartChain";
@@ -143,12 +143,12 @@ const selector = (component: FlowComponent): Selector => {
             bonsaiFrame.alpha = zazenFrame.alpha += (0.01 * delta);
 
             if (zazenFrame.alpha >= 1) {
-                pixiApp.ticker.remove(show);
+                boardApp.ticker.remove(show);
                 promise.resolve();
             }
         }
 
-        setTimeout(() => pixiApp.ticker.add(show), 1000);
+        setTimeout(() => boardApp.ticker.add(show), 1000);
         return promise.promise;
     }
 

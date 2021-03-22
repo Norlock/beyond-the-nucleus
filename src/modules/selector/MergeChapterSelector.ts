@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Chapter } from 'src/chapters/base/Chapter';
 import { ChapterSelectorFactory } from 'src/factories/ChapterSelectorFactory';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 import { ActionSelector } from 'src/utils/ActionTypes';
 import { UIUtils } from '../ui/GetUI';
 import { ChapterSelector } from './Selector';
@@ -42,12 +42,12 @@ const hideAnimation = (root: PIXI.Container, resolve: Function) => {
         if (root.alpha > 0) {
             root.alpha -= 0.05;
         } else {
-            pixiApp.ticker.remove(hideChapter);
+            boardApp.ticker.remove(hideChapter);
             root.visible = false;
             root.alpha = 1;
             resolve();
         }
     };
 
-    pixiApp.ticker.add(hideChapter);
+    boardApp.ticker.add(hideChapter);
 }

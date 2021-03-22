@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { ZendoName } from 'src/chapters/ZendoChapter';
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
 import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
 import { ZendoPart2 } from './ZendoPart2';
@@ -94,7 +94,7 @@ const component = (factory: FlowComponentFactory): FlowComponent => {
     const cardData = CustomPixiCardFactory(background, ZendoName.START)
         .setCard(container)
         .addChild(header, paragraph, paragraph2)
-        .setOffset(pixiApp.screen.width / 2 - radius, pixiApp.screen.height / 2 - radius)
+        .setOffset(boardApp.screen.width / 2 - radius, boardApp.screen.height / 2 - radius)
         .build();
 
     return factory

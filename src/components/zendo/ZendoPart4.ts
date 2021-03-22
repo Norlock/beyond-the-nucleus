@@ -8,7 +8,7 @@ import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { LoaderType } from 'src/modules/partChain/PartLoader';
 import { CardOptions } from 'src/modules/pixi/Pixi';
 import { Selector } from 'src/modules/selector/Selector';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 import { Promiser } from 'src/utils/Promiser';
 import { FlowComponent } from '../base/FlowComponent';
 import { PartChain } from '../base/PartChain';
@@ -35,8 +35,8 @@ const component = (factory: FlowComponentFactory): FlowComponent => {
         alpha: 1,
         x: 2200,
         y: 1500,
-        width: pixiApp.screen.width - 400,
-        height: pixiApp.screen.height - 100,
+        width: boardApp.screen.width - 400,
+        height: boardApp.screen.height - 100,
         pivotCenter: false,
     };
 

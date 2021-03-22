@@ -1,7 +1,7 @@
 import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
 import {InputHandler} from 'src/modules/inputHandler/InputHandler';
 import { UIUtils } from 'src/modules/ui/GetUI';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
 import { Component } from './Component';
 import { FlowComponent } from './FlowComponent';
@@ -19,7 +19,7 @@ const init = (): void => {
     let isKeyDown: boolean;
     let blocked = false;
 
-    pixiCanvas.appendChild(pixiApp.view);
+    pixiCanvas.appendChild(boardApp.view);
 
     const partChainer = PartChainer();
     const initial = partChainer.init("Zendo5");
@@ -32,22 +32,22 @@ const init = (): void => {
         if (keyDown) {
             switch (keyPressed) {
                 case ActionUI.LEFT:
-                    pixiApp.stage.x += 10;
+                    boardApp.stage.x += 10;
                     break;
                 case ActionUI.RIGHT:
-                    pixiApp.stage.x -= 10;
+                    boardApp.stage.x -= 10;
                     break;
                 case ActionUI.UP:
-                    pixiApp.stage.y += 10;
+                    boardApp.stage.y += 10;
                     break;
                 case ActionUI.DOWN:
-                    pixiApp.stage.y -= 10;
+                    boardApp.stage.y -= 10;
                     break;
             }
         }
     };
 
-    pixiApp.ticker.add(scroll);
+    boardApp.ticker.add(scroll);
 
     const keyUp = (): void => {
         isKeyDown = false;

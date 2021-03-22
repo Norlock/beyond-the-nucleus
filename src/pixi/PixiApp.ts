@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Promiser } from 'src/utils/Promiser';
 
-export const pixiApp = new PIXI.Application({
+export const boardApp = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
     resizeTo: window,
@@ -20,18 +20,18 @@ interface resourceNames {
 }
 
 export const preload = (): Promise<void> => {
-    pixiApp.loader.baseUrl = 'src/assets';
-    pixiApp.loader
+    boardApp.loader.baseUrl = 'src/assets';
+    boardApp.loader
         .add('oceanStart', 'ocean/ocean.jpg')
         .add('oceanTurtle', 'ocean/ocean-turtle.jpg')
         .add('oceanBubble', 'ocean/bubble.png')
         .add('oceanAnthozoa', 'ocean/Anthozoa.jpg')
         .add('zendoCard', 'zendo/card-background.jpg');
 
-    pixiApp.loader.onError.add((err: any) => console.error(err));
+    boardApp.loader.onError.add((err: any) => console.error(err));
 
     const promiser = Promiser<void>();
-    pixiApp.loader.load((loader, res) => {
+    boardApp.loader.load((loader, res) => {
         pixiResources = {
             oceanBubble: res.oceanBubble.texture,
             oceanStart: res.oceanStart.texture,
@@ -50,5 +50,5 @@ export const isInViewport = (container: PIXI.Container): boolean => {
     const maxX = minX + container.width;
     const maxY = minY + container.height;
 
-    return minX < pixiApp.stage.x && pixiApp.stage.x < maxX && minY < pixiApp.stage.y && pixiApp.stage.y < maxY;
+    return minX < boardApp.stage.x && boardApp.stage.x < maxX && minY < boardApp.stage.y && boardApp.stage.y < maxY;
 };

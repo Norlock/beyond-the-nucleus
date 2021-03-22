@@ -2,7 +2,7 @@ import { Chapter, ContainerData } from './base/Chapter';
 import * as PIXI from 'pixi.js';
 import { GetAudio } from 'src/modules/audio/GetAudio';
 import { Selector } from 'src/modules/selector/Selector';
-import { pixiApp, pixiResources } from 'src/pixi/PixiApp';
+import { boardApp, pixiResources } from 'src/pixi/PixiApp';
 import { PixiPlugin } from 'gsap/all';
 import { gsap } from 'gsap';
 import { ChapterFactory } from 'src/factories/ChapterFactory';
@@ -48,7 +48,7 @@ const getBackground1 = (): ContainerData => {
     const displacementWater = PIXI.Sprite.from('src/assets/ocean/displacement.png');
     displacementWater.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.MIRRORED_REPEAT;
     const displacementFilter = new PIXI.filters.DisplacementFilter(displacementWater);
-    const scale = (pixiApp.screen.width / 1920) * 12;
+    const scale = (boardApp.screen.width / 1920) * 12;
     displacementWater.scale.set(scale);
 
     background.width = imageWidth;
@@ -66,7 +66,7 @@ const getBackground1 = (): ContainerData => {
     const select = async () => {
         const promiser = Promiser<void>();
         setTimeout(() => {
-            pixiApp.ticker.add(animateWater);
+            boardApp.ticker.add(animateWater);
             promiser.resolve();
         }, 200);
 
@@ -74,7 +74,7 @@ const getBackground1 = (): ContainerData => {
     };
 
     const unselect = async () => {
-        pixiApp.ticker.remove(animateWater);
+        boardApp.ticker.remove(animateWater);
     };
 
     const selector = SelectorFactory(new Selector("Displacement background 1"))
@@ -116,7 +116,7 @@ const getBackground2 = (): ContainerData => {
     circle.filters = [new PIXI.filters.BlurFilter(blurSize)];
 
     const bounds = new PIXI.Rectangle(0, 0, (radius + blurSize) * 2, (radius + blurSize) * 2);
-    const texture = pixiApp.renderer.generateTexture(circle, PIXI.SCALE_MODES.NEAREST, 1, bounds);
+    const texture = boardApp.renderer.generateTexture(circle, PIXI.SCALE_MODES.NEAREST, 1, bounds);
     const focus = new PIXI.Sprite(texture);
     focus.position.x = 0;
     focus.position.y = 0;
@@ -137,12 +137,12 @@ const getBackground2 = (): ContainerData => {
     const bubbleSelector = bubbleAnimation(background);
 
     const select = async () => {
-        pixiApp.ticker.add(animateWater);
+        boardApp.ticker.add(animateWater);
         bubbleSelector.select();
     };
 
     const unselect = async () => {
-        pixiApp.ticker.remove(animateWater);
+        boardApp.ticker.remove(animateWater);
         bubbleSelector.unselect();
     };
 
@@ -160,7 +160,7 @@ const getBackground2 = (): ContainerData => {
 
 const getBackground3 = (container2: PIXI.Container): ContainerData => {
     const container = new PIXI.Container();
-    container.x = container2.x - pixiApp.screen.width - 1000;
+    container.x = container2.x - boardApp.screen.width - 1000;
     container.y = 2500;
 
     let videoSprite: PIXI.Sprite;
@@ -171,8 +171,8 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
         video.loop = true;
         video.src = '/src/assets/ocean/Coral.mp4';
         videoSprite = PIXI.Sprite.from(PIXI.Texture.from(video));
-        videoSprite.width = pixiApp.screen.width;
-        videoSprite.height = pixiApp.screen.height;
+        videoSprite.width = boardApp.screen.width;
+        videoSprite.height = boardApp.screen.height;
         container.addChild(videoSprite);
     };
 

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { FlowComponent } from "src/components/base/FlowComponent";
 import { SelectorFactory } from "src/factories/SelectorFactory";
-import { pixiApp } from "src/pixi/PixiApp";
+import { boardApp } from "src/pixi/PixiApp";
 import { ActionSelector } from "src/utils/ActionTypes";
 import { Selector, StandardSelectorTag } from "../selector/Selector";
 import { PixiSelector } from "./Pixi";
@@ -44,11 +44,11 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
     const select = async (): Promise<void> => {
         count = 0;
         curve.visible = true;
-        pixiApp.ticker.add(animate);
+        boardApp.ticker.add(animate);
     }
 
     const unselect = async (action: ActionSelector): Promise<void> => {
-        pixiApp.ticker.remove(animate);
+        boardApp.ticker.remove(animate);
 
         if (action === ActionSelector.PREVIOUS) {
             curve.visible = false;

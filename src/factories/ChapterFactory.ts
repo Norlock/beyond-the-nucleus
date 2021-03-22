@@ -4,7 +4,7 @@ import { AudioComponent } from 'src/modules/audio/AudioComponent';
 import { MergeAudioUtility } from 'src/modules/audio/MergeAudioUtility';
 import { MergeChapterSelector } from 'src/modules/selector/MergeChapterSelector';
 import { Selector } from 'src/modules/selector/Selector';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 
 export const ChapterFactory = (chapterType: ChapterType, x: number, y: number, name: string) => {
     const self = new Chapter(name);
@@ -15,7 +15,7 @@ export const ChapterFactory = (chapterType: ChapterType, x: number, y: number, n
     MergeAudioUtility(self);
     MergeChapterSelector(self);
 
-    pixiApp.stage.addChild(self.root);
+    boardApp.stage.addChild(self.root);
 
     const addAudio = (audio: AudioComponent, tag: string) => {
         self.audio.addComponent(audio, tag);

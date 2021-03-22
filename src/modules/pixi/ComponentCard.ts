@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { SelectorFactory } from "src/factories/SelectorFactory";
-import { pixiApp } from "src/pixi/PixiApp";
+import { boardApp } from "src/pixi/PixiApp";
 import { ActionSelector, ActionType } from 'src/utils/ActionTypes';
 import { Promiser } from 'src/utils/Promiser';
 import { Selector, StandardSelectorTag } from "../selector/Selector";
@@ -50,7 +50,7 @@ const scrollToCard = async (card: PIXI.Container, offset: Offset) => {
 
     const scrollAnimation = (): void => {
         if (absXSpeed < Math.abs(newX) && absYSpeed < Math.abs(newY)) {
-            pixiApp.stage.setTransform(pixiApp.stage.x - xSpeed, pixiApp.stage.y - ySpeed);
+            boardApp.stage.setTransform(boardApp.stage.x - xSpeed, boardApp.stage.y - ySpeed);
             newX -= xSpeed;
             newY -= ySpeed;
 
@@ -59,13 +59,13 @@ const scrollToCard = async (card: PIXI.Container, offset: Offset) => {
                 ySpeed = ySpeed * 1.05;
             }
         } else {
-            pixiApp.stage.setTransform(pixiApp.stage.x - newX, pixiApp.stage.y - newY);
-            pixiApp.ticker.remove(scrollAnimation);
+            boardApp.stage.setTransform(boardApp.stage.x - newX, boardApp.stage.y - newY);
+            boardApp.ticker.remove(scrollAnimation);
             promiser.resolve();
         }
     };
 
-    pixiApp.ticker.add(scrollAnimation);
+    boardApp.ticker.add(scrollAnimation);
     return promiser.promise;
 };
 

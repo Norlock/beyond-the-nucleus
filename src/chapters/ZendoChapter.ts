@@ -4,7 +4,7 @@ import { SelectorFactory } from 'src/factories/SelectorFactory';
 import { SelectState } from 'src/modules/audio/AudioComponent';
 import { GetAudio } from 'src/modules/audio/GetAudio';
 import { Selector } from 'src/modules/selector/Selector';
-import { pixiApp } from 'src/pixi/PixiApp';
+import { boardApp } from 'src/pixi/PixiApp';
 import { Chapter, ContainerData } from './base/Chapter';
 import { ChapterType } from './base/ChapterType';
 
@@ -59,13 +59,13 @@ const selector = (self: Chapter): Selector => {
                 blurfilterLeft.blur -= 0.1;
                 blurfilterRight.blur -= 0.1;
             } else {
-                pixiApp.ticker.remove(animate);
+                boardApp.ticker.remove(animate);
                 resolve();
             }
         };
 
         setTimeout(() => {
-            pixiApp.ticker.add(animate);
+            boardApp.ticker.add(animate);
         }, 500);
     }
 

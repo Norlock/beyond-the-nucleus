@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {pixiApp} from 'src/pixi/PixiApp';
+import {boardApp} from 'src/pixi/PixiApp';
 import {ActionSelector} from 'src/utils/ActionTypes';
 import {UIUtils} from '../ui/GetUI';
 import { GameLoader } from './GameLoader';
@@ -19,7 +19,7 @@ export class DefaultGameLoader implements GameLoader {
         UIUtils.doAction(ActionSelector.GAME);
 
         // TODO rename to boardApp
-        pixiApp.stop();
+        boardApp.stop();
         this.app = gameApp();
 
         gameCanvas.appendChild(this.app.view);
@@ -30,10 +30,13 @@ export class DefaultGameLoader implements GameLoader {
     cleanup(): void {
         this.next?.cleanup();
 
-        pixiApp.start();
+        gameCanvas.firstChild.remove();
+        boardApp.start();
 
         UIUtils.doAction(ActionSelector.GAME);
         UIUtils.hideCanvasBlur();
+
+        this.busy = false;
     }
 
     append(custom: GameLoader): void {
