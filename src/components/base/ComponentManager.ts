@@ -1,3 +1,5 @@
+import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
+import {InputHandler} from 'src/modules/inputHandler/InputHandler';
 import { UIUtils } from 'src/modules/ui/GetUI';
 import { pixiApp } from 'src/pixi/PixiApp';
 import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
@@ -8,11 +10,13 @@ import { PartChainer } from './PartChainer';
 
 const pixiCanvas = document.getElementById('pixi-canvas');
 
-export const initComponentManager = (): void => {
+let inputHandler: InputHandler;
+
+const init = (): void => {
     let currentComponent: Component;
 
     let keyPressed: string;
-    let keyDown: boolean;
+    let isKeyDown: boolean;
     let blocked = false;
 
     pixiCanvas.appendChild(pixiApp.view);
@@ -45,23 +49,22 @@ export const initComponentManager = (): void => {
 
     pixiApp.ticker.add(scroll);
 
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (keyDown && event.key !== keyPressed) return;
+    const keyUp = (): void => {
+        isKeyDown = false;
 
-        keyDown = true;
+        UIUtils.unhighlightUIControl(keyPressed);
+    }
+
+    const keyDown = (event: KeyboardEvent): void => {
+        if (isKeyDown && event.key !== keyPressed) return;
+
+        isKeyDown = true;
         keyPressed = event.key;
 
         UIUtils.highlightUIControl(event.key);
-    });
+    }
 
-    document.addEventListener('keyup', () => {
-        keyDown = false;
-
-        UIUtils.unhighlightUIControl(keyPressed);
-    });
-
-
-    document.addEventListener('keypress', (event: KeyboardEvent) => {
+    const keyPress = (event: KeyboardEvent) => {
          if (ActionUtil.isSelector(event.key)) {
              if (currentComponent instanceof GameComponent && event.key === ActionSelector.GAME) {
                  console.log('is game');
@@ -71,7 +74,14 @@ export const initComponentManager = (): void => {
          }  else if (ActionUtil.isUI(event.key)) {
              UIUtils.doUIAction(event.key as ActionUI);
          }
-    });
+
+    }
+
+    inputHandler = {
+        keyPress,
+        keyDown,
+        keyUp
+    };
 
     const move = async (action: ActionSelector) => {
         if (blocked) {
@@ -101,3 +111,10 @@ export const initComponentManager = (): void => {
         }  
     };
 };
+
+export const ComponentManager = {
+    init,
+    connectInputHandler: () => connectInputHandler(inputHandler)
+}
+
+

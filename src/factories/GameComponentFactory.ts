@@ -2,7 +2,7 @@ import { Chapter } from 'src/chapters/base/Chapter';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { GameComponent } from 'src/components/base/GameComponent';
 import { Game } from 'src/modules/game/Game';
-import { Keyboard } from 'src/modules/keyboard/Keyboard';
+import {InputHandler} from 'src/modules/inputHandler/InputHandler';
 import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
 import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi';
 import { PixiSelector } from 'src/modules/pixi/Pixi';
@@ -40,8 +40,8 @@ export class GameComponentFactory {
         return this;
     }
 
-    mergeInputHandler(keyboard: Keyboard) {
-        this.component.keyboard = keyboard;
+    mergeInputHandler(inputHandler: InputHandler) {
+        this.component.inputHandler = inputHandler;
         return this;
     }
 }

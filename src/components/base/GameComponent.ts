@@ -1,10 +1,10 @@
-import { Game } from "src/modules/game/Game";
-import { Keyboard } from "src/modules/keyboard/Keyboard";
-import { Resources } from "src/modules/resources/Resources";
+import { Game, GameModule } from "src/modules/game/Game";
+import {InputHandler, InputHandlerModule} from "src/modules/inputHandler/InputHandler";
+import { Resources, ResourcesModule } from "src/modules/resources/Resources";
 import { FlowComponent } from "./FlowComponent";
 
-export class GameComponent extends FlowComponent {
-    keyboard: Keyboard;
+export class GameComponent extends FlowComponent implements InputHandlerModule, ResourcesModule, GameModule {
+    inputHandler: InputHandler;
     resources: Resources;
     game: Game;
 }

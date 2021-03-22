@@ -1,6 +1,6 @@
 import './styles/index.scss';
 import './Global';
-import { initComponentManager } from './components/base/ComponentManager';
+import { ComponentManager } from './components/base/ComponentManager';
 import { preload } from './pixi/PixiApp';
 
 const initSplash = () => {
@@ -19,7 +19,8 @@ const initSplash = () => {
     button.addEventListener('click', () => {
         splash.remove();
         promise.then(() => {
-            initComponentManager();
+            ComponentManager.init();
+            ComponentManager.connectInputHandler();
         });
     });
 
