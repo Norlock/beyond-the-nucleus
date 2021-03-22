@@ -8,7 +8,8 @@ export enum ActionSelector {
 
 export enum ActionUI {
     TOGGLE_HELP = '?',
-    TOGGLE_MUTE_UNMUTE = 'm',
+    TOGGLE_MUTE = 'm',
+    TOGGLE_CANVAS_BLUR = 'blur',
     LEFT = 'ArrowLeft',
     RIGHT = 'ArrowRight',
     UP = 'ArrowUp',

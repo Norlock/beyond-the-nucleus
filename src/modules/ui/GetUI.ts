@@ -12,7 +12,8 @@ const nextControl = document.getElementById('next-control');
 const videoControl = document.getElementById('video-control');
 const gameControl = document.getElementById('game-control');
 
-const canvas = document.getElementById('pixi-canvas');
+const boardCanvas = document.getElementById('pixi-canvas');
+const gameCanvas = document.getElementById('game-canvas');
 const chapterTitle = document.getElementById('chapter-title');
 const fragmentContainer = document.getElementById('fragment-container');
 
@@ -92,18 +93,22 @@ const unhighlightUIControl = (action: string): void => {
     } 
 }
 
-const doUIAction = (action: ActionUI): void => {
+const doAction = (action: string): void => {
     if (action === ActionUI.TOGGLE_HELP) {
         toggleHelp();
+    } else if (action === ActionSelector.GAME) {
+        gameCanvas.classList.toggle("show");
+    } else if (action === ActionUI.TOGGLE_CANVAS_BLUR) {
+        boardCanvas.classList.toggle("blur");
     }
 }
 
 const showCanvasBlur = (): void => {
-    canvas.classList.add("blur");
+    boardCanvas.classList.add("blur");
 }
 
 const hideCanvasBlur = (): void => {
-    canvas.classList.remove("blur");
+    boardCanvas.classList.remove("blur");
 }
 
 const changeChapter = (self: Chapter): void => {
@@ -140,7 +145,7 @@ export const UIUtils: UI = {
     unhighlightUIControl,
     hideCanvasBlur,
     showCanvasBlur,
-    doUIAction,
+    doAction,
     changeChapter,
     showControl,
     hideControl

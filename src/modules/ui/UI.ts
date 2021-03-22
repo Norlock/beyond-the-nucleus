@@ -1,5 +1,4 @@
 import { Chapter } from "src/chapters/base/Chapter";
-import { ActionUI } from "src/utils/ActionTypes";
 import {ControlType} from "./GetUI";
 
 export interface UI {
@@ -11,7 +10,7 @@ export interface UI {
     hideCanvasBlur(): void;
     highlightUIControl(action: string): void;
     unhighlightUIControl(action: string): void;
-    doUIAction(action: ActionUI): void;
+    doAction(action: string): void;
     changeChapter(self: Chapter): void;
 }
 

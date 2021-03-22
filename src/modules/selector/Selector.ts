@@ -1,6 +1,10 @@
 import { ContainerSelector } from 'src/chapters/base/ContainerSelector';
 import { ActionSelector } from 'src/utils/ActionTypes';
 
+export interface SelectorModule {
+    selector: Selector;
+}
+
 export enum StandardSelectorTag {
     FLOW = 'flow',
     CARD = 'card',
@@ -65,7 +69,3 @@ export class ChapterSelector extends Selector {
 export type Select = (action?: ActionSelector) => Promise<void>;
 export type ChapterSelect = (containerName: string) => Promise<void>;
 export type Unselect = (action?: ActionSelector) => Promise<void>;
-
-export interface SelectorModule {
-    selector: Selector;
-}

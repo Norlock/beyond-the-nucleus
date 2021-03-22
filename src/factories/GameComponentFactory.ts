@@ -1,7 +1,8 @@
 import { Chapter } from 'src/chapters/base/Chapter';
 import { FlowComponent } from 'src/components/base/FlowComponent';
 import { GameComponent } from 'src/components/base/GameComponent';
-import { Game } from 'src/modules/game/Game';
+import {DefaultGameLoader} from 'src/modules/game/DefaultGameLoader';
+import {GameLoader} from 'src/modules/game/GameLoader';
 import {InputHandler} from 'src/modules/inputHandler/InputHandler';
 import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
 import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi';
@@ -15,6 +16,7 @@ export class GameComponentFactory {
     constructor(chapter: Chapter, tag: string) {
         this.component = new GameComponent(chapter);
         this.component.tag = tag;
+        this.component.game = new DefaultGameLoader(); 
 
         MergeUI(this.component);
         MergeGameSelector(this.component);
@@ -35,8 +37,8 @@ export class GameComponentFactory {
         return this;
     }
 
-    mergeGame(game: Game) {
-        this.component.game = game;
+    appendGameLoader(custom: GameLoader) {
+        this.component.game.append(custom);
         return this;
     }
 

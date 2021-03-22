@@ -63,7 +63,7 @@ p, ul {
 }
 
 #pixi-canvas {
-    transition: 1s;
+    filter: unset;
 
     &.blur {
         filter: grayscale(0.7) blur(3px) drop-shadow(10px 10px 5px black);

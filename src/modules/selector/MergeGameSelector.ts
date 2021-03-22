@@ -11,7 +11,6 @@ export const MergeGameSelector = (self: GameComponent) => {
     const select = async() => {
         document.body.classList.add(self.tag);
         self.ui.showControl(ControlType.GAME)
-
     }
 
     const unselect = async() => {

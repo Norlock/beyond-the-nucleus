@@ -67,12 +67,16 @@ const init = (): void => {
     const keyPress = (event: KeyboardEvent) => {
          if (ActionUtil.isSelector(event.key)) {
              if (currentComponent instanceof GameComponent && event.key === ActionSelector.GAME) {
-                 console.log('is game');
+                 if (!currentComponent.game.busy) {
+                     currentComponent.game.init();
+                 } else {
+                     currentComponent.game.cleanup();
+                 }
              } else {
                  move(event.key as ActionSelector);
              }
          }  else if (ActionUtil.isUI(event.key)) {
-             UIUtils.doUIAction(event.key as ActionUI);
+             UIUtils.doAction(event.key);
          }
 
     }
