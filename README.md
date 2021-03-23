@@ -22,8 +22,9 @@ Some test app for ideas
 - [+-] Test component before adding to the chain
 - [x] Lazy load also backwards
 - [x] Mover lazy loading over to PartChain and outide MergePixiFlow
+- [ ] Disable inputHandler mini game
 - [ ] Goldray filter for turtle http://filters.pixijs.download/dev/demo/index.html
-- [ ] Show hotkeys overlay (panning etc).
+- [x] Show hotkeys overlay (panning etc).
 - [ ] Deep see fish with light + https://pixijs.io/examples/#/gsap3-interaction/gsap3-filters.js
 - [ ] Graphical effects (fire, stars, rain, movement)
 - [ ] Tests

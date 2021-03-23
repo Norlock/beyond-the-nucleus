@@ -4,7 +4,7 @@ import {ControlType} from '../ui/GetUI';
 import {MergeFlowSelector} from './MergeFlowSelector';
 import {Selector} from './Selector';
 
-export const MergeGameSelector = (self: GameComponent) => {
+export const MergeGameComponentSelector = (self: GameComponent) => {
     // First merge default flow selector
     MergeFlowSelector(self);
 

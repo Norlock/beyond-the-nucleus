@@ -1,5 +1,7 @@
+import * as PIXI from 'pixi.js';
+
 export interface Resources {
-    init(): void;
+    load(): Promise<PIXI.IResourceDictionary>;
     cleanup(): void;
 }
 
