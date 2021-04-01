@@ -18,6 +18,7 @@ export const MergeDefaultGameLoader = (self: GameComponent) => {
 
         UIUtils.showCanvasBlur();
         UIUtils.doAction(ActionSelector.GAME);
+        UIUtils.hideAllControls();
 
         boardApp.stop();
         game.app = gameApp();

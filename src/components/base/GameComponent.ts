@@ -1,11 +1,11 @@
 import {DefaultGameLoader} from "src/modules/game/GameLoader";
 import { GameModule } from "src/modules/game/GameLoader";
 import {InputHandler, InputHandlerModule} from "src/modules/inputHandler/InputHandler";
-import { Resources, ResourcesModule } from "src/modules/resources/Resources";
+import { ResourceHandler, ResourcesModule } from "src/modules/resourceHandler/ResourceHandler";
 import { FlowComponent } from "./FlowComponent";
 
 export class GameComponent extends FlowComponent implements InputHandlerModule, ResourcesModule, GameModule {
     inputHandler: InputHandler;
-    resources: Resources;
+    resourceHandler: ResourceHandler;
     game: DefaultGameLoader;
 }

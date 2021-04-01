@@ -51,3 +51,5 @@ const initSplash = () => {
 };
 
 initSplash();
+
+//testBlinkList();

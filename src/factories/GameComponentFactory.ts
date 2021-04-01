@@ -7,7 +7,7 @@ import {InputHandler} from 'src/modules/inputHandler/InputHandler';
 import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
 import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi';
 import { PixiSelector } from 'src/modules/pixi/Pixi';
-import {Resources} from 'src/modules/resources/Resources';
+import {ResourceHandler} from 'src/modules/resourceHandler/ResourceHandler';
 import {MergeGameComponentSelector} from 'src/modules/selector/MergeGameComponentSelector';
 import { MergeUI } from 'src/modules/ui/GetUI';
 
@@ -35,11 +35,6 @@ export class GameComponentFactory {
 
     mergePixiCard(containerName: string, card: PixiSelector): GameComponentFactory {
         MergePixiFlowCard(this.component, containerName, card);
-        return this;
-    }
-
-    mergeResources(resources: Resources) {
-        this.component.resources = resources;
         return this;
     }
 

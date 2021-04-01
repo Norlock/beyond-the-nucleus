@@ -4,18 +4,15 @@ import {GameLoader} from "src/modules/game/GameLoader";
 
 export const kungfuLoader = (self: GameComponent): GameLoader => {
     const init = async () => {
-        const resources = await self.resources.load();
+        const resources = await self.resourceHandler.load();
 
-        const sprite = new PIXI.Sprite(resources.NatureEnvironment.texture);
-        self.game.app.stage.addChild(sprite);
-        
+        self.game.app.stage.addChild(self.resourceHandler.devContainer);
 
         console.log('welcome from init!');
     }
     
     const cleanup = () => {
-        self.resources.cleanup();
-
+        self.resourceHandler.cleanup();
     }
 
     return {

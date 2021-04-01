@@ -22,7 +22,7 @@ const init = (): void => {
     pixiCanvas.appendChild(boardApp.view);
 
     const partChainer = PartChainer();
-    const initial = partChainer.init("Zendo5");
+    const initial = partChainer.init("Kungfu");
 
     currentComponent = initial.component;
     currentComponent.chapter.selector.select(initial.component.pixi.containerName);

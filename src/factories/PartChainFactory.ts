@@ -1,8 +1,8 @@
 import { ChapterType } from "src/chapters/base/ChapterType";
 import { PartChain } from "src/components/base/PartChain";
 import { TestFlags } from "src/components/base/PartTester";
-import {MergeFlowLoader} from "src/modules/partChain/MergeFlowLoader";
-import {MergeGameLoader} from "src/modules/partChain/MergeGameLoader";
+import {MergePartChainFlowLoader} from "src/modules/partChain/MergePartChainFlowLoader";
+import {MergePartChainGameLoader} from "src/modules/partChain/MergePartChainGameLoader";
 import {AttachPreviousFunction, BuildFunction, LoaderType} from "src/modules/partChain/PartLoader";
 
 type PartCreator = (part: PartChain) => PartChain;
@@ -12,11 +12,10 @@ export const PartChainFactory = (tag: string, chapterType: ChapterType, previous
     const self = new PartChain(tag, chapterType, previous);
 
     const mergeLoader = (loaderType: LoaderType, buildComponentFunction: BuildFunction, attachPreviousComponentFunction: AttachPreviousFunction) => {
-
         if (loaderType === LoaderType.FLOW) {
-            MergeFlowLoader(self, buildComponentFunction, attachPreviousComponentFunction);
+            MergePartChainFlowLoader(self, buildComponentFunction, attachPreviousComponentFunction);
         } else {
-            MergeGameLoader(self, buildComponentFunction, attachPreviousComponentFunction);
+            MergePartChainGameLoader(self, buildComponentFunction, attachPreviousComponentFunction);
         }
 
         return factory;

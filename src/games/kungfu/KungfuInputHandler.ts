@@ -20,8 +20,10 @@ export const kungfuInputHandler = (self: GameComponent): InputHandler => {
     }
 
     const keyPress = (event: KeyboardEvent): void => {
-        console.log('keypress xD', event.key);
-        //if (event.key === ""
+        console.log('keypress', event.key);
+        if (event.key === "d") {
+            //self.game.con
+        }
     }
 
     return {
