@@ -1,9 +1,11 @@
 import * as PIXI from 'pixi.js';
 
 export interface ResourceHandler {
-    load: () => Promise<PIXI.IResourceDictionary>;
+    load: () => Promise<void>;
     cleanup: () => void;
     devContainer: PIXI.Container;
+    resources: PIXI.IResourceDictionary;
+    readonly TILE_SIZE: number;
 }
 
 export interface ResourcesModule {

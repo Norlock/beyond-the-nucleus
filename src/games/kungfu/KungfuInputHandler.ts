@@ -22,7 +22,10 @@ export const kungfuInputHandler = (self: GameComponent): InputHandler => {
     const keyPress = (event: KeyboardEvent): void => {
         console.log('keypress', event.key);
         if (event.key === "d") {
-            //self.game.con
+            const { devContainer } = self.resourceHandler;
+            devContainer.visible = !devContainer.visible;
+            console.log('is visible', devContainer.visible);
+            self.game.app.render();
         }
     }
 

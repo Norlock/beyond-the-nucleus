@@ -4,19 +4,19 @@ import {ResourceHandler} from 'src/modules/resourceHandler/ResourceHandler';
 import {LOG} from "src/utils/Logger";
 import {Promiser} from "src/utils/Promiser";
 
-class KungfuResourceHandler implements  ResourceHandler {
+class KungfuResourceHandler implements ResourceHandler {
+    resources: PIXI.IResourceDictionary;
     devContainer: PIXI.Container;
-    load: () => Promise<PIXI.IResourceDictionary>;
+    load: () => Promise<void>;
     cleanup: () => void;
+    readonly TILE_SIZE = 48;
 }
-
-const TILE_SIZE = 48;
 
 export const MergeKungfuResourceHandler = (self: GameComponent): void => {
     const resourceHandler = new KungfuResourceHandler();
 
     const load = () => {
-        const promiser = Promiser<PIXI.IResourceDictionary>();
+        const promiser = Promiser<void>();
         const { app } = self.game;
 
         app.loader.baseUrl = 'src/assets/games/kungfu/tiles';
@@ -27,8 +27,9 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
 
         app.loader.onError.add((err: any) => LOG.error(err));
         app.loader.load(loader => {
-            devContainer(self, loader.resources);
-            promiser.resolve(loader.resources);
+            self.resourceHandler.resources = loader.resources;
+            devContainer(self);
+            promiser.resolve();
         });
 
         return promiser.promise;
@@ -44,7 +45,8 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
     self.resourceHandler = resourceHandler;
 }
 
-const devContainer = (self: GameComponent, resources: PIXI.IResourceDictionary): void => {
+const devContainer = (self: GameComponent): void => {
+    const { resources, TILE_SIZE } = self.resourceHandler;
     const container = new PIXI.Container();
 
     let style = new PIXI.TextStyle({
@@ -73,6 +75,7 @@ const devContainer = (self: GameComponent, resources: PIXI.IResourceDictionary):
     }
 
     container.name = "dev";
+    self.resourceHandler.devContainer = container;
     self.game.app.stage.addChild(container);
 
     console.log('welcome from init!');
