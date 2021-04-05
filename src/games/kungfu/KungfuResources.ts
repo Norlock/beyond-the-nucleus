@@ -19,11 +19,14 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
         const promiser = Promiser<void>();
         const { app } = self.game;
 
-        app.loader.baseUrl = 'src/assets/games/kungfu/tiles';
+        app.loader.baseUrl = 'src/assets/games/kungfu';
 
         for (let i = 1; i <= 128; i++) {
-            app.loader.add(`tile${i}`, `tile${i}.png`);
+            app.loader.add(`tile${i}`, `/tiles/tile${i}.png`);
         }
+
+        // Player
+        app.loader.add('playerIdle','/player/KungFuIdle/Kung_Fu_Man_SpriteSheet_Idle_4way.png');
 
         app.loader.onError.add((err: any) => LOG.error(err));
         app.loader.load(loader => {

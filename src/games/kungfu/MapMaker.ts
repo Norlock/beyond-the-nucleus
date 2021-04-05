@@ -105,6 +105,13 @@ export const GenerateMap = (self: GameComponent): void => {
 
     let tile = getTile(70);
     let next: Column;
+
+    const player = new PIXI.Sprite(resources.playerIdle.texture);
+    player.x = 2 * tileSize;
+    player.y = 3 * tileSize;
+    player.scale.set(2);
+
+    stage.addChild(player);
     
     // initial
     grid.column = column0();
