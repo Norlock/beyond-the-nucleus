@@ -1,92 +1,8 @@
 import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
+import {Cell} from './Cell';
+import {Column} from './Column';
 
-class Cell {
-    tile: PIXI.Sprite;
-    x: number;
-    y: number;
-    above: Cell;
-    below: Cell;
-
-    constructor(x: number, y: number, tile?: PIXI.Sprite) {
-        this.x = x;
-        this.y = y;
-        this.tile = tile;
-    }
-
-    addToMapUpwards(stage: PIXI.Container): void {
-        this.tile.x = this.x * tileSize;
-        this.tile.y = this.y * tileSize;
-        stage.addChild(this.tile);
-        this.above?.addToMapUpwards(stage);
-    }
-}
-
-class Pipeline {
-    y: number;
-    cell: Cell; // Baseline
-
-    get isActive(): boolean {
-        return this.cell ? true : false;
-    }
-}
-
-class Column {
-    readonly x: number; 
-    // In future
-    readonly pipelineTop = new Pipeline();
-    readonly pipelineBottom = new Pipeline();
-
-    private _next: Column;
-    private _previous: Column;
-
-    constructor(x: number) {
-        this.x = x;
-    }
-    
-    render() {
-        // Draw cells
-    }
-
-    setNext(next: Column): Column {
-        this._next = next;
-        next._previous = this;
-        return next;
-    }
-
-    get next(): Column {
-        return this._next;
-    }
-
-    setPrevious(previous: Column): Column {
-        this._previous = previous;
-        previous._next = this;
-        return previous;
-    }
-
-    get previous(): Column {
-        return this._previous;
-    }
-}
-
-class Grid {
-    playersCell: Cell;
-    renderReach: number;
-    pipelineDelta: number;
-
-    column: Column;
-
-    updateGrid(pos: PIXI.Point) {
-        if (this.column.x < pos.x) {
-            this.column = this.column.next;
-        } else if (pos.x < this.column.x) {
-            this.column = this.column.previous;
-        }
-
-        this.column.pipelineTop.y = pos.y - this.pipelineDelta;
-        this.column.pipelineBottom.y = pos.y + this.pipelineDelta;
-    }
-}
 
 let grid: Grid;
 let resources: PIXI.IResourceDictionary;
@@ -114,7 +30,7 @@ export const GenerateMap = (self: GameComponent): void => {
     stage.addChild(player);
     
     // initial
-    grid.column = column0();
+    grid.head = column0();
     next = grid.column.setNext(column1());
     next = next.setNext(column2());
     next = next.setNext(column3());
@@ -142,8 +58,7 @@ export const RenderMap = (self: GameComponent): void => {
 
     let column = grid.column;
     while (column.next) {
-        let cell = column.pipelineBottom.cell;
-        cell.addToMapUpwards(stage);
+        column.cell.addToMapUpwards(stage);
         column = column.next;
     }
 
@@ -151,9 +66,12 @@ export const RenderMap = (self: GameComponent): void => {
 
 }
 
+
+export const cont
+
 export const column0 = () => {
-    const column = new Column(0);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+    const column = Column.create(0);
+    column.addCell(Cell.create(11, getTile(70));
     return column;
 }
 
@@ -166,6 +84,7 @@ export const column1 = () => {
 export const column2 = () => {
     const column = new Column(2);
     column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+    column.pipelineBottom.cell.
     return column;
 }
 
