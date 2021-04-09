@@ -1,3 +1,4 @@
+import {GameComponent} from 'src/components/base/GameComponent';
 import {Cell} from "./Cell";
 
 export class Column {
@@ -7,10 +8,10 @@ export class Column {
     next: Column;
     previous: Column;
 
-    addToStage: () => void;
+    addToStage: (component: GameComponent) => void;
 
-    setNext: (next: Column) =>  Column; 
-    setPrevious: (previous: Column) =>  Column; 
+    setNext: () =>  Column; 
+    setPrevious: () =>  Column; 
     addCell: (cell: Cell) => void;
 
     private constructor() {}
@@ -18,20 +19,23 @@ export class Column {
     static create = (x: number): Column => {
         const self = new Column();
         self.x = x;
-        self.setNext = (next) => setNext(self, next);
-        self.setPrevious = (previous) => setPrevious(self, previous);
+        self.setNext = () => setNext(self);
+        self.setPrevious = () => setPrevious(self);
         self.addCell = (cell) => addCell(self, cell);
+        self.addToStage = (component) => addToStage(self, component);
         return self;
     }
 }
 
-const setNext = (self: Column, next: Column) => {
+const setNext = (self: Column) => {
+    const next = Column.create(self.x + 1);
     self.next = next;
     next.previous = self;
     return next;
 }
 
-const setPrevious = (self: Column, previous: Column) => {
+const setPrevious = (self: Column) => {
+    const previous = Column.create(self.x - 1);
     self.previous = previous;
     previous.next = self;
     return previous;
@@ -43,4 +47,8 @@ const addCell = (self: Column, cell: Cell): void => {
     } else {
         self.head = cell;
     }
+}
+
+const addToStage = (self: Column, component: GameComponent) => {
+    self.head.addToStage(component, self.x);
 }

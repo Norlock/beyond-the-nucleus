@@ -16,6 +16,8 @@ export class Grid {
     static create() {
         const self = new Grid();
         self.head = Column.create(0);
+        self.tail = self.head;
+
         self.appendColumn = () => appendColumn(self);
         self.prependColumn = () => prependColumn(self);
         return self;
@@ -24,21 +26,13 @@ export class Grid {
 }
 
 const appendColumn = (self: Grid): Column => {
-    let column = self.head;
-    while (column.next) {
-        column = column.next;
-    }
-
-    return Column.create(column.x + 1);
+    self.tail = self.tail.setNext();
+    return self.tail;
 }
 
 const prependColumn = (self: Grid): Column => {
-    let column = self.head;
-    while (column.previous) {
-        column = column.previous;
-    }
-
-    return Column.create(column.x - 1);
+    self.head = self.head.setPrevious();
+    return self.head;
 }
 
 //const updateGrid = (self: Grid, pos: PIXI.Point) => {

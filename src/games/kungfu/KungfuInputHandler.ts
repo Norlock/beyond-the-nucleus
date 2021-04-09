@@ -6,13 +6,10 @@ export const kungfuInputHandler = (self: GameComponent): InputHandler => {
 
     const keyUp = (event: KeyboardEvent): void => {
         isKeyDown = false;
-        console.log('keyup :)');
-
     }
 
     const keyDown = (event: KeyboardEvent): void => {
         isKeyDown = true;
-        console.log('keydown :O', event.key);
 
         if (event.key === "Escape") {
             self.game.cleanup();
@@ -24,7 +21,6 @@ export const kungfuInputHandler = (self: GameComponent): InputHandler => {
         if (event.key === "d") {
             const { devContainer } = self.resourceHandler;
             devContainer.visible = !devContainer.visible;
-            console.log('is visible', devContainer.visible);
             self.game.app.render();
         }
     }

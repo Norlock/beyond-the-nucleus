@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {Cell} from './Cell';
-import {Column} from './Column';
-
+import {Grid} from './Grid';
 
 let grid: Grid;
 let resources: PIXI.IResourceDictionary;
@@ -11,16 +10,12 @@ let tileSize: number;
 export const GenerateMap = (self: GameComponent): void => {
     // Make default grid
     const stage = self.game.app.stage;
-    grid = new Grid();
-    grid.renderReach = 20;
-    grid.pipelineDelta = 10;
+    grid = Grid.create();
+    grid.columnReach = 20;
 
     //stage = self.game.app.stage;
     resources = self.resourceHandler.resources;
     tileSize = self.resourceHandler.TILE_SIZE;
-
-    let tile = getTile(70);
-    let next: Column;
 
     const player = new PIXI.Sprite(resources.playerIdle.texture);
     player.x = 2 * tileSize;
@@ -30,17 +25,17 @@ export const GenerateMap = (self: GameComponent): void => {
     stage.addChild(player);
     
     // initial
-    grid.head = column0();
-    next = grid.column.setNext(column1());
-    next = next.setNext(column2());
-    next = next.setNext(column3());
-    next = next.setNext(column4());
-    next = next.setNext(column5());
-    next = next.setNext(column6());
-    next = next.setNext(column7());
-    next = next.setNext(column8());
+    column0(grid);
+    column1(grid);
+    column2(grid);
+    column3(grid);
+    column4(grid);
+    column5(grid);
+    column6(grid);
+    column7(grid);
+    column8(grid);
 
-    grid.playersCell = new Cell(1, 1, tile);
+    //grid.playersCell = new Cell(1, 1, tile);
 }
 
 export const getTile = (number: number): PIXI.Sprite => {
@@ -48,78 +43,64 @@ export const getTile = (number: number): PIXI.Sprite => {
 }
 
 export const RenderMap = (self: GameComponent): void => {
-    const { stage } = self.game.app;
-
-    const cell = grid.playersCell;
-    const tile = cell.tile;
-
-    tile.x = cell.x * self.resourceHandler.TILE_SIZE;
-    tile.y = cell.y * self.resourceHandler.TILE_SIZE;
-
-    let column = grid.column;
+    let column = grid.head;
     while (column.next) {
-        column.cell.addToMapUpwards(stage);
+        column.addToStage(self);
         column = column.next;
     }
-
-    stage.addChild(tile);
-
 }
 
 
-export const cont
-
-export const column0 = () => {
-    const column = Column.create(0);
-    column.addCell(Cell.create(11, getTile(70));
+export const column0 = (grid: Grid) => {
+    const column = grid.head;
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column1 = () => {
-    const column = new Column(1);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column1 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column2 = () => {
-    const column = new Column(2);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
-    column.pipelineBottom.cell.
+export const column2 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column3 = () => {
-    const column = new Column(3);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column3 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column4 = () => {
-    const column = new Column(4);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column4 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column5 = () => {
-    const column = new Column(5);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column5 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column6 = () => {
-    const column = new Column(6);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column6 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column7 = () => {
-    const column = new Column(7);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column7 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
 
-export const column8 = () => {
-    const column = new Column(8);
-    column.pipelineBottom.cell = new Cell(column.x, 11, getTile(70))
+export const column8 = (grid: Grid) => {
+    const column = grid.appendColumn();
+    column.addCell(Cell.create(11, getTile(70)));
     return column;
 }

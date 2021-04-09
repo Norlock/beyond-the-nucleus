@@ -9,7 +9,6 @@ export class Cell {
 
     // Returns HEAD
     addCell: (add: Cell, head: Cell) => Cell;
-
     addToStage: (component: GameComponent, x: number) => void;
 
     // Prints recursively
@@ -54,6 +53,5 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
 }
 
 const print = (self: Cell): void => {
-    LOG.log("Cell " + self.y, self.tile);
     self.above?.print();
 }
