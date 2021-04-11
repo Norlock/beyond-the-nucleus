@@ -10,8 +10,8 @@ export class Column {
 
     addToStage: (component: GameComponent) => void;
 
-    setNext: () =>  Column; 
-    setPrevious: () =>  Column; 
+    setNext: (copyHead?: Cell) =>  Column; 
+    setPrevious: (copyHead?: Cell) =>  Column; 
     addCell: (cell: Cell) => void;
 
     private constructor() {}
@@ -19,36 +19,34 @@ export class Column {
     static create = (x: number): Column => {
         const self = new Column();
         self.x = x;
-        self.setNext = () => setNext(self);
-        self.setPrevious = () => setPrevious(self);
+        self.setNext = (copyHead) => setNext(self, copyHead);
+        self.setPrevious = (copyHead) => setPrevious(self, copyHead);
         self.addCell = (cell) => addCell(self, cell);
-        self.addToStage = (component) => addToStage(self, component);
+        self.addToStage = (component) => self.head.addToStage(component, self.x);
         return self;
     }
 }
 
-const setNext = (self: Column) => {
-    const next = Column.create(self.x + 1);
-    self.next = next;
-    next.previous = self;
-    return next;
+// Head of cells 
+const setNext = (self: Column, copyHead?: Cell) => {
+    self.next = Column.create(self.x + 1);
+    self.next.head = copyHead;
+    self.next.previous = self;
+    return self.next;
 }
 
-const setPrevious = (self: Column) => {
-    const previous = Column.create(self.x - 1);
-    self.previous = previous;
-    previous.next = self;
-    return previous;
+// Head of cells 
+const setPrevious = (self: Column, copyHead?: Cell) => {
+    self.previous = Column.create(self.x - 1);
+    self.previous.head = copyHead;
+    self.previous.next = self;
+    return self.previous;
 }
 
 const addCell = (self: Column, cell: Cell): void => {
     if (self.head) {
-        self.head = self.head.addCell(cell, self.head);
+        self.head.addCell(cell, self);
     } else {
         self.head = cell;
     }
-}
-
-const addToStage = (self: Column, component: GameComponent) => {
-    self.head.addToStage(component, self.x);
 }

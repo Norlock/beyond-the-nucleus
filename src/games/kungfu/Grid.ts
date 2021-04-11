@@ -11,6 +11,11 @@ export class Grid {
     appendColumn: () => Column;
     prependColumn: () => Column;
 
+    appendContainer: (column: Column, length: number) => Column;
+    prependContainer: (column: Column, length: number) => Column;
+
+    print: () => void;
+
     private constructor() {}
 
     static create() {
@@ -20,6 +25,8 @@ export class Grid {
 
         self.appendColumn = () => appendColumn(self);
         self.prependColumn = () => prependColumn(self);
+        self.appendContainer = (column, length) => appendContainer(self, column, length); 
+        self.prependContainer = (column, length) => prependContainer(self, column, length); 
         return self;
     }
 
@@ -33,6 +40,20 @@ const appendColumn = (self: Grid): Column => {
 const prependColumn = (self: Grid): Column => {
     self.head = self.head.setPrevious();
     return self.head;
+}
+
+export const appendContainer = (self: Grid, column: Column, length: number) => {
+    for (let i = 0; i < length; i++) {
+        self.tail = self.tail.setNext(column.head);
+        console.log(self.tail);
+    }
+    return self.tail;
+}
+
+export const prependContainer = (self: Grid, column: Column, length: number) => {
+    let copyColumn: Column;
+    return copyColumn;
+
 }
 
 //const updateGrid = (self: Grid, pos: PIXI.Point) => {

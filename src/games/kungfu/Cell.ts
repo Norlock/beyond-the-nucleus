@@ -1,14 +1,15 @@
 import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {LOG} from 'src/utils/Logger';
+import {Column} from './Column';
 
 export class Cell {
-    tile: PIXI.Sprite;
+    tile: PIXI.Texture;
     y: number;
     above: Cell;
 
     // Returns HEAD
-    addCell: (add: Cell, head: Cell) => Cell;
+    addCell: (add: Cell, column: Column) => void;
     addToStage: (component: GameComponent, x: number) => void;
 
     // Prints recursively
@@ -16,7 +17,7 @@ export class Cell {
 
     private constructor() {}
 
-    static create(y: number, tile: PIXI.Sprite): Cell {
+    static create(y: number, tile: PIXI.Texture): Cell {
         const self = new Cell();
         self.y = y;
         self.tile = tile;
@@ -27,16 +28,14 @@ export class Cell {
     }
 }
 
-const addCell = (self: Cell, add: Cell, head: Cell): Cell => {
+const addCell = (self: Cell, add: Cell, column: Column): void => {
     if (add.y < self.y) {
         add.above = self;
-        if (self === head) {
-            return add;
-        } else {
-            return head;
+        if (self === column.head) {
+            column.head = add;
         }
     } else if (self.above) {
-        self.above.addCell(add, head);
+        self.above.addCell(add, column);
     } else {
         self.above = add;
     }
@@ -46,12 +45,15 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
     const { stage } = component.game.app
     const { TILE_SIZE } = component.resourceHandler;
 
-    self.tile.x = x * TILE_SIZE;
-    self.tile.y = self.y * TILE_SIZE;
-    stage.addChild(self.tile);
+    const sprite = new PIXI.Sprite(self.tile);
+
+    sprite.x = x * TILE_SIZE;
+    sprite.y = self.y * TILE_SIZE;
+    stage.addChild(sprite);
     self.above?.addToStage(component, x);
 }
 
 const print = (self: Cell): void => {
+    LOG.log('cell' , self.y, self.tile);
     self.above?.print();
 }

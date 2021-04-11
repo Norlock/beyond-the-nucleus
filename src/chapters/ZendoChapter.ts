@@ -22,7 +22,8 @@ const blurfilterRight = new PIXI.filters.BlurFilter(blurSize);
 
 export const ZendoChapter = (): Chapter => {
     const intro = GetAudio('src/assets/zendo/bell.wav', false, 0.2);
-    const factory = ChapterFactory(ChapterType.ZEN, 7000, 7000, "Zendo")
+    //const factory = ChapterFactory(ChapterType.ZEN, 7000, 7000, "Zendo")
+    const factory = ChapterFactory(ChapterType.ZEN, 0, 0, "Zendo")
         .addContainer(background1())
         .addAudio(intro, AudioTag.INTRO);
 

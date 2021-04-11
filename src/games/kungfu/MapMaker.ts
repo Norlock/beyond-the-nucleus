@@ -33,13 +33,14 @@ export const GenerateMap = (self: GameComponent): void => {
     column5(grid);
     column6(grid);
     column7(grid);
-    column8(grid);
+    let column = column8(grid);
 
+    grid.appendContainer(column, 15);
     //grid.playersCell = new Cell(1, 1, tile);
 }
 
-export const getTile = (number: number): PIXI.Sprite => {
-    return PIXI.Sprite.from(resources[`tile${number}`].texture);
+export const getTile = (number: number): PIXI.Texture => {
+    return resources[`tile${number}`].texture;
 }
 
 export const RenderMap = (self: GameComponent): void => {
@@ -49,7 +50,6 @@ export const RenderMap = (self: GameComponent): void => {
         column = column.next;
     }
 }
-
 
 export const column0 = (grid: Grid) => {
     const column = grid.head;
