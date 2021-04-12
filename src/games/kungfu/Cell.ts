@@ -49,6 +49,7 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
 
     sprite.x = x * TILE_SIZE;
     sprite.y = self.y * TILE_SIZE;
+    //sprite.hitArea
     stage.addChild(sprite);
     self.above?.addToStage(component, x);
 }

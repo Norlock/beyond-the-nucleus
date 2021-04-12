@@ -26,7 +26,7 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
         }
 
         // Player
-        app.loader.add('playerIdle','/player/KungFuIdle/Kung_Fu_Man_SpriteSheet_Idle_4way.png');
+        app.loader.add('playerIdle','/player/KungFuIdle/NES_Kung_Fu_Man_Idle_EAST_strip4.png');
 
         app.loader.onError.add((err: any) => LOG.error(err));
         app.loader.load(loader => {

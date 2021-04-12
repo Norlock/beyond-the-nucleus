@@ -6,6 +6,7 @@ import {GenerateMap, RenderMap} from './MapMaker';
 export const kungfuLoader = (self: GameComponent): GameLoader => {
     const init = async () => {
         const resources = await self.resourceHandler.load();
+        self.inputHandler.init();
 
         self.game.app.stage.addChild(self.resourceHandler.devContainer);
         GenerateMap(self);

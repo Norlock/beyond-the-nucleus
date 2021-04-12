@@ -53,7 +53,6 @@ export const appendContainer = (self: Grid, column: Column, length: number) => {
 export const prependContainer = (self: Grid, column: Column, length: number) => {
     let copyColumn: Column;
     return copyColumn;
-
 }
 
 //const updateGrid = (self: Grid, pos: PIXI.Point) => {

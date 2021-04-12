@@ -17,12 +17,6 @@ export const GenerateMap = (self: GameComponent): void => {
     resources = self.resourceHandler.resources;
     tileSize = self.resourceHandler.TILE_SIZE;
 
-    const player = new PIXI.Sprite(resources.playerIdle.texture);
-    player.x = 2 * tileSize;
-    player.y = 3 * tileSize;
-    player.scale.set(2);
-
-    stage.addChild(player);
     
     // initial
     column0(grid);
@@ -37,6 +31,30 @@ export const GenerateMap = (self: GameComponent): void => {
 
     grid.appendContainer(column, 15);
     //grid.playersCell = new Cell(1, 1, tile);
+
+    const playerIdle: PIXI.Texture[] = [];
+    playerIdle.push(new PIXI.Texture(resources.playerIdle.texture.baseTexture, 
+                                           new PIXI.Rectangle(0, 0, 16, 24)));
+    playerIdle.push(new PIXI.Texture(resources.playerIdle.texture.baseTexture, 
+                                           new PIXI.Rectangle(16, 0, 16, 24)));
+    playerIdle.push(new PIXI.Texture(resources.playerIdle.texture.baseTexture, 
+                                           new PIXI.Rectangle(32, 0, 16, 24)));
+    playerIdle.push(new PIXI.Texture(resources.playerIdle.texture.baseTexture, 
+                                           new PIXI.Rectangle(48, 0, 16, 24)));
+
+    let player = new PIXI.Sprite(playerIdle[0]);
+
+    player.x = 2 * tileSize;
+    player.y = 3 * tileSize;
+    player.scale.set(2);
+
+    stage.addChild(player);
+
+    //let index = 0;
+    const idlePlayer = () => {
+        player.texture = playerIdle[(Math.floor(Date.now() / 150) % 4)];
+    }
+    self.game.app.ticker.add(idlePlayer);
 }
 
 export const getTile = (number: number): PIXI.Texture => {

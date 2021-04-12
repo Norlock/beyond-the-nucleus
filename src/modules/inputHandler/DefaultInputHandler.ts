@@ -22,9 +22,12 @@ export const defaultInputHandler = (keyPress: KeyPressFunction): InputHandler =>
         UIUtils.highlightUIControl(event.key);
     }
 
+    const init = () => {};
+
     return {
         keyUp,
         keyDown,
-        keyPress
+        keyPress,
+        init
     };
 }

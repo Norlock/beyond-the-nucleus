@@ -47,7 +47,9 @@ const init = (): void => {
         }
     };
 
-    boardApp.ticker.add(scroll);
+    const initInputHandler = () => {
+        boardApp.ticker.add(scroll);
+    }
 
     const keyUp = (): void => {
         isKeyDown = false;
@@ -84,7 +86,8 @@ const init = (): void => {
     inputHandler = {
         keyPress,
         keyDown,
-        keyUp
+        keyUp,
+        init: initInputHandler
     };
 
     const move = async (action: ActionSelector) => {
