@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {Cell} from './Cell';
 import {Grid} from './Grid';
+import {Player} from './Player';
 
 let grid: Grid;
 let resources: PIXI.IResourceDictionary;
@@ -42,7 +43,9 @@ export const GenerateMap = (self: GameComponent): void => {
     playerIdle.push(new PIXI.Texture(resources.playerIdle.texture.baseTexture, 
                                            new PIXI.Rectangle(48, 0, 16, 24)));
 
-    let player = new PIXI.Sprite(playerIdle[0]);
+    //let player = new PIXI.Sprite(playerIdle[0]);
+    let player = Player.create(self);
+    console.log('test', player);
 
     player.x = 2 * tileSize;
     player.y = 3 * tileSize;

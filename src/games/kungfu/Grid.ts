@@ -45,7 +45,6 @@ const prependColumn = (self: Grid): Column => {
 export const appendContainer = (self: Grid, column: Column, length: number) => {
     for (let i = 0; i < length; i++) {
         self.tail = self.tail.setNext(column.head);
-        console.log(self.tail);
     }
     return self.tail;
 }

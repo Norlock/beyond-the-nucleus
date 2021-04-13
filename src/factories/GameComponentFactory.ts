@@ -3,11 +3,9 @@ import { FlowComponent } from 'src/components/base/FlowComponent';
 import { GameComponent } from 'src/components/base/GameComponent';
 import {GameLoader} from 'src/modules/game/GameLoader';
 import {MergeDefaultGameLoader} from 'src/modules/game/MergeDefaultGameLoader';
-import {InputHandler} from 'src/modules/inputHandler/InputHandler';
 import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
 import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi';
 import { PixiSelector } from 'src/modules/pixi/Pixi';
-import {ResourceHandler} from 'src/modules/resourceHandler/ResourceHandler';
 import {MergeGameComponentSelector} from 'src/modules/selector/MergeGameComponentSelector';
 import { MergeUI } from 'src/modules/ui/GetUI';
 
@@ -40,11 +38,6 @@ export class GameComponentFactory {
 
     mergeGameLoader(custom: GameLoader) {
         this.component.game.append(custom);
-        return this;
-    }
-
-    mergeInputHandler(inputHandler: InputHandler) {
-        this.component.inputHandler = inputHandler;
         return this;
     }
 }

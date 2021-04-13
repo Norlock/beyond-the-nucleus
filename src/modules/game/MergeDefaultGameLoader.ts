@@ -25,8 +25,6 @@ export const MergeDefaultGameLoader = (self: GameComponent) => {
 
         gameCanvas.appendChild(game.app.view);
 
-        connectInputHandler(self.inputHandler);
-
         game.next?.init();
     }
 

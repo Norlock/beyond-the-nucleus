@@ -12,7 +12,6 @@ import { PartChain } from "../base/PartChain";
 import { defaultTestFlags } from "../base/PartTester";
 import {headerStyle, paragraphStyle, zendoCardImage} from "./ZendoStyles";
 import {MergeKungfuResourceHandler} from "src/games/kungfu/KungfuResources";
-import {kungfuInputHandler} from 'src/games/kungfu/KungfuInputHandler';
 
 export const ZendoPart6 = (previous: PartChain): PartChain => {
     return PartChainFactory("Kungfu", ChapterType.ZEN, previous)
@@ -73,7 +72,6 @@ const component = (factory: GameComponentFactory): FlowComponent => {
     const component = factory
         .mergePixiCard(cardData.containerName, cardData.card)
         .mergeGameLoader(kungfuLoader(factory.component))
-        .mergeInputHandler(kungfuInputHandler(factory.component))
         .component;
 
     MergeKungfuResourceHandler(component);
