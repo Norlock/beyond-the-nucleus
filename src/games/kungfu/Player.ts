@@ -8,6 +8,21 @@ export class Player extends PIXI.Sprite {
     health: number;
     weapon: any;
 
+    idleEast: PIXI.Texture[] = [];
+    idleWest: PIXI.Texture[] = [];
+    idleNorth: PIXI.Texture[] = [];
+    idleSouth: PIXI.Texture[] = [];
+
+    walkEast: PIXI.Texture[] = [];
+    walkWest: PIXI.Texture[] = [];
+    walkNorth: PIXI.Texture[] = [];
+    walkSouth: PIXI.Texture[] = [];
+
+    attackEast: PIXI.Texture[] = [];
+    attackWest: PIXI.Texture[] = [];
+    attackNorth: PIXI.Texture[] = [];
+    attackSouth: PIXI.Texture[] = [];
+
     private constructor() {
         super();
     }

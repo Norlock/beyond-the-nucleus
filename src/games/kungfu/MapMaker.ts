@@ -18,7 +18,6 @@ export const GenerateMap = (self: GameComponent): void => {
     resources = self.resourceHandler.resources;
     tileSize = self.resourceHandler.TILE_SIZE;
 
-    
     // initial
     column0(grid);
     column1(grid);
