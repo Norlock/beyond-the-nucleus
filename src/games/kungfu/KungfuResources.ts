@@ -26,7 +26,16 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
         }
 
         // Player
-        app.loader.add('playerIdle','/player/KungFuIdle/NES_Kung_Fu_Man_Idle_EAST_strip4.png');
+        app.loader.add('idleEast','/player/KungFuIdle/NES_Kung_Fu_Man_Idle_EAST_strip4.png');
+        app.loader.add('idleWest','/player/KungFuIdle/NES_Kung_Fu_Man_Idle_WEST_strip4.png');
+        app.loader.add('idleNorth','/player/KungFuIdle/NES_Kung_Fu_Man_Idle_NORTH_strip4.png');
+        app.loader.add('idleSouth','/player/KungFuIdle/NES_Kung_Fu_Man_Idle_SOUTH_strip4.png');
+        app.loader.add('walkEast','/player/KungFuWalk/NES_Kung_Fu_Man_Walk_EAST_strip4.png');
+        app.loader.add('walkWest','/player/KungFuWalk/NES_Kung_Fu_Man_Walk_WEST_strip4.png');
+        app.loader.add('attackFSEast','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_EAST_strip4.png');
+        app.loader.add('attackFSWest','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_WEST_strip4.png');
+        //app.loader.add('attackFSEast','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_strip4.png');
+        //app.loader.add('attackFSEast','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_strip4.png');
 
         app.loader.onError.add((err: any) => LOG.error(err));
         app.loader.load(loader => {

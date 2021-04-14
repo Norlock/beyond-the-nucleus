@@ -1,7 +1,7 @@
 # beyond-the-nucleus
 Some test app for ideas
 
-## Roadmap
+## Roadmap board
 - [x] Logger (lets do it earlier going to use it all the time anyway) 
 - [x] Pixi 
 - [x] Pixi scroller
@@ -30,6 +30,17 @@ Some test app for ideas
 - [ ] Tests
 - [ ] WASM -> chain calc functions and have some return at the end so you calc everything at once in rust
 - [ ] Think about different resolutions in relation with scroll offset or component placement 
+
+## Roadmap Kungfu
+- [ ] collision
+- [ ] falling 
+- [ ] jumping
+- [ ] maybe fetch map from backend?
+- [ ] enemies
+- [ ] multiple grids, for background maybe
+- [ ] sounds
+- [ ] load config
+
 ### Not sure
 - [ ] Pixi focus move with the scroller. 
 
