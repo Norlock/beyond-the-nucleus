@@ -3,12 +3,16 @@ import {GameComponent} from "src/components/base/GameComponent";
 import {ResourceHandler} from 'src/modules/resourceHandler/ResourceHandler';
 import {LOG} from "src/utils/Logger";
 import {Promiser} from "src/utils/Promiser";
+import {Grid} from './Grid';
 
-class KungfuResourceHandler implements ResourceHandler {
+export class KungfuResourceHandler implements ResourceHandler {
     resources: PIXI.IResourceDictionary;
     devContainer: PIXI.Container;
     load: () => Promise<void>;
     cleanup: () => void;
+
+    playerGrid: Grid;
+    backgroundGrid: Grid;
     readonly TILE_SIZE = 48;
 }
 
@@ -60,6 +64,7 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
 const devContainer = (self: GameComponent): void => {
     const { resources, TILE_SIZE } = self.resourceHandler;
     const container = new PIXI.Container();
+    container.visible = false;
 
     let style = new PIXI.TextStyle({
         fill: "#FFFFFF",
@@ -88,8 +93,4 @@ const devContainer = (self: GameComponent): void => {
 
     container.name = "dev";
     self.resourceHandler.devContainer = container;
-    self.game.app.stage.addChild(container);
-
-    console.log('welcome from init!');
-
 }

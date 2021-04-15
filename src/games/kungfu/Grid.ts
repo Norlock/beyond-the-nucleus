@@ -11,8 +11,8 @@ export class Grid {
     appendColumn: () => Column;
     prependColumn: () => Column;
 
-    appendContainer: (column: Column, length: number) => Column;
-    prependContainer: (column: Column, length: number) => Column;
+    appendContainer: (length: number) => Column;
+    prependContainer: (length: number) => Column;
 
     print: () => void;
 
@@ -25,8 +25,8 @@ export class Grid {
 
         self.appendColumn = () => appendColumn(self);
         self.prependColumn = () => prependColumn(self);
-        self.appendContainer = (column, length) => appendContainer(self, column, length); 
-        self.prependContainer = (column, length) => prependContainer(self, column, length); 
+        self.appendContainer = (length) => appendContainer(self, length); 
+        self.prependContainer = (length) => prependContainer(self, length); 
         return self;
     }
 
@@ -42,16 +42,20 @@ const prependColumn = (self: Grid): Column => {
     return self.head;
 }
 
-export const appendContainer = (self: Grid, column: Column, length: number) => {
+export const appendContainer = (self: Grid, length: number) => {
+    const column = self.tail;
     for (let i = 0; i < length; i++) {
         self.tail = self.tail.setNext(column.head);
     }
     return self.tail;
 }
 
-export const prependContainer = (self: Grid, column: Column, length: number) => {
-    let copyColumn: Column;
-    return copyColumn;
+export const prependContainer = (self: Grid, length: number) => {
+    const column = self.head;
+    for (let i = 0; i < length; i++) {
+        self.head = self.head.setPrevious(column.head);
+    }
+    return column;
 }
 
 //const updateGrid = (self: Grid, pos: PIXI.Point) => {

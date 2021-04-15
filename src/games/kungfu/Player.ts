@@ -2,11 +2,15 @@ import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
 import {InputHandler} from "src/modules/inputHandler/InputHandler";
+import {Collision} from './CollisionType';
+import {Column} from './Column';
+import {KungfuResourceHandler} from './KungfuResources';
 
 // TODO
 export class Player extends PIXI.Sprite {
     health: number;
     weapon: any;
+    currentColumn: Column;
 
     idleEast: PIXI.Texture[] = [];
     idleWest: PIXI.Texture[] = [];
@@ -41,35 +45,46 @@ enum Direction {
     EAST
 }
 
+let collision: Collision;
+
 const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     let isKeyDown: boolean;
-    let keyPressed = 'd';
+    let keyPressed: string;
     let direction = Direction.EAST;
 
     const { stage } = component.game.app;
 
     const scroll = (): void => {
         if (isKeyDown) {
+            collision = self.currentColumn.head.detectCollision(self);
             switch (keyPressed) {
                 case 'a':
-                    self.x -= 10;
-                    stage.x += 10;
-                    self.texture = self.walkWest[(Math.floor(Date.now() / 150) % 4)];
+                    if (!collision.left) {
+                        self.x -= 10;
+                        stage.x += 10;
+                        self.texture = self.walkWest[(Math.floor(Date.now() / 150) % 4)];
+                    }
                 break;
                 case 'd':
-                    self.x += 10;
-                    stage.x -= 10;
-                    self.texture = self.walkEast[(Math.floor(Date.now() / 150) % 4)];
+                    if (!collision.right) {
+                        self.x += 10;
+                        stage.x -= 10;
+                        self.texture = self.walkEast[(Math.floor(Date.now() / 150) % 4)];
+                    }
                 break;
                 case 'w':
-                    self.y -= 10;
-                    stage.y += 10;
-                    self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
+                    if (!collision.top) {
+                        self.y -= 10;
+                        stage.y += 10;
+                        self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
+                    }
                 break;
                 case 's':
-                    self.y += 10;
-                    stage.y -= 10;
-                    self.texture = self.walkSouth[(Math.floor(Date.now() / 150) % 4)];
+                    if (!collision.bottom) {
+                        self.y += 10;
+                        stage.y -= 10;
+                        self.texture = self.walkSouth[(Math.floor(Date.now() / 150) % 4)];
+                    }
                 break;
                 case ' ':
                     if (direction === Direction.WEST) {
@@ -88,7 +103,6 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
                     self.texture = self.idleEast[(Math.floor(Date.now() / 150) % 4)];
                 break;
             }
-            //self.texture = self.idleEast[(Math.floor(Date.now() / 150) % 4)];
         }
     };
 
@@ -125,6 +139,12 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
         keyDown,
         keyPress,
     }
+}
+
+const fall = (self: Player, component: GameComponent) => {
+    const {playerGrid} = component.resourceHandler as KungfuResourceHandler;
+    //const grid = resourceHandler.playerGrid
+
 }
 
 const initResources = (self: Player, component: GameComponent) => {

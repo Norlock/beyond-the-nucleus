@@ -27,12 +27,9 @@ export const GenerateMap = (self: GameComponent): void => {
     column5(grid);
     column6(grid);
     column7(grid);
-    let column = column8(grid);
 
-    grid.appendContainer(column, 15);
-    //grid.playersCell = new Cell(1, 1, tile);
+    grid.appendContainer(15);
 
-    //let player = new PIXI.Sprite(playerIdle[0]);
     let player = Player.create(self);
     console.log('test', player);
 
