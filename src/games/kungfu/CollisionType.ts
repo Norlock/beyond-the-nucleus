@@ -3,5 +3,8 @@ export class Collision {
     bottom = false;
     left = false;
     right = false;
+
+    xRemainer: number;
+    yRemainder: number;
 }
 

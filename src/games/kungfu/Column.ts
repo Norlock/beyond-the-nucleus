@@ -50,3 +50,16 @@ const addCell = (self: Column, cell: Cell): void => {
         self.head = cell;
     }
 }
+
+const detectCollision = (self: Cell, x: number, y: number, vx: number, vy: number): Collision => {
+    const collision = new Collision();
+    // Maybe return collision object with remaining x,y to avoid recal?
+    if (0 < vx) {
+
+
+    } else {
+
+    }
+
+    return collision;
+}
