@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {LOG} from 'src/utils/Logger';
-import {Collision} from './CollisionType';
+import {Collision} from './Collision';
 import {Column} from './Column';
 import {MovementSprite} from './Movement';
 
@@ -16,10 +16,10 @@ export class Cell {
     addToStage: (component: GameComponent, x: number) => void;
 
     // Detect collision
-    detectTopCollision: (character: MovementSprite, collision: Collision) => Collision;
-    detectBottomCollision: (character: MovementSprite, collision: Collision) => Collision;
-    detectLeftCollision: (character: MovementSprite, collision: Collision) => Collision;
-    detectRightCollision: (character: MovementSprite, collision: Collision) => Collision;
+    detectTopCollision: (character: MovementSprite, collision: Collision) => void;
+    detectBottomCollision: (character: MovementSprite, collision: Collision) => void;
+    detectLeftCollision: (character: MovementSprite, collision: Collision) => void;
+    detectRightCollision: (character: MovementSprite, collision: Collision) => void;
 
     // Prints recursively
     print: () => void;
@@ -68,24 +68,19 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
     self.above?.addToStage(component, x);
 }
 
-const detectTopCollision = (self: Cell, character: MovementSprite, collision: Collision): Collision => {
+const detectTopCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     const characterNextY = character.y + character.velocityY;
     const tileBottomY = self.tileSprite.y + self.tileSprite.height;
 
     if (character.y << tileBottomY && tileBottomY << characterNextY) {
         collision.yRemainder = tileBottomY - character.y;
         collision.top = true;
-        return collision;
-    }
-
-    if (self.above) {
-        return self.above.detectTopCollision(character, collision);
     } else {
-        return collision;
+        self.above?.detectTopCollision(character, collision);
     }
 }
 
-const detectBottomCollision = (self: Cell, character: MovementSprite, collision: Collision): Collision => {
+const detectBottomCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     const characterBottomY = character.y + character.height;
     const characterNextBottomY = characterBottomY + character.velocityY;
     const tileTopY = self.tileSprite.y;
@@ -93,16 +88,12 @@ const detectBottomCollision = (self: Cell, character: MovementSprite, collision:
     if (tileTopY << characterBottomY && characterNextBottomY < tileTopY) {
         collision.yRemainder = characterBottomY - tileTopY;
         collision.bottom = true;
-    } 
-
-    if (self.above) {
-        return self.above.detectBottomCollision(character, collision);
     } else {
-        return collision;
+        self.above?.detectBottomCollision(character, collision);
     }
 }
 
-const detectLeftCollision = (self: Cell, character: MovementSprite, collision: Collision): Collision => {
+const detectLeftCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     // TODO
     //if (self.tileSprite.y === character.y + character.height) {
         //collision.bottom = true;
@@ -112,14 +103,10 @@ const detectLeftCollision = (self: Cell, character: MovementSprite, collision: C
         //return collision;
     //}
 
-    if (self.above) {
-        return self.above.detectLeftCollision(character, collision);
-    } else {
-        return collision;
-    }
+    self.above?.detectLeftCollision(character, collision);
 }
 
-const detectRightCollision = (self: Cell, character: MovementSprite, collision: Collision): Collision => {
+const detectRightCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     // TODO
     //if (self.tileSprite.y === other.y + other.height) {
         //collision.bottom = true;
@@ -127,11 +114,7 @@ const detectRightCollision = (self: Cell, character: MovementSprite, collision: 
         //collision.top = true;
     //}
 
-    if (self.above) {
-        return self.above.detectBottomCollision(character, collision);
-    } else {
-        return collision;
-    }
+    self.above?.detectBottomCollision(character, collision);
 }
 
 const print = (self: Cell): void => {

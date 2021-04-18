@@ -1,5 +1,7 @@
 import {GameComponent} from 'src/components/base/GameComponent';
 import {Cell} from "./Cell";
+import {Collision} from './Collision';
+import {MovementSprite} from './Movement';
 
 export class Column {
     x: number; 
@@ -13,6 +15,7 @@ export class Column {
     setNext: (copyHead?: Cell) =>  Column; 
     setPrevious: (copyHead?: Cell) =>  Column; 
     addCell: (cell: Cell) => void;
+    detectCollision: (character: MovementSprite) => Collision;
 
     private constructor() {}
 
@@ -23,6 +26,7 @@ export class Column {
         self.setPrevious = (copyHead) => setPrevious(self, copyHead);
         self.addCell = (cell) => addCell(self, cell);
         self.addToStage = (component) => self.head.addToStage(component, self.x);
+        self.detectCollision = (character) => detectCollision(self, character);
         return self;
     }
 }
@@ -51,14 +55,21 @@ const addCell = (self: Column, cell: Cell): void => {
     }
 }
 
-const detectCollision = (self: Cell, x: number, y: number, vx: number, vy: number): Collision => {
+const detectCollision = (self: Column, character: MovementSprite): Collision => {
     const collision = new Collision();
-    // Maybe return collision object with remaining x,y to avoid recal?
-    if (0 < vx) {
 
+    if (0 < character.velocityX) {
+        // Detect right collision
 
     } else {
+        // Detect left collision
 
+    }
+
+    if (0 < character.velocityY) {
+        self.head.detectBottomCollision(character, collision);
+    } else {
+        self.head.detectTopCollision(character, collision);
     }
 
     return collision;

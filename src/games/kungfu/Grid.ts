@@ -45,6 +45,7 @@ const prependColumn = (self: Grid): Column => {
 export const appendContainer = (self: Grid, length: number) => {
     const column = self.tail;
     for (let i = 0; i < length; i++) {
+        // TODO kijken of head gecloned moet worden
         self.tail = self.tail.setNext(column.head);
     }
     return self.tail;
@@ -53,6 +54,7 @@ export const appendContainer = (self: Grid, length: number) => {
 export const prependContainer = (self: Grid, length: number) => {
     const column = self.head;
     for (let i = 0; i < length; i++) {
+        // TODO kijken of head gecloned moet worden
         self.head = self.head.setPrevious(column.head);
     }
     return column;
