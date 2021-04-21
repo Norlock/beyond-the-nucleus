@@ -1,7 +1,7 @@
 import {GameComponent} from 'src/components/base/GameComponent';
 import {Cell} from "./Cell";
 import {Collision} from './Collision';
-import {MovementSprite} from './Movement';
+import {MovementSprite} from './MovementSprite';
 
 export class Column {
     x: number; 
