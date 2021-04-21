@@ -66,7 +66,7 @@ const detectCollision = (self: Column, character: MovementSprite): Collision => 
 
     }
 
-    if (0 < character.velocityY) {
+    if (0 <= character.velocityY) {
         self.head.detectBottomCollision(character, collision);
     } else {
         self.head.detectTopCollision(character, collision);

@@ -2,12 +2,12 @@ import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
 import {InputHandler} from "src/modules/inputHandler/InputHandler";
-import {Collision} from './CollisionType';
+import {Collision} from './Collision';
 import {Column} from './Column';
-import {KungfuResourceHandler} from './KungfuResources';
+import {MovementSprite} from './MovementSprite';
 
 // TODO
-export class Player extends PIXI.Sprite {
+export class Player extends MovementSprite {
     health: number;
     weapon: any;
     currentColumn: Column;
@@ -27,12 +27,16 @@ export class Player extends PIXI.Sprite {
     attackNorth: PIXI.Texture[] = [];
     attackSouth: PIXI.Texture[] = [];
 
-    private constructor() {
-        super();
+    private constructor(component: GameComponent, x: number, y: number) {
+        super(component, x, y); 
+        this.velocityY = 0;
+        this.velocityX = 0;
     }
 
-    static create = (component: GameComponent): Player => {
-        const self = new Player();
+    static create = (component: GameComponent, x: number, y: number): Player => {
+        const self = new Player(component, x, y);
+        self.currentColumn = component.resourceHandler.characterGrid.getColumn(x);
+
         component.inputHandler = inputHandler(self, component);
         connectInputHandler(component.inputHandler);
         initResources(self, component);
@@ -45,8 +49,6 @@ enum Direction {
     EAST
 }
 
-let collision: Collision;
-
 const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     let isKeyDown: boolean;
     let keyPressed: string;
@@ -55,14 +57,19 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     const { stage } = component.game.app;
 
     const scroll = (): void => {
+        const collision = self.currentColumn.detectCollision(self);
+        applyGravity(self, collision);
+
         if (isKeyDown) {
-            collision = self.currentColumn.head.detectCollision(self);
             switch (keyPressed) {
                 case 'a':
                     if (!collision.left) {
                         self.x -= 10;
                         stage.x += 10;
                         self.texture = self.walkWest[(Math.floor(Date.now() / 150) % 4)];
+                        self.updateColumn();
+                        console.log('column', self.currentColumn);
+                        // TODO check column again
                     }
                 break;
                 case 'd':
@@ -70,6 +77,8 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
                         self.x += 10;
                         stage.x -= 10;
                         self.texture = self.walkEast[(Math.floor(Date.now() / 150) % 4)];
+                        self.updateColumn();
+                        console.log('column', self.currentColumn);
                     }
                 break;
                 case 'w':
@@ -104,6 +113,8 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
                 break;
             }
         }
+
+        component.game.app.render();
     };
 
     component.game.app.ticker.add(scroll);
@@ -141,10 +152,16 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     }
 }
 
-const fall = (self: Player, component: GameComponent) => {
-    const {playerGrid} = component.resourceHandler as KungfuResourceHandler;
-    //const grid = resourceHandler.playerGrid
-
+const applyGravity = (self: Player, collision: Collision) => {
+    if (collision.bottom) {
+        self.velocityY = 0;
+        self.y = self.y + collision.yRemainder;
+    } else {
+        if (self.velocityY < 9) {
+            self.velocityY = self.velocityY + 3;
+        }
+        self.y = self.y + self.velocityY;
+    }
 }
 
 const initResources = (self: Player, component: GameComponent) => {

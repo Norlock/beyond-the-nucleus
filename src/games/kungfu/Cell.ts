@@ -3,7 +3,7 @@ import {GameComponent} from "src/components/base/GameComponent";
 import {LOG} from 'src/utils/Logger';
 import {Collision} from './Collision';
 import {Column} from './Column';
-import {MovementSprite} from './Movement';
+import {MovementSprite} from './MovementSprite';
 
 export class Cell {
     tileTexture: PIXI.Texture;
@@ -66,13 +66,15 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
     sprite.y = self.cellY * TILE_SIZE;
     stage.addChild(sprite);
     self.above?.addToStage(component, x);
+
+    self.tileSprite = sprite;
 }
 
 const detectTopCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     const characterNextY = character.y + character.velocityY;
     const tileBottomY = self.tileSprite.y + self.tileSprite.height;
 
-    if (character.y << tileBottomY && tileBottomY << characterNextY) {
+    if (character.y <= tileBottomY && tileBottomY <= characterNextY) {
         collision.yRemainder = tileBottomY - character.y;
         collision.top = true;
     } else {
@@ -85,8 +87,11 @@ const detectBottomCollision = (self: Cell, character: MovementSprite, collision:
     const characterNextBottomY = characterBottomY + character.velocityY;
     const tileTopY = self.tileSprite.y;
 
-    if (tileTopY << characterBottomY && characterNextBottomY < tileTopY) {
-        collision.yRemainder = characterBottomY - tileTopY;
+    if (tileTopY === characterBottomY) {
+        collision.yRemainder = 0;
+        collision.bottom = true;
+    } else if (characterBottomY < tileTopY  && tileTopY <= characterNextBottomY) {
+        collision.yRemainder = tileTopY - characterBottomY;
         collision.bottom = true;
     } else {
         self.above?.detectBottomCollision(character, collision);

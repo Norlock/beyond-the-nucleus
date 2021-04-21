@@ -1,3 +1,4 @@
+import {GameComponent} from "src/components/base/GameComponent";
 import {Cell} from "./Cell";
 import {Column} from "./Column";
 
@@ -10,6 +11,8 @@ export class Grid {
 
     appendColumn: () => Column;
     prependColumn: () => Column;
+    getColumn: (x: number) => Column;
+    getColumnIndex: (x: number) => number;
 
     appendContainer: (length: number) => Column;
     prependContainer: (length: number) => Column;
@@ -18,7 +21,7 @@ export class Grid {
 
     private constructor() {}
 
-    static create() {
+    static create(component: GameComponent) {
         const self = new Grid();
         self.head = Column.create(0);
         self.tail = self.head;
@@ -27,6 +30,8 @@ export class Grid {
         self.prependColumn = () => prependColumn(self);
         self.appendContainer = (length) => appendContainer(self, length); 
         self.prependContainer = (length) => prependContainer(self, length); 
+        self.getColumnIndex = (x) => getColumnIndex(component, x);
+        self.getColumn = (x) => getColumn(self, component, x);
         return self;
     }
 
@@ -42,7 +47,7 @@ const prependColumn = (self: Grid): Column => {
     return self.head;
 }
 
-export const appendContainer = (self: Grid, length: number) => {
+const appendContainer = (self: Grid, length: number) => {
     const column = self.tail;
     for (let i = 0; i < length; i++) {
         // TODO kijken of head gecloned moet worden
@@ -51,7 +56,7 @@ export const appendContainer = (self: Grid, length: number) => {
     return self.tail;
 }
 
-export const prependContainer = (self: Grid, length: number) => {
+const prependContainer = (self: Grid, length: number) => {
     const column = self.head;
     for (let i = 0; i < length; i++) {
         // TODO kijken of head gecloned moet worden
@@ -60,10 +65,17 @@ export const prependContainer = (self: Grid, length: number) => {
     return column;
 }
 
-//const updateGrid = (self: Grid, pos: PIXI.Point) => {
-    //if (self.head.x < pos.x) {
-        //self.head = self.head.next;
-    //} else if (pos.x < self.head.x) {
-        //self.head = self.head.previous;
-    //}
-//}
+const getColumnIndex = (component: GameComponent, x: number): number => {
+    return Math.trunc(x / component.resourceHandler.TILE_SIZE);
+}
+
+const getColumn = (self: Grid, component: GameComponent, x: number): Column => {
+    const columnX = Math.trunc(x / component.resourceHandler.TILE_SIZE);
+    let column = self.head;
+
+    while (column.x !== columnX) {
+        column = column.next;
+    }
+
+    return column;
+}

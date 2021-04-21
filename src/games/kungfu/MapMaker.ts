@@ -4,17 +4,16 @@ import {Cell} from './Cell';
 import {Grid} from './Grid';
 import {Player} from './Player';
 
-let grid: Grid;
 let resources: PIXI.IResourceDictionary;
 let tileSize: number;
 
 export const GenerateMap = (self: GameComponent): void => {
     // Make default grid
     const stage = self.game.app.stage;
-    grid = Grid.create();
-    grid.columnReach = 20;
+    const grid = Grid.create(self);
+    self.resourceHandler.characterGrid = grid;
+    self.resourceHandler.characterGrid.columnReach = 20; // TODO
 
-    //stage = self.game.app.stage;
     resources = self.resourceHandler.resources;
     tileSize = self.resourceHandler.TILE_SIZE;
 
@@ -30,11 +29,7 @@ export const GenerateMap = (self: GameComponent): void => {
 
     grid.appendContainer(15);
 
-    let player = Player.create(self);
-    console.log('test', player);
-
-    player.x = 2 * tileSize;
-    player.y = 3 * tileSize;
+    let player = Player.create(self, 2 * tileSize, 3 * tileSize);
     player.scale.set(2);
 
     stage.addChild(player);
@@ -45,7 +40,7 @@ export const getTile = (number: number): PIXI.Texture => {
 }
 
 export const RenderMap = (self: GameComponent): void => {
-    let column = grid.head;
+    let column = self.resourceHandler.characterGrid.head;
     while (column.next) {
         column.addToStage(self);
         column = column.next;

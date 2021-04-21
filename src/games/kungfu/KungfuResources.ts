@@ -11,7 +11,7 @@ export class KungfuResourceHandler implements ResourceHandler {
     load: () => Promise<void>;
     cleanup: () => void;
 
-    playerGrid: Grid;
+    characterGrid: Grid;
     backgroundGrid: Grid;
     readonly TILE_SIZE = 48;
 }
