@@ -23,7 +23,7 @@ export class Grid {
 
     static create(component: GameComponent) {
         const self = new Grid();
-        self.head = Column.create(0);
+        self.head = Column.create(component, 0);
         self.tail = self.head;
 
         self.appendColumn = () => appendColumn(self);
@@ -31,7 +31,7 @@ export class Grid {
         self.appendContainer = (length) => appendContainer(self, length); 
         self.prependContainer = (length) => prependContainer(self, length); 
         self.getColumnIndex = (x) => getColumnIndex(component, x);
-        self.getColumn = (x) => getColumn(self, component, x);
+        self.getColumn = (x) => getColumn(self, x);
         return self;
     }
 
@@ -69,8 +69,8 @@ const getColumnIndex = (component: GameComponent, x: number): number => {
     return Math.trunc(x / component.resourceHandler.TILE_SIZE);
 }
 
-const getColumn = (self: Grid, component: GameComponent, x: number): Column => {
-    const columnX = Math.trunc(x / component.resourceHandler.TILE_SIZE);
+const getColumn = (self: Grid, x: number): Column => {
+    const columnX = self.getColumnIndex(x);
     let column = self.head;
 
     while (column.x !== columnX) {

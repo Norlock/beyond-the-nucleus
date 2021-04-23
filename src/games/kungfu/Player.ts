@@ -7,6 +7,7 @@ import {Column} from './Column';
 import {MovementSprite} from './MovementSprite';
 
 // TODO
+// if in air disable LR movement
 export class Player extends MovementSprite {
     health: number;
     weapon: any;
@@ -57,61 +58,28 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     const { stage } = component.game.app;
 
     const scroll = (): void => {
-        const collision = self.currentColumn.detectCollision(self);
-        applyGravity(self, collision);
+        applyGravity(self);
 
         if (isKeyDown) {
             switch (keyPressed) {
                 case 'a':
-                    if (!collision.left) {
-                        self.x -= 10;
-                        stage.x += 10;
-                        self.texture = self.walkWest[(Math.floor(Date.now() / 150) % 4)];
-                        self.updateColumn();
-                        console.log('column', self.currentColumn);
-                        // TODO check column again
-                    }
+                    moveLeft(self, stage);
                 break;
                 case 'd':
-                    if (!collision.right) {
-                        self.x += 10;
-                        stage.x -= 10;
-                        self.texture = self.walkEast[(Math.floor(Date.now() / 150) % 4)];
-                        self.updateColumn();
-                        console.log('column', self.currentColumn);
-                    }
+                    moveRight(self, stage);
                 break;
                 case 'w':
-                    if (!collision.top) {
-                        self.y -= 10;
-                        stage.y += 10;
-                        self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
-                    }
+                    moveTop(self, stage);
                 break;
                 case 's':
-                    if (!collision.bottom) {
-                        self.y += 10;
-                        stage.y -= 10;
-                        self.texture = self.walkSouth[(Math.floor(Date.now() / 150) % 4)];
-                    }
+                    moveBottom(self, stage);
                 break;
                 case ' ':
-                    if (direction === Direction.WEST) {
-                        self.texture = self.attackWest[(Math.floor(Date.now() / 150) % 4)];
-                    } else {
-                        self.texture = self.attackEast[(Math.floor(Date.now() / 150) % 4)];
-                    }
+                    attack(self, direction);
                 break;
             }
         } else {
-            switch (direction) {
-                case Direction.WEST:
-                    self.texture = self.idleWest[(Math.floor(Date.now() / 150) % 4)];
-                break;
-                case Direction.EAST:
-                    self.texture = self.idleEast[(Math.floor(Date.now() / 150) % 4)];
-                break;
-            }
+            idle(self, direction);
         }
 
         component.game.app.render();
@@ -152,7 +120,85 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     }
 }
 
-const applyGravity = (self: Player, collision: Collision) => {
+const moveLeft = (self: Player, stage: PIXI.Container) => {
+    self.texture = self.walkWest[(Math.floor(Date.now() / 150) % 4)];
+
+    if (0 < self.velocityX) 
+        self.velocityX = 0;
+
+    if (self.velocityX > -9) 
+        self.velocityX -= 3;
+
+    const collision = self.currentColumn.detectLeftCollision(self);
+
+    if (collision.left) {
+        self.x += collision.xRemainer;
+        stage.x -= collision.xRemainer; 
+    } else {
+        self.x += self.velocityX;
+        stage.x -= self.velocityX;
+    }
+
+    self.updateColumn();
+    console.log('column', self.velocityX);
+}
+
+const moveRight = (self: Player, stage: PIXI.Container) => {
+    self.texture = self.walkEast[(Math.floor(Date.now() / 150) % 4)];
+
+    if (self.velocityX < 0) 
+        self.velocityX = 0;
+    
+    if (self.velocityX < 9) 
+        self.velocityX += 3;
+
+    const collision = self.currentColumn.detectRightCollision(self);
+
+    if (collision.right) {
+        self.x += collision.xRemainer;
+        stage.x -= collision.xRemainer; 
+    } else {
+        self.x += self.velocityX;
+        stage.x -= self.velocityX;
+    }
+
+    self.updateColumn();
+    console.log('column', self.currentColumn);
+}
+
+const moveTop = (self: Player, stage: PIXI.Container) => {
+    // Jump / todo ladder climbing
+    //self.y -= 10;
+    //stage.y += 10;
+    self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
+}
+
+const moveBottom = (self: Player, stage: PIXI.Container) => {
+    // Jump / todo ladder descending
+    //self.y += 10;
+    //stage.y -= 10;
+    self.texture = self.walkSouth[(Math.floor(Date.now() / 150) % 4)];
+}
+
+const attack = (self: Player, direction: Direction) => {
+    if (direction === Direction.WEST) {
+        self.texture = self.attackWest[(Math.floor(Date.now() / 150) % 4)];
+    } else {
+        self.texture = self.attackEast[(Math.floor(Date.now() / 150) % 4)];
+    }
+}
+
+const idle = (self: Player, direction: Direction) => {
+    self.velocityX = 0;
+    if (direction === Direction.WEST) {
+        self.texture = self.idleWest[(Math.floor(Date.now() / 150) % 4)];
+    } else {
+        self.texture = self.idleEast[(Math.floor(Date.now() / 150) % 4)];
+    }
+}
+
+const applyGravity = (self: Player) => {
+    const collision = self.currentColumn.detectVerticalCollision(self);
     if (collision.bottom) {
         self.velocityY = 0;
         self.y = self.y + collision.yRemainder;

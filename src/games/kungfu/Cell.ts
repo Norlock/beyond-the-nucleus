@@ -21,6 +21,16 @@ export class Cell {
     detectLeftCollision: (character: MovementSprite, collision: Collision) => void;
     detectRightCollision: (character: MovementSprite, collision: Collision) => void;
 
+    inYRange: (character: MovementSprite) => boolean;
+
+    get tileTop(): number {
+        return this.tileSprite.y;
+    }
+
+    get tileBottom(): number {
+        return this.tileTop + this.tileSprite.height;
+    }
+
     // Prints recursively
     print: () => void;
 
@@ -33,6 +43,7 @@ export class Cell {
         self.print = () => print(self);
         self.addCell = (add, head) => addCell(self, add, head);
         self.addToStage = (component, x) => addToStage(self, component, x);
+        self.inYRange = (character) => inYRange(self, character);
 
         self.detectTopCollision = (movement, collision) => detectTopCollision(self, movement, collision);
         self.detectBottomCollision = (movement, collision) => detectBottomCollision(self, movement, collision);
@@ -70,6 +81,11 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
     self.tileSprite = sprite;
 }
 
+const inYRange = (self: Cell, character: MovementSprite): boolean => {
+    return character.y.isBetween(self.tileTop, self.tileBottom) ||
+        character.bottomY.isBetween(self.tileTop, self.tileBottom);
+}
+
 const detectTopCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     const characterNextY = character.y + character.velocityY;
     const tileBottomY = self.tileSprite.y + self.tileSprite.height;
@@ -99,27 +115,23 @@ const detectBottomCollision = (self: Cell, character: MovementSprite, collision:
 }
 
 const detectLeftCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
-    // TODO
-    //if (self.tileSprite.y === character.y + character.height) {
-        //collision.bottom = true;
-        //return collision;
-    //} else if (self.tileSprite.y === other.y - other.height) {
-        //collision.top = true;
-        //return collision;
-    //}
-
-    self.above?.detectLeftCollision(character, collision);
+    // TODO calculate virtual Y of char at this column
+    if (self.inYRange(character)) {
+        collision.left = true;
+        collision.xRemainer = character.x - (self.tileSprite.x + self.tileSprite.width);
+    } else {
+        self.above?.detectLeftCollision(character, collision);
+    }
 }
 
 const detectRightCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
     // TODO
-    //if (self.tileSprite.y === other.y + other.height) {
-        //collision.bottom = true;
-    //} else if (self.tileSprite.y === other.y - other.height) {
-        //collision.top = true;
-    //}
-
-    self.above?.detectBottomCollision(character, collision);
+    if (self.inYRange(character)) {
+        collision.right = true;
+        collision.xRemainer = (self.tileSprite.x + self.tileSprite.width) - character.x;
+    } else {
+        self.above?.detectLeftCollision(character, collision);
+    }
 }
 
 const print = (self: Cell): void => {

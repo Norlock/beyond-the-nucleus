@@ -9,6 +9,10 @@ export class MovementSprite extends PIXI.Sprite {
     currentColumn: Column;
     updateColumn: () => void;
 
+    get bottomY(): number {
+        return this.y + this.height;
+    }
+
     constructor(component: GameComponent, x: number, y: number) {
         super();
         this.x = x;

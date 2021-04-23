@@ -32,9 +32,10 @@ Some test app for ideas
 - [ ] Think about different resolutions in relation with scroll offset or component placement 
 
 ## Roadmap Kungfu
-- [ ] collision
+- [ ] collision (and collision with jump/fall)
 - [ ] falling 
 - [ ] jumping
+- [ ] movement LR 
 - [ ] maybe fetch map from backend?
 - [ ] enemies
 - [ ] multiple grids, for background maybe

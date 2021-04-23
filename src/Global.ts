@@ -6,6 +6,6 @@ Array.prototype.replace = function<T>(source: T, target: T): T[] {
     return (this as Array<T>).map(item => item === source ? target : item)
 }
 
-Number.prototype.isBetween = (low: number, high: number) => {
+Number.prototype.isBetween = function (low: number, high: number) {
     return low < this.valueOf() && this.valueOf() < high;
 }
