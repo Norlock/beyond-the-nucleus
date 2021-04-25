@@ -245,6 +245,24 @@ const initResources = (self: Player, component: GameComponent) => {
     self.walkWest.push(new PIXI.Texture(resources.walkWest.texture.baseTexture, 
                                            new PIXI.Rectangle(48, 0, 16, 24)));
 
+    self.walkNorth.push(new PIXI.Texture(resources.walkNorth.texture.baseTexture, 
+                                           new PIXI.Rectangle(0, 0, 16, 24)));
+    self.walkNorth.push(new PIXI.Texture(resources.walkNorth.texture.baseTexture, 
+                                           new PIXI.Rectangle(16, 0, 16, 24)));
+    self.walkNorth.push(new PIXI.Texture(resources.walkNorth.texture.baseTexture, 
+                                           new PIXI.Rectangle(32, 0, 16, 24)));
+    self.walkNorth.push(new PIXI.Texture(resources.walkNorth.texture.baseTexture, 
+                                           new PIXI.Rectangle(48, 0, 16, 24)));
+
+    self.walkSouth.push(new PIXI.Texture(resources.walkSouth.texture.baseTexture, 
+                                           new PIXI.Rectangle(0, 0, 16, 24)));
+    self.walkSouth.push(new PIXI.Texture(resources.walkSouth.texture.baseTexture, 
+                                           new PIXI.Rectangle(16, 0, 16, 24)));
+    self.walkSouth.push(new PIXI.Texture(resources.walkSouth.texture.baseTexture, 
+                                           new PIXI.Rectangle(32, 0, 16, 24)));
+    self.walkSouth.push(new PIXI.Texture(resources.walkSouth.texture.baseTexture, 
+                                           new PIXI.Rectangle(48, 0, 16, 24)));
+
     self.attackEast.push(new PIXI.Texture(resources.attackFSEast.texture.baseTexture, 
                                            new PIXI.Rectangle(0, 0, 24, 24)));
     self.attackEast.push(new PIXI.Texture(resources.attackFSEast.texture.baseTexture, 
