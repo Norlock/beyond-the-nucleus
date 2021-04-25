@@ -49,6 +49,7 @@ export const RenderMap = (self: GameComponent): void => {
 
 export const column0 = (grid: Grid) => {
     const column = grid.head;
+    column.addCell(Cell.create(10, getTile(70)));
     column.addCell(Cell.create(11, getTile(70)));
     return column;
 }
@@ -85,6 +86,7 @@ export const column5 = (grid: Grid) => {
 
 export const column6 = (grid: Grid) => {
     const column = grid.appendColumn();
+    column.addCell(Cell.create(10, getTile(70)));
     column.addCell(Cell.create(11, getTile(70)));
     return column;
 }

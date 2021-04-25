@@ -82,8 +82,10 @@ const addToStage = (self: Cell, component: GameComponent, x: number): void => {
 }
 
 const inYRange = (self: Cell, character: MovementSprite): boolean => {
-    return character.y.isBetween(self.tileTop, self.tileBottom) ||
-        character.bottomY.isBetween(self.tileTop, self.tileBottom);
+    const above = self.tileBottom < character.y;
+    const below = character.bottomY < self.tileBottom;
+
+    return (!above && !below);
 }
 
 const detectTopCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
@@ -118,7 +120,7 @@ const detectLeftCollision = (self: Cell, character: MovementSprite, collision: C
     // TODO calculate virtual Y of char at this column
     if (self.inYRange(character)) {
         collision.left = true;
-        collision.xRemainer = character.x - (self.tileSprite.x + self.tileSprite.width);
+        collision.xRemainer = (self.tileSprite.x + self.tileSprite.width) - character.x;
     } else {
         self.above?.detectLeftCollision(character, collision);
     }
@@ -128,7 +130,7 @@ const detectRightCollision = (self: Cell, character: MovementSprite, collision: 
     // TODO
     if (self.inYRange(character)) {
         collision.right = true;
-        collision.xRemainer = (self.tileSprite.x + self.tileSprite.width) - character.x;
+        collision.xRemainer = self.tileSprite.x - character.endX;
     } else {
         self.above?.detectLeftCollision(character, collision);
     }

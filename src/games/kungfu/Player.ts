@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
 import {InputHandler} from "src/modules/inputHandler/InputHandler";
-import {Collision} from './Collision';
 import {Column} from './Column';
 import {MovementSprite} from './MovementSprite';
 
@@ -82,7 +81,7 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
             idle(self, direction);
         }
 
-        component.game.app.render();
+        //component.game.app.render();
     };
 
     component.game.app.ticker.add(scroll);
@@ -140,7 +139,6 @@ const moveLeft = (self: Player, stage: PIXI.Container) => {
     }
 
     self.updateColumn();
-    console.log('column', self.velocityX);
 }
 
 const moveRight = (self: Player, stage: PIXI.Container) => {
@@ -163,7 +161,6 @@ const moveRight = (self: Player, stage: PIXI.Container) => {
     }
 
     self.updateColumn();
-    console.log('column', self.currentColumn);
 }
 
 const moveTop = (self: Player, stage: PIXI.Container) => {

@@ -13,11 +13,14 @@ export class MovementSprite extends PIXI.Sprite {
         return this.y + this.height;
     }
 
+    get endX(): number {
+        return this.x + this.width;
+    }
+
     constructor(component: GameComponent, x: number, y: number) {
         super();
         this.x = x;
         this.y = y;
-        this.anchor.set(0.5, 0);
         this.updateColumn = () => updateColumn(this, component);
     }
 }

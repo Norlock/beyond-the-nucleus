@@ -100,8 +100,8 @@ const detectLeftCollision = (self: Column, component: GameComponent, character: 
 const detectRightCollision = (self: Column, component: GameComponent, character: MovementSprite): Collision => {
     const collision = new Collision();
 
-    const newX = character.x + character.velocityX;
-    const targetIndex = component.resourceHandler.characterGrid.getColumnIndex(newX);
+    const newEndX = character.endX + character.velocityX;
+    const targetIndex = component.resourceHandler.characterGrid.getColumnIndex(newEndX);
 
     if (targetIndex === self.x || self.next === undefined) {
         return collision;
@@ -117,5 +117,5 @@ const detectRightCollision = (self: Column, component: GameComponent, character:
         }  
     }
 
-    return detectCollisionRecursively(self.previous);
+    return detectCollisionRecursively(self.next);
 }
