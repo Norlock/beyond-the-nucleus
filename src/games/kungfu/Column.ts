@@ -78,6 +78,7 @@ const detectLeftCollision = (self: Column, component: GameComponent, character: 
 
     const newX = character.x + character.velocityX;
     const targetIndex = component.resourceHandler.characterGrid.getColumnIndex(newX);
+    console.log('x', self.x, targetIndex);
 
     if (targetIndex === self.x || self.previous === undefined) {
         return collision;
@@ -103,7 +104,9 @@ const detectRightCollision = (self: Column, component: GameComponent, character:
 
     const newEndX = character.endX + character.velocityX;
     const targetIndex = component.resourceHandler.characterGrid.getColumnIndex(newEndX);
+    console.log('x', self.x, targetIndex);
 
+    // todo undefined maybe block
     if (targetIndex === self.x || self.next === undefined) {
         return collision;
     }

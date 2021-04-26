@@ -28,6 +28,9 @@ export class Player extends MovementSprite {
     attackNorth: PIXI.Texture[] = [];
     attackSouth: PIXI.Texture[] = [];
 
+    jumpEast: PIXI.Texture;
+    jumpWest: PIXI.Texture;
+
     private constructor(component: GameComponent, x: number, y: number) {
         super(component, x, y); 
         this.velocityY = 0;
@@ -57,6 +60,7 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
 
     const scroll = (): void => {
         const collision = 0 <= self.velocityY ? fall(self, stage) : jump(self, stage);
+        component.game.app.render();
 
         if (isKeyDown) {
             switch (keyPressed) {
@@ -74,6 +78,10 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
                 break;
                 case 'w':
                     if (collision.bottom) { // Only jump if on ground
+                        if (self.direction === Direction.EAST)
+                            self.texture =  self.jumpEast;
+                        else
+                            self.texture = self.jumpWest;
                         moveTop(self, stage);
                     }
                 break;
@@ -84,7 +92,7 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
                     attack(self);
                 break;
             }
-        } else {
+        } else if (collision.bottom) {
             idle(self);
         }
     };
@@ -161,8 +169,6 @@ const updateHorizontal = (self: Player, stage: PIXI.Container, collision: Collis
 
 const moveTop = (self: Player, stage: PIXI.Container) => {
     // Jump / todo ladder climbing
-    //self.y -= 10;
-    //stage.y += 10;
     const ladder = false;
     if (ladder) {
         self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
@@ -196,51 +202,55 @@ const idle = (self: Player) => {
 }
 
 const fall = (self: Player, stage: PIXI.Container) => {
+    if (self.velocityY < 9) 
+        self.velocityY += 3;
+
     const collision = self.currentColumn.detectBottomCollision(self);
     if (collision.bottom) {
         self.velocityY = 0;
         self.y += collision.yRemainder;
         stage.y -= collision.yRemainder;
+        if (0 < collision.yRemainder)
+            updateHorizontalInAir(self, stage);
     } else {
-        if (self.velocityY < 9) {
-            self.velocityY += 3;
-        }
         self.y += self.velocityY;
         stage.y -= self.velocityY;
+
         updateHorizontalInAir(self, stage);
     }
+    
     return collision;
 }
 
 const jump = (self: Player, stage: PIXI.Container) => {
+    // TODO -3 etc as variable
+    if (self.velocityY <= -3) 
+        self.velocityY += 3;
+
+    updateHorizontalInAir(self, stage);
+
     const collision = self.currentColumn.detectTopCollision(self);
     if (collision.top) {
         self.velocityY = 0;
         self.y += collision.yRemainder;
         stage.y -= collision.yRemainder;
     } else {
-        // TODO -3 etc as variable
-        if (self.velocityY <= -3) {
-            self.velocityY += 3;
-        }
         self.y += self.velocityY;
         stage.y -= self.velocityY;
-        updateHorizontalInAir(self, stage);
     }
 
     return collision;
-
 }
 
 const updateHorizontalInAir = (self: Player, stage: PIXI.Container) => {
     if (0 < self.velocityX) {
+        const collision = self.currentColumn.detectRightCollision(self);
+        updateHorizontal(self, stage, collision);
         self.velocityX--;
-        const collision = self.currentColumn.detectRightCollision(self);
-        updateHorizontal(self, stage, collision);
     } else if (self.velocityX < 0) {
-        self.velocityX++;
-        const collision = self.currentColumn.detectRightCollision(self);
+        const collision = self.currentColumn.detectLeftCollision(self);
         updateHorizontal(self, stage, collision);
+        self.velocityX++;
     }
 }
 
@@ -317,5 +327,9 @@ const initResources = (self: Player, component: GameComponent) => {
                                            new PIXI.Rectangle(48, 0, 24, 24)));
     self.attackWest.push(new PIXI.Texture(resources.attackFSWest.texture.baseTexture, 
                                            new PIXI.Rectangle(72, 0, 24, 24)));
+
+    self.jumpEast = new PIXI.Texture(resources.jumpEast.texture.baseTexture);
+    self.jumpWest = new PIXI.Texture(resources.jumpWest.texture.baseTexture);
+    self.texture = self.idleWest[(Math.floor(Date.now() / 150) % 4)];
 }
 

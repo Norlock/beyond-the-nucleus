@@ -29,7 +29,7 @@ export const GenerateMap = (self: GameComponent): void => {
 
     grid.appendContainer(15);
 
-    const player = Player.create(self, 2 * tileSize, 6 * tileSize);
+    const player = Player.create(self, 100, 5 * tileSize);
 
     stage.addChild(player);
 }
@@ -50,54 +50,45 @@ export const column0 = (grid: Grid) => {
     const column = grid.head;
     column.addCell(Cell.create(10, getTile(70)));
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column1 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column2 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column3 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column4 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column5 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column6 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(10, getTile(70)));
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column7 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }
 
 export const column8 = (grid: Grid) => {
     const column = grid.appendColumn();
     column.addCell(Cell.create(11, getTile(70)));
-    return column;
 }

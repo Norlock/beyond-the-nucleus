@@ -40,8 +40,8 @@ export const MergeKungfuResourceHandler = (self: GameComponent): void => {
         app.loader.add('walkSouth','/player/KungFuWalk/NES_Kung_Fu_Man_Walk_SOUTH_strip4.png');
         app.loader.add('attackFSEast','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_EAST_strip4.png');
         app.loader.add('attackFSWest','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_WEST_strip4.png');
-        //app.loader.add('attackFSEast','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_strip4.png');
-        //app.loader.add('attackFSEast','/player/KungFuAttack/NES_Kung_Fu_Man_AttackFS_strip4.png');
+        app.loader.add('jumpEast','/player/KungFuJump/NES_Kung_Fu_Man_Jump_EAST.png');
+        app.loader.add('jumpWest','/player/KungFuJump/NES_Kung_Fu_Man_Jump_WEST.png');
 
         app.loader.onError.add((err: any) => LOG.error(err));
         app.loader.load(loader => {
