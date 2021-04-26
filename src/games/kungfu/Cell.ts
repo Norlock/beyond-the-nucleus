@@ -101,7 +101,6 @@ const detectTopCollision = (self: Cell, character: MovementSprite, collision: Co
 }
 
 const detectBottomCollision = (self: Cell, character: MovementSprite, collision: Collision): void => {
-    console.log('char', character);
     const characterBottomY = character.y + character.height;
     const characterNextBottomY = characterBottomY + character.velocityY;
     const tileTopY = self.tileSprite.y;

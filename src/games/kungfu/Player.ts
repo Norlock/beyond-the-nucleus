@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js';
 import {GameComponent} from "src/components/base/GameComponent";
 import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
 import {InputHandler} from "src/modules/inputHandler/InputHandler";
+import {Collision} from './Collision';
 import {Column} from './Column';
-import {MovementSprite} from './MovementSprite';
+import {Direction, MovementSprite} from './MovementSprite';
 
 // TODO
 // if in air disable LR movement
@@ -31,11 +32,15 @@ export class Player extends MovementSprite {
         super(component, x, y); 
         this.velocityY = 0;
         this.velocityX = 0;
+        this.scale.set(2);
     }
 
     static create = (component: GameComponent, x: number, y: number): Player => {
         const self = new Player(component, x, y);
         self.currentColumn = component.resourceHandler.characterGrid.getColumn(x);
+        self.direction = Direction.EAST;
+
+        component.game.app.stage.y += 200;
 
         component.inputHandler = inputHandler(self, component);
         connectInputHandler(component.inputHandler);
@@ -44,44 +49,44 @@ export class Player extends MovementSprite {
     }
 }
 
-enum Direction {
-    WEST,
-    EAST
-}
-
 const inputHandler = (self: Player, component: GameComponent): InputHandler => {
     let isKeyDown: boolean;
     let keyPressed: string;
-    let direction = Direction.EAST;
 
     const { stage } = component.game.app;
 
     const scroll = (): void => {
-        applyGravity(self);
+        const collision = 0 <= self.velocityY ? fall(self, stage) : jump(self, stage);
 
         if (isKeyDown) {
             switch (keyPressed) {
                 case 'a':
-                    moveLeft(self, stage);
+                    if (collision.bottom) { // No left/right movement allowed when in air
+                        self.direction = Direction.WEST;
+                        moveLeft(self, stage);
+                    }
                 break;
                 case 'd':
-                    moveRight(self, stage);
+                    if (collision.bottom) { // No left/right movement allowed when in air
+                        self.direction = Direction.WEST;
+                        moveRight(self, stage);
+                    }
                 break;
                 case 'w':
-                    moveTop(self, stage);
+                    if (collision.bottom) { // Only jump if on ground
+                        moveTop(self, stage);
+                    }
                 break;
                 case 's':
                     moveBottom(self, stage);
                 break;
                 case ' ':
-                    attack(self, direction);
+                    attack(self);
                 break;
             }
         } else {
-            idle(self, direction);
+            idle(self);
         }
-
-        //component.game.app.render();
     };
 
     component.game.app.ticker.add(scroll);
@@ -92,24 +97,21 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
 
     const keyDown = (event: KeyboardEvent): void => {
         isKeyDown = true;
-        console.log('keypress', event.key);
+        //console.log('keypress', event.key);
 
         //if (event.key 
-        keyPressed = event.key;
     }
 
     const keyPress = (event: KeyboardEvent): void => {
+        keyPressed = event.key;
+
         if (event.key === "\\") {
             const { devContainer } = component.resourceHandler;
             devContainer.visible = !devContainer.visible;
             component.game.app.render();
         } else if (event.key === "Escape") {
             component.game.cleanup();
-        } else if (event.key === 'a') {
-            direction = Direction.WEST;
-        } else if (event.key === 'd') {
-            direction = Direction.EAST;
-        }  
+        } 
     }
 
     return {
@@ -129,16 +131,7 @@ const moveLeft = (self: Player, stage: PIXI.Container) => {
         self.velocityX -= 3;
 
     const collision = self.currentColumn.detectLeftCollision(self);
-
-    if (collision.left) {
-        self.x += collision.xRemainer;
-        stage.x -= collision.xRemainer; 
-    } else {
-        self.x += self.velocityX;
-        stage.x -= self.velocityX;
-    }
-
-    self.updateColumn();
+    updateHorizontal(self, stage, collision);
 }
 
 const moveRight = (self: Player, stage: PIXI.Container) => {
@@ -151,8 +144,11 @@ const moveRight = (self: Player, stage: PIXI.Container) => {
         self.velocityX += 3;
 
     const collision = self.currentColumn.detectRightCollision(self);
+    updateHorizontal(self, stage, collision);
+}
 
-    if (collision.right) {
+const updateHorizontal = (self: Player, stage: PIXI.Container, collision: Collision) => {
+    if (collision.left || collision.right) {
         self.x += collision.xRemainer;
         stage.x -= collision.xRemainer; 
     } else {
@@ -167,7 +163,12 @@ const moveTop = (self: Player, stage: PIXI.Container) => {
     // Jump / todo ladder climbing
     //self.y -= 10;
     //stage.y += 10;
-    self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
+    const ladder = false;
+    if (ladder) {
+        self.texture = self.walkNorth[(Math.floor(Date.now() / 150) % 4)];
+    } else {
+        self.velocityY = -18;
+    }
 }
 
 const moveBottom = (self: Player, stage: PIXI.Container) => {
@@ -177,33 +178,69 @@ const moveBottom = (self: Player, stage: PIXI.Container) => {
     self.texture = self.walkSouth[(Math.floor(Date.now() / 150) % 4)];
 }
 
-const attack = (self: Player, direction: Direction) => {
-    if (direction === Direction.WEST) {
+const attack = (self: Player) => {
+    if (self.direction === Direction.WEST) {
         self.texture = self.attackWest[(Math.floor(Date.now() / 150) % 4)];
     } else {
         self.texture = self.attackEast[(Math.floor(Date.now() / 150) % 4)];
     }
 }
 
-const idle = (self: Player, direction: Direction) => {
+const idle = (self: Player) => {
     self.velocityX = 0;
-    if (direction === Direction.WEST) {
+    if (self.direction === Direction.WEST) {
         self.texture = self.idleWest[(Math.floor(Date.now() / 150) % 4)];
     } else {
         self.texture = self.idleEast[(Math.floor(Date.now() / 150) % 4)];
     }
 }
 
-const applyGravity = (self: Player) => {
-    const collision = self.currentColumn.detectVerticalCollision(self);
+const fall = (self: Player, stage: PIXI.Container) => {
+    const collision = self.currentColumn.detectBottomCollision(self);
     if (collision.bottom) {
         self.velocityY = 0;
-        self.y = self.y + collision.yRemainder;
+        self.y += collision.yRemainder;
+        stage.y -= collision.yRemainder;
     } else {
         if (self.velocityY < 9) {
-            self.velocityY = self.velocityY + 3;
+            self.velocityY += 3;
         }
-        self.y = self.y + self.velocityY;
+        self.y += self.velocityY;
+        stage.y -= self.velocityY;
+        updateHorizontalInAir(self, stage);
+    }
+    return collision;
+}
+
+const jump = (self: Player, stage: PIXI.Container) => {
+    const collision = self.currentColumn.detectTopCollision(self);
+    if (collision.top) {
+        self.velocityY = 0;
+        self.y += collision.yRemainder;
+        stage.y -= collision.yRemainder;
+    } else {
+        // TODO -3 etc as variable
+        if (self.velocityY <= -3) {
+            self.velocityY += 3;
+        }
+        self.y += self.velocityY;
+        stage.y -= self.velocityY;
+        updateHorizontalInAir(self, stage);
+    }
+
+    return collision;
+
+}
+
+const updateHorizontalInAir = (self: Player, stage: PIXI.Container) => {
+    if (0 < self.velocityX) {
+        self.velocityX--;
+        const collision = self.currentColumn.detectRightCollision(self);
+        updateHorizontal(self, stage, collision);
+    } else if (self.velocityX < 0) {
+        self.velocityX++;
+        const collision = self.currentColumn.detectRightCollision(self);
+        updateHorizontal(self, stage, collision);
     }
 }
 

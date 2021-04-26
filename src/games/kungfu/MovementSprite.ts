@@ -2,12 +2,18 @@ import * as PIXI from 'pixi.js';
 import {GameComponent} from 'src/components/base/GameComponent';
 import {Column} from './Column';
 
+export enum Direction {
+    WEST,
+    EAST
+}
+
 export class MovementSprite extends PIXI.Sprite {
     velocityX: number;
     velocityY: number;
 
     currentColumn: Column;
     updateColumn: () => void;
+    direction: Direction;
 
     get bottomY(): number {
         return this.y + this.height;

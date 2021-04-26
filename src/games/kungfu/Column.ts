@@ -15,7 +15,8 @@ export class Column {
     setNext: (copyHead?: Cell) =>  Column; 
     setPrevious: (copyHead?: Cell) =>  Column; 
     addCell: (cell: Cell) => void;
-    detectVerticalCollision: (character: MovementSprite) => Collision;
+    detectTopCollision: (character: MovementSprite) => Collision;
+    detectBottomCollision: (character: MovementSprite) => Collision;
     detectRightCollision: (character: MovementSprite) => Collision;
     detectLeftCollision: (character: MovementSprite) => Collision;
 
@@ -28,7 +29,8 @@ export class Column {
         self.setPrevious = (copyHead) => setPrevious(self, component, copyHead);
         self.addCell = (cell) => addCell(self, cell);
         self.addToStage = (component) => self.head.addToStage(component, self.x);
-        self.detectVerticalCollision = (character) => detectVerticalCollision(self, character);
+        self.detectTopCollision = (character) => detectTopCollision(self, character);
+        self.detectBottomCollision = (character) => detectBottomCollision(self, character);
         self.detectLeftCollision = (character) => detectLeftCollision(self, component, character);
         self.detectRightCollision = (character) => detectRightCollision(self, component, character);
         return self;
@@ -59,16 +61,15 @@ const addCell = (self: Column, cell: Cell): void => {
     }
 }
 
-const detectVerticalCollision = (self: Column, character: MovementSprite): Collision => {
+const detectTopCollision = (self: Column, character: MovementSprite): Collision => {
     const collision = new Collision();
+    self.head.detectTopCollision(character, collision);
+    return collision;
+}
 
-    // Velocity 0
-    if (0 <= character.velocityY) {
-        self.head.detectBottomCollision(character, collision);
-    } else {
-        self.head.detectTopCollision(character, collision);
-    }
-
+const detectBottomCollision = (self: Column, character: MovementSprite): Collision => {
+    const collision = new Collision();
+    self.head.detectBottomCollision(character, collision);
     return collision;
 }
 

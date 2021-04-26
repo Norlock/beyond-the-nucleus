@@ -29,8 +29,7 @@ export const GenerateMap = (self: GameComponent): void => {
 
     grid.appendContainer(15);
 
-    let player = Player.create(self, 2 * tileSize, 3 * tileSize);
-    player.scale.set(2);
+    const player = Player.create(self, 2 * tileSize, 6 * tileSize);
 
     stage.addChild(player);
 }
