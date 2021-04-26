@@ -68,7 +68,7 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
                 break;
                 case 'd':
                     if (collision.bottom) { // No left/right movement allowed when in air
-                        self.direction = Direction.WEST;
+                        self.direction = Direction.EAST;
                         moveRight(self, stage);
                     }
                 break;
