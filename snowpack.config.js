@@ -17,9 +17,7 @@ module.exports = {
         types: true
     },
     devOptions: {},
-    buildOptions: {
-        htmlFragments: true
-    },
+    buildOptions: {},
     alias: {
         "src": "./src",
         "public": "./public",
