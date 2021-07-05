@@ -1,40 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="src/Index.js" type="module"></script>
-    <meta charset="utf-8">
-    <title>Beyond the nucleus</title>
-    <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
-    <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet">
-    <link href="src/assets/furacode-webfontkit/stylesheet.css" rel="stylesheet">
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
+        <link href="src/assets/furacode-webfontkit/stylesheet.css" rel="stylesheet" />
+    </head>
 
-  <body>
-    <div id="splash-container"> 
-      <h1 id="splash-header">Beyond the Nucleus</h1>
-      <img id="splash-image-bridge" class="splash-image fadeIn" 
-        alt="splash" src="src/assets/splash.jpg">
-      <img id="splash-image-earth" class="splash-image"
-        src="src/assets/splash2.jpg" loading="lazy" alt="splash-green">
-      <button id="splash-button" type="button">Enter the zone</button>
-    </div>
+    <body>
+        <div id="splash-container">
+            <h1 id="splash-header">Beyond the Nucleus</h1>
+            <img id="splash-image-bridge" class="splash-image fadeIn" alt="splash" src="src/assets/splash.jpg" />
+            <img
+                id="splash-image-earth"
+                class="splash-image"
+                src="src/assets/splash2.jpg"
+                loading="lazy"
+                alt="splash-green"
+            />
+            <button id="splash-button" type="button">Enter the zone</button>
+        </div>
 
-    <div id="fragment-container"></div>
-    <div id="pixi-canvas"></div>
-    <div id="game-canvas"></div>
+        <div id="app"></div>
 
-    <div id="video-container" class="hide"></div>
+        <div id="fragment-container"></div>
 
-    <div id="help-control-wrapper">
-      <span id="help-control" class="info-control">?</span>
-    </div>
-    <h1 id="chapter-title">Ocean</h1>
-    <div id="toolbar-controls">
-      <span id="game-control" class="info-control additional hide">P</span>
-      <span id="video-control" class="info-control additional hide">V</span>
-      <span id="next-control" class="info-control disable">S</span>
-      <span id="previous-control" class="info-control disable">B</span>
-      <span id="page-number" class="info-control">1</span>
-    </div>
-  </body>
+        <script src="src/index.js" type="module"></script>
+    </body>
 </html>

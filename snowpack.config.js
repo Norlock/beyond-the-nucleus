@@ -1,7 +1,6 @@
 // Snowpack Configuration File
 // See all supported options: https://www.snowpack.dev/reference/configuration
 
-/** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
     mount: {
         "src": "/src",
@@ -9,16 +8,15 @@ module.exports = {
     },
     plugins: [
         '@snowpack/plugin-typescript',
-        '@snowpack/plugin-sass'
+        '@snowpack/plugin-sass',
+        'snowpack-plugin-elm',
     ],
     packageOptions: {
         polyfillNode: true,
         source: 'remote',
         types: true
     },
-    devOptions: {
-        hmrDelay: 50
-    },
+    devOptions: {},
     buildOptions: {
         htmlFragments: true
     },
