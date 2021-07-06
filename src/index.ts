@@ -1,7 +1,7 @@
 import './styles/index.scss'
 import './Global'
 import { preload } from './pixi/PixiApp'
-import { Elm } from './Main.elm'
+import { initElm } from './elm-bridge'
 
 const initSplash = () => {
     const button = document.getElementById('splash-button')
@@ -50,9 +50,3 @@ const initSplash = () => {
 }
 
 initSplash()
-
-function initElm() {
-    const app = Elm.Main.init({
-        node: document.getElementById('app')
-    })
-}

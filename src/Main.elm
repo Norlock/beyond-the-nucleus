@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events
+import Components
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as Decode
@@ -19,12 +20,22 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { showHelp = False }, Cmd.none )
+    ( { showHelp = False
+      , component = Components.components
+      }
+    , Cmd.none
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        StepForwards ->
+            ( stepForwards model, Cmd.none )
+
+        StepBackwards ->
+            ( model, Cmd.none )
+
         ToggleHelp ->
             ( { model | showHelp = not model.showHelp }, Cmd.none )
 
@@ -32,8 +43,18 @@ update msg model =
             ( model, Cmd.none )
 
 
+stepForwards : Model -> Model
+stepForwards model =
+    case model.component.next of
+        Next list ->
+            list
+                |> List.head
+                |> Maybe.withDefault model.component
+                |> (\new -> { model | component = new })
+
+
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Browser.Events.onKeyPress keyDecoder
 
 
@@ -48,6 +69,12 @@ toKey char =
         "?" ->
             ToggleHelp
 
+        "s" ->
+            StepForwards
+
+        "b" ->
+            StepBackwards
+
         _ ->
             Noop
 
@@ -59,22 +86,43 @@ view model =
     }
 
 
+parseChapter : Chapter -> String
+parseChapter chapter =
+    case chapter of
+        Ocean ->
+            "Ocean"
+
+        Zendo ->
+            "Zendo"
+
+        Natives ->
+            "Natives"
+
+
+
+-- TODO hide / show canvas blur
+
+
 body : Model -> Html Msg
-body model =
+body { component, showHelp } =
+    let
+        { index, chapter } =
+            component
+    in
     div [ class "container" ]
         [ div [ id "pixi-canvas" ] []
         , div [ id "game-canvas" ] []
-        , div [ id "help-overlay", classList [ ( "show", model.showHelp ) ] ] [ helpContainer ]
+        , div [ id "help-overlay", classList [ ( "show", showHelp ) ] ] [ helpContainer ]
         , div [ id "help-control-wrapper" ]
             [ span [ id "help-control", class "info-control" ] [ text "?" ]
             ]
-        , h1 [ id "chapter-title" ] [ text "Ocean" ] -- TODO model chapter name
+        , h1 [ id "chapter-title" ] [ text (parseChapter chapter) ]
         , div [ id "toolbar-controls" ]
             [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
             , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
             , span [ id "next-control", class "info-control disable" ] [ text "S" ]
             , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
-            , span [ id "page-number", class "info-control" ] [ text "1" ] -- TODO index
+            , span [ id "page-number", class "info-control" ] [ text (String.fromInt index) ]
             ]
         ]
 
