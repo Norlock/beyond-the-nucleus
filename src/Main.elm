@@ -28,6 +28,7 @@ init _ =
     ( { showHelp = False
       , components = components
       , current = List.head (Dict.values components)
+      , dialog = Nothing
       }
     , Cmd.none
     )
@@ -138,6 +139,12 @@ defaultView component showHelp =
     let
         { index, chapter } =
             component
+
+        hasNext =
+            Components.hasDirection component Next
+
+        hasPrevious =
+            Components.hasDirection component Previous
     in
     div [ class "container" ]
         [ div [ id "pixi-canvas" ] []
@@ -150,8 +157,18 @@ defaultView component showHelp =
         , div [ id "toolbar-controls" ]
             [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
             , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
-            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
-            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
+            , span
+                [ id "next-control"
+                , class "info-control"
+                , classList [ ( "disable", not hasNext ) ]
+                ]
+                [ text "S" ]
+            , span
+                [ id "previous-control"
+                , class "info-control"
+                , classList [ ( "disable", not hasPrevious ) ]
+                ]
+                [ text "B" ]
             , span [ id "page-number", class "info-control" ] [ text (String.fromInt index) ]
             ]
         ]

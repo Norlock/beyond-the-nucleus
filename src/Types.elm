@@ -7,6 +7,7 @@ type alias Model =
     { showHelp : Bool
     , components : ComponentDict
     , current : Maybe Component
+    , dialog : Maybe Dialog
     }
 
 
@@ -15,6 +16,12 @@ type alias Component =
     , chapter : Chapter
     , connections : List Connection
     , index : Int
+    }
+
+
+type alias ErrorData =
+    { title : String
+    , message : String
     }
 
 
@@ -38,6 +45,10 @@ type Chapter
     = Ocean
     | Zendo
     | Natives
+
+
+type Dialog
+    = Error ErrorData
 
 
 type Msg

@@ -1,4 +1,4 @@
-module Components exposing (components, stepBackwards, stepForwards)
+module Components exposing (components, hasDirection, stepBackwards, stepForwards)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
@@ -126,11 +126,16 @@ stepForwards model =
             model
 
 
+getConnection : Component -> Direction -> Maybe Connection
+getConnection component directionCompare =
+    component.connections
+        |> List.filter (\( direction, _ ) -> direction == directionCompare)
+        |> List.head
+
+
 getNext : Component -> ComponentDict -> Maybe Component
 getNext component dict =
-    component.connections
-        |> List.filter (\( direction, _ ) -> direction == Next)
-        |> List.head
+    getConnection component Next
         |> Maybe.map (\( _, id ) -> findComponent id dict)
         |> Maybe.withDefault Nothing
 
@@ -149,8 +154,13 @@ stepBackwards model =
 
 getPrevious : Component -> ComponentDict -> Maybe Component
 getPrevious component dict =
-    component.connections
-        |> List.filter (\( direction, _ ) -> direction == Previous)
-        |> List.head
+    getConnection component Previous
         |> Maybe.map (\( _, id ) -> findComponent id dict)
         |> Maybe.withDefault Nothing
+
+
+hasDirection : Component -> Direction -> Bool
+hasDirection component direction =
+    getConnection component direction
+        |> Maybe.map (\_ -> True)
+        |> Maybe.withDefault False
