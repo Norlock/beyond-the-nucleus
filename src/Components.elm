@@ -1,4 +1,4 @@
-module Components exposing (..)
+module Components exposing (components, stepBackwards, stepForwards)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
@@ -114,28 +114,43 @@ hasPreviousDirection id comparable =
         comparable.connections
 
 
+stepForwards : Model -> Model
+stepForwards model =
+    case model.current of
+        Just component ->
+            getNext component model.components
+                |> Maybe.map (\new -> { model | current = Just new })
+                |> Maybe.withDefault model
 
---stepForwards : Model -> Model
---stepForwards model =
---let
---{ current } =
---model
---next = findComponent current.
---in
---case model.component.next of
---Next list ->
---list
---|> List.head
---|> Maybe.withDefault model.component
---|> (\new -> { model | component = new })
---stepBackwards : Model -> Model
---stepBackwards model =
---case model.component.previous of
---Previous (Just previous) ->
---{ model | component = previous }
---Previous Nothing ->
---model
---addNextConnection : ComponentId -> Component -> Dict String Component -> Dict String Component
---addNextConnection nextId dict component =
---{ component | connections = component.connections ++ [ ( Next, nextId ) ] }
---|> (\updatedComponent -> Dict.insert (getIdStr component.id) updatedComponent dict)
+        Nothing ->
+            model
+
+
+getNext : Component -> ComponentDict -> Maybe Component
+getNext component dict =
+    component.connections
+        |> List.filter (\( direction, _ ) -> direction == Next)
+        |> List.head
+        |> Maybe.map (\( _, id ) -> findComponent id dict)
+        |> Maybe.withDefault Nothing
+
+
+stepBackwards : Model -> Model
+stepBackwards model =
+    case model.current of
+        Just component ->
+            getPrevious component model.components
+                |> Maybe.map (\new -> { model | current = Just new })
+                |> Maybe.withDefault model
+
+        Nothing ->
+            model
+
+
+getPrevious : Component -> ComponentDict -> Maybe Component
+getPrevious component dict =
+    component.connections
+        |> List.filter (\( direction, _ ) -> direction == Previous)
+        |> List.head
+        |> Maybe.map (\( _, id ) -> findComponent id dict)
+        |> Maybe.withDefault Nothing

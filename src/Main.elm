@@ -37,10 +37,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         StepForwards ->
-            ( model, Cmd.none )
+            ( Components.stepForwards model, Cmd.none )
 
         StepBackwards ->
-            ( model, Cmd.none )
+            ( Components.stepBackwards model, Cmd.none )
 
         ToggleHelp ->
             ( { model | showHelp = not model.showHelp }, Cmd.none )
