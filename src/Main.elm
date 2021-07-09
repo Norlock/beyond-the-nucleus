@@ -3,6 +3,7 @@ module Main exposing (..)
 import Browser
 import Browser.Events
 import Components
+import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as Decode
@@ -20,8 +21,13 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
+    let
+        components =
+            Components.components
+    in
     ( { showHelp = False
-      , component = Components.components
+      , components = components
+      , current = List.head (Dict.values components)
       }
     , Cmd.none
     )
@@ -31,7 +37,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         StepForwards ->
-            ( stepForwards model, Cmd.none )
+            ( model, Cmd.none )
 
         StepBackwards ->
             ( model, Cmd.none )
@@ -41,16 +47,6 @@ update msg model =
 
         Noop ->
             ( model, Cmd.none )
-
-
-stepForwards : Model -> Model
-stepForwards model =
-    case model.component.next of
-        Next list ->
-            list
-                |> List.head
-                |> Maybe.withDefault model.component
-                |> (\new -> { model | component = new })
 
 
 subscriptions : Model -> Sub Msg
@@ -104,7 +100,41 @@ parseChapter chapter =
 
 
 body : Model -> Html Msg
-body { component, showHelp } =
+body model =
+    case model.current of
+        Just current ->
+            defaultView current model.showHelp
+
+        Nothing ->
+            errorView model.showHelp
+
+
+
+-- TODO Show error
+
+
+errorView : Bool -> Html Msg
+errorView showHelp =
+    div [ class "container" ]
+        [ div [ id "pixi-canvas" ] []
+        , div [ id "game-canvas" ] []
+        , div [ id "help-overlay", classList [ ( "show", showHelp ) ] ] [ helpContainer ]
+        , div [ id "help-control-wrapper" ]
+            [ span [ id "help-control", class "info-control" ] [ text "?" ]
+            ]
+        , h1 [ id "chapter-title" ] [ text "" ]
+        , div [ id "toolbar-controls" ]
+            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
+            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
+            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
+            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
+            , span [ id "page-number", class "info-control" ] [ text "-" ]
+            ]
+        ]
+
+
+defaultView : Component -> Bool -> Html Msg
+defaultView component showHelp =
     let
         { index, chapter } =
             component

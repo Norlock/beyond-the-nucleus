@@ -1,19 +1,37 @@
 module Types exposing (..)
 
+import Dict exposing (Dict)
+
 
 type alias Model =
     { showHelp : Bool
-    , component : Component
+    , components : ComponentDict
+    , current : Maybe Component
     }
 
 
 type alias Component =
-    { id : String
+    { id : ComponentId
     , chapter : Chapter
-    , next : Next
-    , previous : Previous
+    , connections : List Connection
     , index : Int
     }
+
+
+type alias ComponentDict =
+    Dict String Component
+
+
+type ComponentId
+    = Ocean1
+    | Ocean2
+    | Ocean3
+    | Ocean4
+    | Ocean5
+    | Ocean6
+    | Zendo1
+    | Zendo2
+    | Zendo3
 
 
 type Chapter
@@ -22,16 +40,17 @@ type Chapter
     | Natives
 
 
-type Next
-    = Next (List Component)
-
-
-type Previous
-    = Previous (Maybe Component)
-
-
 type Msg
     = Noop
+    | ToggleHelp
     | StepForwards
     | StepBackwards
-    | ToggleHelp
+
+
+type alias Connection =
+    ( Direction, ComponentId )
+
+
+type Direction
+    = Next
+    | Previous
