@@ -4,10 +4,9 @@ import Dict exposing (Dict)
 
 
 type alias Model =
-    { showHelp : Bool
-    , components : ComponentDict
+    { components : ComponentDict
     , current : Maybe Component
-    , dialog : Maybe Dialog
+    , ui : UI
     }
 
 
@@ -16,6 +15,12 @@ type alias Component =
     , chapter : Chapter
     , connections : List Connection
     , index : Int
+    }
+
+
+type alias UI =
+    { dialog : Maybe Dialog
+    , highlighted : Maybe Button
     }
 
 
@@ -49,6 +54,7 @@ type Chapter
 
 type Dialog
     = Error ErrorData
+    | ShowHelp
 
 
 type Msg
@@ -56,6 +62,13 @@ type Msg
     | ToggleHelp
     | StepForwards
     | StepBackwards
+    | Highlight (Maybe Button)
+
+
+type Button
+    = HelpButton
+    | NextButton
+    | PreviousButton
 
 
 type alias Connection =

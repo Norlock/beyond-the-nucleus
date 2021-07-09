@@ -25,13 +25,19 @@ init _ =
         components =
             Components.components
     in
-    ( { showHelp = False
-      , components = components
+    ( { components = components
       , current = List.head (Dict.values components)
-      , dialog = Nothing
+      , ui = initUI
       }
     , Cmd.none
     )
+
+
+initUI : UI
+initUI =
+    { dialog = Nothing
+    , highlighted = Nothing
+    }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -44,24 +50,72 @@ update msg model =
             ( Components.stepBackwards model, Cmd.none )
 
         ToggleHelp ->
-            ( { model | showHelp = not model.showHelp }, Cmd.none )
+            ( { model | ui = toggleDialog model.ui }, Cmd.none )
+
+        Highlight btn ->
+            ( handleHighlight model btn, Cmd.none )
 
         Noop ->
             ( model, Cmd.none )
 
 
+getUI : Maybe Dialog -> Maybe Button -> UI
+getUI maybeDialog maybeButton =
+    { dialog = maybeDialog
+    , highlighted = maybeButton
+    }
+
+
+handleHighlight : Model -> Maybe Button -> Model
+handleHighlight model maybeButton =
+    let
+        dialog =
+            model.ui.dialog
+    in
+    case maybeButton of
+        Just HelpButton ->
+            { model | ui = getUI dialog (Just HelpButton) }
+
+        Just NextButton ->
+            { model | ui = getUI dialog (Just NextButton) }
+
+        Just PreviousButton ->
+            { model | ui = getUI dialog (Just PreviousButton) }
+
+        Nothing ->
+            { model | ui = getUI dialog Nothing }
+
+
+toggleDialog : UI -> UI
+toggleDialog ui =
+    if ui.dialog == Just ShowHelp then
+        { ui | dialog = Nothing }
+
+    else
+        { ui | dialog = Just ShowHelp }
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onKeyPress keyDecoder
+    Sub.batch
+        [ Browser.Events.onKeyPress (keyDecoder navKey)
+        , Browser.Events.onKeyDown (keyDecoder highlightKey)
+        , Browser.Events.onKeyUp (keyDecoder releaseHighlight)
+        ]
 
 
-keyDecoder : Decode.Decoder Msg
-keyDecoder =
-    Decode.map toKey (Decode.field "key" Decode.string)
+keyDecoder : (String -> Msg) -> Decode.Decoder Msg
+keyDecoder keyFunction =
+    Decode.map keyFunction (Decode.field "key" Decode.string)
 
 
-toKey : String -> Msg
-toKey char =
+releaseHighlight : String -> Msg
+releaseHighlight _ =
+    Highlight Nothing
+
+
+highlightKey : String -> Msg
+highlightKey char =
     case char of
         "?" ->
             ToggleHelp
@@ -71,6 +125,22 @@ toKey char =
 
         "b" ->
             StepBackwards
+
+        _ ->
+            Noop
+
+
+navKey : String -> Msg
+navKey char =
+    case char of
+        "?" ->
+            Highlight (Just HelpButton)
+
+        "s" ->
+            Highlight (Just NextButton)
+
+        "b" ->
+            Highlight (Just PreviousButton)
 
         _ ->
             Noop
@@ -104,38 +174,18 @@ body : Model -> Html Msg
 body model =
     case model.current of
         Just current ->
-            defaultView current model.showHelp
+            defaultView current model.ui
 
         Nothing ->
-            errorView model.showHelp
+            errorView
 
 
 
 -- TODO Show error
 
 
-errorView : Bool -> Html Msg
-errorView showHelp =
-    div [ class "container" ]
-        [ div [ id "pixi-canvas" ] []
-        , div [ id "game-canvas" ] []
-        , div [ id "help-overlay", classList [ ( "show", showHelp ) ] ] [ helpContainer ]
-        , div [ id "help-control-wrapper" ]
-            [ span [ id "help-control", class "info-control" ] [ text "?" ]
-            ]
-        , h1 [ id "chapter-title" ] [ text "" ]
-        , div [ id "toolbar-controls" ]
-            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
-            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
-            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
-            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
-            , span [ id "page-number", class "info-control" ] [ text "-" ]
-            ]
-        ]
-
-
-defaultView : Component -> Bool -> Html Msg
-defaultView component showHelp =
+defaultView : Component -> UI -> Html Msg
+defaultView component ui =
     let
         { index, chapter } =
             component
@@ -145,13 +195,28 @@ defaultView component showHelp =
 
         hasPrevious =
             Components.hasDirection component Previous
+
+        activate =
+            "activate"
+
+        disable =
+            "disable"
     in
     div [ class "container" ]
         [ div [ id "pixi-canvas" ] []
         , div [ id "game-canvas" ] []
-        , div [ id "help-overlay", classList [ ( "show", showHelp ) ] ] [ helpContainer ]
+        , div
+            [ id "help-overlay"
+            , classList [ ( "show", ui.dialog == Just ShowHelp ) ]
+            ]
+            [ helpContainer ]
         , div [ id "help-control-wrapper" ]
-            [ span [ id "help-control", class "info-control" ] [ text "?" ]
+            [ span
+                [ id "help-control"
+                , class "info-control"
+                , classList [ ( activate, ui.highlighted == Just HelpButton ) ]
+                ]
+                [ text "?" ]
             ]
         , h1 [ id "chapter-title" ] [ text (parseChapter chapter) ]
         , div [ id "toolbar-controls" ]
@@ -160,13 +225,19 @@ defaultView component showHelp =
             , span
                 [ id "next-control"
                 , class "info-control"
-                , classList [ ( "disable", not hasNext ) ]
+                , classList
+                    [ ( disable, not hasNext )
+                    , ( activate, ui.highlighted == Just NextButton )
+                    ]
                 ]
                 [ text "S" ]
             , span
                 [ id "previous-control"
                 , class "info-control"
-                , classList [ ( "disable", not hasPrevious ) ]
+                , classList
+                    [ ( disable, not hasPrevious )
+                    , ( activate, ui.highlighted == Just PreviousButton )
+                    ]
                 ]
                 [ text "B" ]
             , span [ id "page-number", class "info-control" ] [ text (String.fromInt index) ]
@@ -192,4 +263,24 @@ helpContainerListItem key action =
     li []
         [ span [ class "left" ] [ text key ]
         , span [ class "right" ] [ text action ]
+        ]
+
+
+errorView : Html Msg
+errorView =
+    div [ class "container" ]
+        [ div [ id "pixi-canvas" ] []
+        , div [ id "game-canvas" ] []
+        , div [ id "help-overlay" ] [ helpContainer ]
+        , div [ id "help-control-wrapper" ]
+            [ span [ id "help-control", class "info-control" ] [ text "?" ]
+            ]
+        , h1 [ id "chapter-title" ] [ text "" ]
+        , div [ id "toolbar-controls" ]
+            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
+            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
+            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
+            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
+            , span [ id "page-number", class "info-control" ] [ text "-" ]
+            ]
         ]
