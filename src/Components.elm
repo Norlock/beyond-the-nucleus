@@ -1,12 +1,38 @@
-module Components exposing (components, hasDirection, stepBackwards, stepForwards)
+module Components exposing (chapterStr, commandStr, components, hasDirection, idStr, stepBackwards, stepForwards)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
 import Types exposing (..)
 
 
-getIdStr : ComponentId -> String
-getIdStr id =
+chapterStr : Chapter -> String
+chapterStr chapter =
+    case chapter of
+        Ocean ->
+            "Ocean"
+
+        Zendo ->
+            "Zendo"
+
+        Natives ->
+            "Natives"
+
+
+commandStr : JSComponentCommand -> String
+commandStr command =
+    case command of
+        JSActivate ->
+            "activate"
+
+        JSDeactivate ->
+            "deactivate"
+
+        JSIdle ->
+            "idle"
+
+
+idStr : ComponentId -> String
+idStr id =
     case id of
         Ocean1 ->
             "ocean1"
@@ -83,12 +109,12 @@ addComponent id previousId chapter dict =
 
 findComponent : ComponentId -> ComponentDict -> Maybe Component
 findComponent key dict =
-    Dict.get (getIdStr key) dict
+    Dict.get (idStr key) dict
 
 
 insertComponent : Component -> ComponentDict -> ComponentDict
 insertComponent component dict =
-    Dict.insert (getIdStr component.id) component dict
+    Dict.insert (idStr component.id) component dict
 
 
 connectNext : ComponentDict -> ComponentDict

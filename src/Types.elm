@@ -18,6 +18,10 @@ type alias Component =
     }
 
 
+type alias Connection =
+    ( Direction, ComponentId )
+
+
 type alias UI =
     { dialog : Maybe Dialog
     , highlighted : Maybe Button
@@ -27,6 +31,13 @@ type alias UI =
 type alias ErrorData =
     { title : String
     , message : String
+    }
+
+
+type alias JSComponentData =
+    { id : String
+    , chapter : String
+    , command : String
     }
 
 
@@ -71,10 +82,12 @@ type Button
     | PreviousButton
 
 
-type alias Connection =
-    ( Direction, ComponentId )
-
-
 type Direction
     = Next
     | Previous
+
+
+type JSComponentCommand
+    = JSIdle
+    | JSActivate
+    | JSDeactivate

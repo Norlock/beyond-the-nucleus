@@ -9,6 +9,7 @@ Some test app for ideas
 -   [x] Mirror components on Elm side
 -   [x] Navigate throught Elm
 -   [ ] Fix UI settings in Elm
+-   [ ] Fix ports
 -   [ ] Component interface ( activate / deactivate / idle )
 -   [ ] Chapter interface ( activate / deactivate / idle )
 

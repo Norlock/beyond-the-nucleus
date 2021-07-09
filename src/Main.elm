@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Browser
 import Browser.Events
@@ -31,6 +31,14 @@ init _ =
       }
     , Cmd.none
     )
+
+
+getJSComponentData : Component -> JSComponentCommand -> JSComponentData
+getJSComponentData component command =
+    { id = Components.idStr component.id
+    , chapter = Components.chapterStr component.chapter
+    , command = Components.commandStr command
+    }
 
 
 initUI : UI
@@ -153,19 +161,6 @@ view model =
     }
 
 
-parseChapter : Chapter -> String
-parseChapter chapter =
-    case chapter of
-        Ocean ->
-            "Ocean"
-
-        Zendo ->
-            "Zendo"
-
-        Natives ->
-            "Natives"
-
-
 
 -- TODO hide / show canvas blur
 
@@ -218,7 +213,7 @@ defaultView component ui =
                 ]
                 [ text "?" ]
             ]
-        , h1 [ id "chapter-title" ] [ text (parseChapter chapter) ]
+        , h1 [ id "chapter-title" ] [ text (Components.chapterStr chapter) ]
         , div [ id "toolbar-controls" ]
             [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
             , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
@@ -284,3 +279,10 @@ errorView =
             , span [ id "page-number", class "info-control" ] [ text "-" ]
             ]
         ]
+
+
+
+-- Ports
+
+
+port toJSComponent : JSComponentData -> Cmd msg
