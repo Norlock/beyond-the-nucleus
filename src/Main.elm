@@ -45,6 +45,10 @@ initUI : UI
 initUI =
     { dialog = Nothing
     , highlighted = Nothing
+    , showGameControl = False
+    , showVideoControl = False
+    , showChapterAnimation = False
+    , showCanvasBlur = False
     }
 
 
@@ -52,10 +56,15 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         StepForwards ->
-            ( Components.stepForwards model, Cmd.none )
+            ( Components.step model Next, Cmd.none )
 
         StepBackwards ->
-            ( Components.stepBackwards model, Cmd.none )
+            --let
+            --model =
+            --Components.step model Previous
+            --in
+            --( model, toJSComponent model.current )
+            ( Components.step model Previous, Cmd.none )
 
         ToggleHelp ->
             ( { model | ui = toggleDialog model.ui }, Cmd.none )
@@ -67,31 +76,30 @@ update msg model =
             ( model, Cmd.none )
 
 
-getUI : Maybe Dialog -> Maybe Button -> UI
-getUI maybeDialog maybeButton =
-    { dialog = maybeDialog
-    , highlighted = maybeButton
-    }
+setDialog : Maybe Dialog -> UI -> UI
+setDialog dialog ui =
+    { ui | dialog = dialog }
+
+
+setHighlight : Maybe Button -> UI -> UI
+setHighlight button ui =
+    { ui | highlighted = button }
 
 
 handleHighlight : Model -> Maybe Button -> Model
 handleHighlight model maybeButton =
-    let
-        dialog =
-            model.ui.dialog
-    in
     case maybeButton of
         Just HelpButton ->
-            { model | ui = getUI dialog (Just HelpButton) }
+            { model | ui = setHighlight (Just HelpButton) model.ui }
 
         Just NextButton ->
-            { model | ui = getUI dialog (Just NextButton) }
+            { model | ui = setHighlight (Just NextButton) model.ui }
 
         Just PreviousButton ->
-            { model | ui = getUI dialog (Just PreviousButton) }
+            { model | ui = setHighlight (Just PreviousButton) model.ui }
 
         Nothing ->
-            { model | ui = getUI dialog Nothing }
+            { model | ui = setHighlight Nothing model.ui }
 
 
 toggleDialog : UI -> UI
@@ -196,9 +204,12 @@ defaultView component ui =
 
         disable =
             "disable"
+
+        hide =
+            "hide"
     in
     div [ class "container" ]
-        [ div [ id "pixi-canvas" ] []
+        [ div [ id "pixi-canvas", classList [ ( "blur", ui.showCanvasBlur ) ] ] []
         , div [ id "game-canvas" ] []
         , div
             [ id "help-overlay"
@@ -213,10 +224,20 @@ defaultView component ui =
                 ]
                 [ text "?" ]
             ]
-        , h1 [ id "chapter-title" ] [ text (Components.chapterStr chapter) ]
+        , h1 [ id "chapter-title", classList [ ( "animate", ui.showChapterAnimation ) ] ] [ text (Components.chapterStr chapter) ]
         , div [ id "toolbar-controls" ]
-            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
-            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
+            [ span
+                [ id "game-control"
+                , class "info-control additional"
+                , classList [ ( hide, not ui.showGameControl ) ]
+                ]
+                [ text "P" ]
+            , span
+                [ id "video-control"
+                , class "info-control additional"
+                , classList [ ( hide, not ui.showVideoControl ) ]
+                ]
+                [ text "V" ]
             , span
                 [ id "next-control"
                 , class "info-control"

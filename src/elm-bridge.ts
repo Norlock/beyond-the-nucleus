@@ -17,7 +17,7 @@ export function initElm() {
         node: document.getElementById('app')
     })
 
-    app.ports.toJSComponent.subscribe((str1: string) => {
-        console.log('str1', str1, 'str2')
+    app.ports.toJSComponent.subscribe((object: string) => {
+        console.log('str1', object)
     })
 }

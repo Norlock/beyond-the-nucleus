@@ -1,4 +1,4 @@
-module Components exposing (chapterStr, commandStr, components, hasDirection, idStr, stepBackwards, stepForwards)
+module Components exposing (chapterStr, commandStr, components, hasDirection, idStr, step)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
@@ -140,11 +140,11 @@ hasPreviousDirection id comparable =
         comparable.connections
 
 
-stepForwards : Model -> Model
-stepForwards model =
+step : Model -> Direction -> Model
+step model direction =
     case model.current of
         Just component ->
-            getNext component model.components
+            getComponent component model.components direction
                 |> Maybe.map (\new -> { model | current = Just new })
                 |> Maybe.withDefault model
 
@@ -159,28 +159,9 @@ getConnection component directionCompare =
         |> List.head
 
 
-getNext : Component -> ComponentDict -> Maybe Component
-getNext component dict =
-    getConnection component Next
-        |> Maybe.map (\( _, id ) -> findComponent id dict)
-        |> Maybe.withDefault Nothing
-
-
-stepBackwards : Model -> Model
-stepBackwards model =
-    case model.current of
-        Just component ->
-            getPrevious component model.components
-                |> Maybe.map (\new -> { model | current = Just new })
-                |> Maybe.withDefault model
-
-        Nothing ->
-            model
-
-
-getPrevious : Component -> ComponentDict -> Maybe Component
-getPrevious component dict =
-    getConnection component Previous
+getComponent : Component -> ComponentDict -> Direction -> Maybe Component
+getComponent component dict direction =
+    getConnection component direction
         |> Maybe.map (\( _, id ) -> findComponent id dict)
         |> Maybe.withDefault Nothing
 

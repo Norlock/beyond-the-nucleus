@@ -25,6 +25,10 @@ type alias Connection =
 type alias UI =
     { dialog : Maybe Dialog
     , highlighted : Maybe Button
+    , showGameControl : Bool
+    , showVideoControl : Bool
+    , showChapterAnimation : Bool
+    , showCanvasBlur : Bool
     }
 
 
