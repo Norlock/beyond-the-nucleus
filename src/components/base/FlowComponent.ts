@@ -1,8 +1,6 @@
-import { FlowPixi, PixiModule } from '../../modules/pixi/Pixi';
-import { Component } from './Component';
-import { Flow } from 'src/modules/mover/Flow';
+import { FlowPixi, PixiModule } from '../../modules/pixi/Pixi'
+import { Component } from './Component'
 
 export class FlowComponent extends Component implements PixiModule {
-    pixi: FlowPixi;
-    mover: Flow;
+    pixi: FlowPixi
 }

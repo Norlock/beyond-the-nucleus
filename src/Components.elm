@@ -1,4 +1,4 @@
-module Components exposing (chapterStr, commandStr, components, hasDirection, idStr, step)
+module Components exposing (chapterStr, commandStr, components, first, hasDirection, idStr, step)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
@@ -29,6 +29,9 @@ commandStr command =
 
         JSIdle ->
             "idle"
+
+        JSInit ->
+            "init"
 
 
 idStr : ComponentId -> String
@@ -142,14 +145,13 @@ hasPreviousDirection id comparable =
 
 step : Model -> Direction -> Model
 step model direction =
-    case model.current of
-        Just component ->
-            getComponent component model.components direction
-                |> Maybe.map (\new -> { model | current = Just new })
-                |> Maybe.withDefault model
-
-        Nothing ->
-            model
+    let
+        component =
+            model.current
+    in
+    getComponent component model.components direction
+        |> Maybe.map (\new -> { model | current = new })
+        |> Maybe.withDefault model
 
 
 getConnection : Component -> Direction -> Maybe Connection

@@ -1,43 +1,29 @@
-import { Chapter } from 'src/chapters/base/Chapter';
-import { FlowComponent } from 'src/components/base/FlowComponent';
-import { GameComponent } from 'src/components/base/GameComponent';
-import {GameLoader} from 'src/modules/game/GameLoader';
-import {MergeDefaultGameLoader} from 'src/modules/game/MergeDefaultGameLoader';
-import { MergeFlowMover, MergeFlowMoverPrevious } from 'src/modules/mover/MergeFlowMover';
-import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi';
-import { PixiSelector } from 'src/modules/pixi/Pixi';
-import {MergeGameComponentSelector} from 'src/modules/selector/MergeGameComponentSelector';
-import { MergeUI } from 'src/modules/ui/GetUI';
+import { Chapter } from 'src/chapters/base/Chapter'
+import { GameComponent } from 'src/components/base/GameComponent'
+import { GameLoader } from 'src/modules/game/GameLoader'
+import { MergeDefaultGameLoader } from 'src/modules/game/MergeDefaultGameLoader'
+import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi'
+import { PixiSelector } from 'src/modules/pixi/Pixi'
+import { MergeGameComponentSelector } from 'src/modules/selector/MergeGameComponentSelector'
 
 export class GameComponentFactory {
-    readonly component: GameComponent;
+    readonly component: GameComponent
 
     constructor(chapter: Chapter, tag: string) {
-        this.component = new GameComponent(chapter);
-        this.component.tag = tag;
+        this.component = new GameComponent(chapter)
+        this.component.tag = tag
 
-        MergeUI(this.component);
-        MergeGameComponentSelector(this.component);
-        MergeDefaultGameLoader(this.component);
-    }
-
-    mergeMover(index: number): GameComponentFactory  {
-        MergeFlowMover(this.component, index);
-        return this;
-    }
-
-    mergePrevious(previous: FlowComponent): GameComponentFactory {
-        MergeFlowMoverPrevious(this.component, previous)
-        return this;
+        MergeGameComponentSelector(this.component)
+        MergeDefaultGameLoader(this.component)
     }
 
     mergePixiCard(containerName: string, card: PixiSelector): GameComponentFactory {
-        MergePixiFlowCard(this.component, containerName, card);
-        return this;
+        MergePixiFlowCard(this.component, containerName, card)
+        return this
     }
 
     mergeGameLoader(custom: GameLoader) {
-        this.component.game.append(custom);
-        return this;
+        this.component.game.append(custom)
+        return this
     }
 }

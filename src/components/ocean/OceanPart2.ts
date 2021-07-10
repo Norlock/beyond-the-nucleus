@@ -1,36 +1,35 @@
-import * as PIXI from 'pixi.js';
-import { ChapterType } from 'src/chapters/base/ChapterType';
-import { OceanName } from 'src/chapters/OceanChapter';
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory';
-import { PartChainFactory } from 'src/factories/PartChainFactory';
-import { PixiCardFactory } from 'src/factories/PixiCardFactory';
-import {LoaderType} from 'src/modules/partChain/PartLoader';
-import { CardOptions } from 'src/modules/pixi/Pixi';
-import { FlowComponent } from '../base/FlowComponent';
-import { PartChain } from '../base/PartChain';
-import { defaultTestFlags, TestFlags } from '../base/PartTester';
-import { OceanPart3 } from './OceanPart3';
-import { oceanStyles } from './OceanStyles';
+import * as PIXI from 'pixi.js'
+import { ChapterType } from 'src/chapters/base/ChapterType'
+import { OceanName } from 'src/chapters/OceanChapter'
+import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PartChainFactory } from 'src/factories/PartChainFactory'
+import { PixiCardFactory } from 'src/factories/PixiCardFactory'
+import { LoaderType } from 'src/modules/partChain/PartLoader'
+import { CardOptions } from 'src/modules/pixi/Pixi'
+import { FlowComponent } from '../base/FlowComponent'
+import { PartChain } from '../base/PartChain'
+import { defaultTestFlags, TestFlags } from '../base/PartTester'
+import { OceanPart3 } from './OceanPart3'
+import { oceanStyles } from './OceanStyles'
 
 export const OceanPart2 = (previous: PartChain): PartChain => {
-    return PartChainFactory("Ocean2", ChapterType.OCEAN, previous)
+    return PartChainFactory('Ocean2', ChapterType.OCEAN, previous)
         .mergeLoader(LoaderType.FLOW, component, attachPreviousComponent)
         .setTestFlags(testFlags())
         .setNextParts(OceanPart3)
-        .build();
+        .build()
 }
 
-const testFlags = (): TestFlags  => {
-    const standard = defaultTestFlags();
-    standard.hasPrevious = false;
-    standard.hasLine = false;
-    return standard;
+const testFlags = (): TestFlags => {
+    const standard = defaultTestFlags()
+    standard.hasPrevious = false
+    standard.hasLine = false
+    return standard
 }
 
 const attachPreviousComponent = (factory: FlowComponentFactory, previous: FlowComponent): void => {
-    factory
-    .mergePrevious(previous)
-    .mergePixiLine(previous, oceanStyles.LINE_COLOR);
+    // TODO kijken naar pixiline
+    factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
 }
 
 const component = (factory: FlowComponentFactory): FlowComponent => {
@@ -42,7 +41,7 @@ const component = (factory: FlowComponentFactory): FlowComponent => {
         width: 450,
         height: 220,
         pivotCenter: false
-    };
+    }
 
     const headerStyle = new PIXI.TextStyle({
         fontSize: 35,
@@ -52,11 +51,11 @@ const component = (factory: FlowComponentFactory): FlowComponent => {
         wordWrap: true,
         wordWrapWidth: cardOptions.width,
         lineJoin: 'round'
-    });
+    })
 
-    const header = new PIXI.Text('The Ancient life', headerStyle);
-    header.x = 30;
-    header.y = 30;
+    const header = new PIXI.Text('The Ancient life', headerStyle)
+    header.x = 30
+    header.y = 30
 
     const paragraghStyle = new PIXI.TextStyle({
         fontSize: 25,
@@ -69,23 +68,19 @@ const component = (factory: FlowComponentFactory): FlowComponent => {
         wordWrap: true,
         wordWrapWidth: cardOptions.width - 40,
         lineJoin: 'round'
-    });
+    })
 
-    const paragraphText =
-        'Which lasted from 541 until 252 million years ago,' +
-        ' was a time of great change on Earth.';
+    const paragraphText = 'Which lasted from 541 until 252 million years ago,' + ' was a time of great change on Earth.'
 
-    const paragraph = new PIXI.Text(paragraphText, paragraghStyle);
-    paragraph.x = 30;
-    paragraph.y = 80;
+    const paragraph = new PIXI.Text(paragraphText, paragraghStyle)
+    paragraph.x = 30
+    paragraph.y = 80
 
     const cardData = PixiCardFactory(cardOptions, factory.component.chapter, OceanName.START)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(400, 300)
-        .build();
+        .build()
 
-    return factory
-            .mergePixiCard(cardData.containerName, cardData.card)
-            .component;
-};
+    return factory.mergePixiCard(cardData.containerName, cardData.card).component
+}

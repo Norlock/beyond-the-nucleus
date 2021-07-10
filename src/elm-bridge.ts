@@ -1,15 +1,14 @@
 import { Elm } from './Main.elm'
 
-interface TSComponent extends ElmComponent {
+interface TSComponent {
     build: () => void
 }
 
 interface ElmComponent {
     id: string
     chapterId: string
-    next: ElmComponent[]
-    previous?: ElmComponent
-    index: number
+    previous?: string
+    command: string
 }
 
 export function initElm() {

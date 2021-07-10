@@ -1,49 +1,49 @@
-import { AudioComponent, AudioModule, SelectState } from './AudioComponent';
+import { AudioComponent, AudioModule, SelectState } from './AudioComponent'
 
 export const MergeAudioUtility = (self: AudioModule): void => {
-    const components: Map<string, AudioComponent> = new Map();
-    let selected: AudioComponent;
-    let shouldStop = false;
+    const components: Map<string, AudioComponent> = new Map()
+    let selected: AudioComponent
+    let shouldStop = false
 
     const addComponent = (component: AudioComponent, tag: string) => {
-        components.set(tag, component);
-    };
+        components.set(tag, component)
+    }
 
     const getComponent = (tag: string): AudioComponent => {
-        return components.get(tag);
-    };
+        return components.get(tag)
+    }
 
     const playAudio = (state: SelectState): void => {
         if (shouldStop) {
-            return;
+            return
         }
 
         if (state === SelectState.fadeIn) {
-            self.audio.selected.fadeIn();
+            self.audio.selected.fadeIn()
         } else if (state === SelectState.play) {
-            self.audio.selected.element.play();
+            self.audio.selected.element.play()
         }
     }
 
     const select = (tag: string, state: SelectState, delay?: number): void => {
         if (self.audio.selected) {
-            self.audio.selected.element.pause();
+            self.audio.selected.element.pause()
         }
 
-        shouldStop = false;
+        shouldStop = false
 
-        self.audio.selected = components.get(tag);
+        self.audio.selected = components.get(tag)
 
         if (delay) {
-            setTimeout(() => playAudio(state), delay);
+            setTimeout(() => playAudio(state), delay)
         } else {
-            playAudio(state);
+            playAudio(state)
         }
-    };
+    }
 
     const stop = (): void => {
-        shouldStop = true;
-        self.audio.selected?.element.pause();
+        shouldStop = true
+        self.audio.selected?.element.pause()
     }
 
     self.audio = {
@@ -52,5 +52,5 @@ export const MergeAudioUtility = (self: AudioModule): void => {
         select,
         selected,
         stop
-    };
-};
+    }
+}

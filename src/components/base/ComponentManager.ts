@@ -1,124 +1,91 @@
-import {connectInputHandler} from 'src/modules/inputHandler/ConnectInputHandler';
-import {InputHandler} from 'src/modules/inputHandler/InputHandler';
-import { UIUtils } from 'src/modules/ui/GetUI';
-import { boardApp } from 'src/pixi/PixiApp';
-import { ActionSelector, ActionUI, ActionUtil } from 'src/utils/ActionTypes';
-import { Component } from './Component';
-import { FlowComponent } from './FlowComponent';
-import {GameComponent} from './GameComponent';
-import { PartChainer } from './PartChainer';
+import { connectInputHandler } from 'src/modules/inputHandler/ConnectInputHandler'
+import { InputHandler } from 'src/modules/inputHandler/InputHandler'
+import { boardApp } from 'src/pixi/PixiApp'
+import { Component } from './Component'
+import { GameComponent } from './GameComponent'
+import { PartChainer } from './PartChainer'
 
-const pixiCanvas = document.getElementById('pixi-canvas');
+const pixiCanvas = document.getElementById('pixi-canvas')
 
-let inputHandler: InputHandler;
+let inputHandler: InputHandler
+
+export enum ActionUI {
+    TOGGLE_HELP = '?',
+    TOGGLE_MUTE = 'm',
+    TOGGLE_CANVAS_BLUR = 'blur',
+    LEFT = 'ArrowLeft',
+    RIGHT = 'ArrowRight',
+    UP = 'ArrowUp',
+    DOWN = 'ArrowDown'
+}
 
 const init = (): void => {
-    let currentComponent: Component;
+    let currentComponent: Component
 
-    let keyPressed: string;
-    let isKeyDown: boolean;
-    let blocked = false;
+    let keyPressed: string
+    let isKeyDown: boolean
 
-    pixiCanvas.appendChild(boardApp.view);
+    pixiCanvas.appendChild(boardApp.view)
 
-    const partChainer = PartChainer();
-    const initial = partChainer.init("Kungfu");
+    const partChainer = PartChainer()
+    const initial = partChainer.init('Kungfu')
 
-    currentComponent = initial.component;
-    currentComponent.chapter.selector.select(initial.component.pixi.containerName);
-    currentComponent.selector.select(ActionSelector.NEXT);
+    currentComponent = initial.component
+    currentComponent.chapter.selector.chapterSelect(initial.component.pixi.containerName)
 
     const scroll = (): void => {
         if (keyDown) {
             switch (keyPressed) {
                 case ActionUI.LEFT:
-                    boardApp.stage.x += 10;
-                    break;
+                    boardApp.stage.x += 10
+                    break
                 case ActionUI.RIGHT:
-                    boardApp.stage.x -= 10;
-                    break;
+                    boardApp.stage.x -= 10
+                    break
                 case ActionUI.UP:
-                    boardApp.stage.y += 10;
-                    break;
+                    boardApp.stage.y += 10
+                    break
                 case ActionUI.DOWN:
-                    boardApp.stage.y -= 10;
-                    break;
+                    boardApp.stage.y -= 10
+                    break
             }
         }
-    };
+    }
 
-    boardApp.ticker.add(scroll);
+    boardApp.ticker.add(scroll)
 
     const keyUp = (): void => {
-        isKeyDown = false;
-
-        UIUtils.unhighlightUIControl(keyPressed);
+        isKeyDown = false
     }
 
     const keyDown = (event: KeyboardEvent): void => {
-        if (isKeyDown && event.key !== keyPressed) return;
+        if (isKeyDown && event.key !== keyPressed) return
 
-        isKeyDown = true;
-        keyPressed = event.key;
-
-        UIUtils.highlightUIControl(event.key);
+        isKeyDown = true
+        keyPressed = event.key
     }
 
     const keyPress = (event: KeyboardEvent) => {
-         if (ActionUtil.isSelector(event.key)) {
-             if (currentComponent instanceof GameComponent && event.key === ActionSelector.GAME) {
-                 if (!currentComponent.game.busy) {
-                     currentComponent.game.init();
-                 } else {
-                     currentComponent.game.cleanup();
-                 }
-             } else {
-                 move(event.key as ActionSelector);
-             }
-         }  else if (ActionUtil.isUI(event.key)) {
-             UIUtils.doAction(event.key);
-         }
-
+        // TODO naar Elm
+        //if (ActionUtil.isSelector(event.key)) {
+        //if (currentComponent instanceof GameComponent && event.key === ActionSelector.GAME) {
+        //if (!currentComponent.game.busy) {
+        //currentComponent.game.init()
+        //} else {
+        //currentComponent.game.cleanup()
+        //}
+        //}
+        //}
     }
 
     inputHandler = {
         keyPress,
         keyDown,
-        keyUp,
-    };
-
-    const move = async (action: ActionSelector) => {
-        if (blocked) {
-            return;
-        } 
-
-        blocked = true;
-
-        const newComponent = currentComponent.mover.move(action);
-        const isDifferent = currentComponent.tag !== newComponent.tag;
-
-        if (isDifferent) {
-            if (newComponent instanceof FlowComponent) {
-                await newComponent.chapter.selector.select(newComponent.pixi.containerName);
-                partChainer.load(newComponent.mover.index);
-            }
-
-            if (currentComponent.chapter.chapterType !== newComponent.chapter.chapterType) {
-                await currentComponent.chapter.selector.unselect(action);
-            }
-
-            Promise.allSettled([
-                currentComponent.selector.unselect(action),
-                newComponent.selector.select(action),
-                currentComponent = newComponent
-            ]).then(() => blocked = false);
-        }  
-    };
-};
+        keyUp
+    }
+}
 
 export const ComponentManager = {
     init,
     connectInputHandler: () => connectInputHandler(inputHandler)
 }
-
-

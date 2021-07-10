@@ -24,12 +24,16 @@ init _ =
     let
         components =
             Components.components
+
+        current =
+            List.head (Dict.values components)
+                |> Maybe.withDefault Components.first
     in
     ( { components = components
-      , current = List.head (Dict.values components)
+      , current = current
       , ui = initUI
       }
-    , Cmd.none
+    , handleJSComponent current JSActivate
     )
 
 
@@ -56,12 +60,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         StepForwards ->
-            Components.step model Next
-                |> handleJSComponent
+            handleStep model Next JSIdle
 
         StepBackwards ->
-            Components.step model Previous
-                |> handleJSComponent
+            handleStep model Previous JSDeactivate
 
         ToggleHelp ->
             ( { model | ui = toggleDialog model.ui }, Cmd.none )
@@ -71,6 +73,23 @@ update msg model =
 
         Noop ->
             ( model, Cmd.none )
+
+
+handleStep : Model -> Direction -> JSComponentCommand -> ( Model, Cmd Msg )
+handleStep model direction previousCmd =
+    let
+        previous =
+            model.current
+    in
+    Components.step model direction
+        |> (\newModel ->
+                ( newModel
+                , Cmd.batch
+                    [ handleJSComponent previous previousCmd
+                    , handleJSComponent newModel.current JSActivate
+                    ]
+                )
+           )
 
 
 setDialog : Maybe Dialog -> UI -> UI
@@ -162,7 +181,7 @@ navKey char =
 view : Model -> Browser.Document Msg
 view model =
     { title = "Beyond the nucleus"
-    , body = [ body model ]
+    , body = [ body model.current model.ui ]
     }
 
 
@@ -170,22 +189,8 @@ view model =
 -- TODO hide / show canvas blur
 
 
-body : Model -> Html Msg
-body model =
-    case model.current of
-        Just current ->
-            defaultView current model.ui
-
-        Nothing ->
-            errorView
-
-
-
--- TODO Show error
-
-
-defaultView : Component -> UI -> Html Msg
-defaultView component ui =
+body : Component -> UI -> Html Msg
+body component ui =
     let
         { index, chapter } =
             component
@@ -207,7 +212,7 @@ defaultView component ui =
     in
     div [ class "container" ]
         [ div [ id "pixi-canvas", classList [ ( "blur", ui.showCanvasBlur ) ] ] []
-        , div [ id "game-canvas" ] []
+        , div [ id "game-canvas", classList [ ( "show", False ) ] ] []
         , div
             [ id "help-overlay"
             , classList [ ( "show", ui.dialog == Just ShowHelp ) ]
@@ -303,20 +308,13 @@ errorView =
 -- Ports
 
 
-handleJSComponent : Model -> ( Model, Cmd Msg )
-handleJSComponent model =
-    case model.current of
-        Just current ->
-            ( model
-            , toJSComponent
-                { id = Components.idStr current.id
-                , chapter = Components.chapterStr current.chapter
-                , command = Components.commandStr JSActivate
-                }
-            )
-
-        Nothing ->
-            ( model, Cmd.none )
+handleJSComponent : Component -> JSComponentCommand -> Cmd Msg
+handleJSComponent current command =
+    toJSComponent
+        { id = Components.idStr current.id
+        , chapter = Components.chapterStr current.chapter
+        , command = Components.commandStr command
+        }
 
 
 port toJSComponent : JSComponentData -> Cmd msg

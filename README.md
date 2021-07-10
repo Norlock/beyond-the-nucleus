@@ -12,6 +12,8 @@ Some test app for ideas
 -   [ ] Fix ports
 -   [ ] Component interface ( activate / deactivate / idle )
 -   [ ] Chapter interface ( activate / deactivate / idle )
+-   [ ] Fix UI for Chapter transition / game transition
+-   [ ] Board scroll -> to Elm
 
 ## Standard
 

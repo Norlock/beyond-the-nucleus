@@ -1,8 +1,7 @@
-import { ContainerSelector } from 'src/chapters/base/ContainerSelector';
-import { ActionSelector } from 'src/utils/ActionTypes';
+import { ContainerSelector } from 'src/chapters/base/ContainerSelector'
 
 export interface SelectorModule {
-    selector: Selector;
+    selector: Selector
 }
 
 export enum StandardSelectorTag {
@@ -12,28 +11,28 @@ export enum StandardSelectorTag {
 }
 
 export class Selector {
-    tag: string; // Tag for debug readability
-    isSelected: boolean;
-    next: Selector;
-    select: Select;
-    unselect: Unselect;
+    tag: string // Tag for debug readability
+    isSelected: boolean
+    next: Selector
+    select: Select
+    unselect: Unselect
 
     constructor(tag: string) {
-        this.tag = tag;
+        this.tag = tag
     }
 
     append(selector: Selector): void {
         if (!this.next) {
-            this.next = selector;
+            this.next = selector
         } else {
-            this.next.append(selector);
+            this.next.append(selector)
         }
     }
 
     insertBefore(selector: Selector, tag: string): void {
         if (this.next?.tag === tag) {
-            selector.next = this.next;
-            this.next = selector;
+            selector.next = this.next
+            this.next = selector
         } else {
             this.next?.insertBefore(selector, tag)
         }
@@ -41,31 +40,31 @@ export class Selector {
 
     insertAfter(selector: Selector, tag: string): void {
         if (this.tag === tag) {
-            selector.next = this.next;
-            this.next = selector;
+            selector.next = this.next
+            this.next = selector
         } else {
             this.next?.insertAfter(selector, tag)
         }
     }
 
     // Select first one first
-    async recursivelySelect(action: ActionSelector): Promise<void> {
-        await this.select(action);
-        await this.next?.recursivelySelect(action);
+    async recursivelySelect(): Promise<void> {
+        await this.select()
+        await this.next?.recursivelySelect()
     }
 
     // Unselect last one first
-    async recursivelyUnselect(action: ActionSelector): Promise<void> {
-        await this.next?.recursivelyUnselect(action);
-        await this.unselect(action);
+    async recursivelyUnselect(): Promise<void> {
+        await this.next?.recursivelyUnselect()
+        await this.unselect()
     }
 }
 
 export class ChapterSelector extends Selector {
-    containerSelector = new ContainerSelector();
-    select: ChapterSelect;
+    containerSelector = new ContainerSelector()
+    chapterSelect: ChapterSelect
 }
 
-export type Select = (action?: ActionSelector) => Promise<void>;
-export type ChapterSelect = (containerName: string) => Promise<void>;
-export type Unselect = (action?: ActionSelector) => Promise<void>;
+export type Select = () => Promise<void>
+export type ChapterSelect = (containerName: string) => Promise<void>
+export type Unselect = () => Promise<void>

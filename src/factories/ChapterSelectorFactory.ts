@@ -1,19 +1,18 @@
-import { ChapterSelect, ChapterSelector, Unselect } from "src/modules/selector/Selector";
+import { ChapterSelect, ChapterSelector, Unselect } from 'src/modules/selector/Selector'
 
 export const ChapterSelectorFactory = (self: ChapterSelector) => {
-
     const setSelect = (value: ChapterSelect) => {
-        self.select = value;
-        return factory;
+        self.chapterSelect = value
+        return factory
     }
 
     const setUnselect = (value: Unselect) => {
-        self.unselect = value;
-        return factory;
+        self.unselect = value
+        return factory
     }
 
     const build = (): ChapterSelector => {
-        return self;
+        return self
     }
 
     const factory = {
@@ -22,5 +21,5 @@ export const ChapterSelectorFactory = (self: ChapterSelector) => {
         build
     }
 
-    return factory;
+    return factory
 }

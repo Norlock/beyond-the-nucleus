@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
-import {GameComponent} from 'src/components/base/GameComponent';
-import {Column} from './Column';
+import * as PIXI from 'pixi.js'
+import { GameComponent } from 'src/components/base/GameComponent'
+import { Column } from './Column'
 
 export enum Direction {
     WEST,
@@ -8,52 +8,50 @@ export enum Direction {
 }
 
 export class MovementSprite extends PIXI.Sprite {
-    velocityX: number;
-    velocityY: number;
+    velocityX: number
+    velocityY: number
 
-    currentColumn: Column;
-    updateColumn: () => void;
-    direction: Direction;
+    currentColumn: Column
+    updateColumn: () => void
+    direction: Direction
 
     get bottomY(): number {
-        return this.y + this.height;
+        return this.y + this.height
     }
 
     get endX(): number {
-        return this.x + this.width;
+        return this.x + this.width
     }
 
     constructor(component: GameComponent, x: number, y: number) {
-        super();
-        this.x = x;
-        this.y = y;
-        this.updateColumn = () => updateColumn(this, component);
+        super()
+        this.x = x
+        this.y = y
+        this.updateColumn = () => updateColumn(this, component)
     }
 }
 
 // TODO event listener column, entt houden zetten zelf cc
 const updateColumn = (self: MovementSprite, component: GameComponent) => {
-    const index = component.resourceHandler.characterGrid.getColumnIndex(self.x);
+    const index = component.resourceHandler.characterGrid.getColumnIndex(self.x)
 
     if (index === self.currentColumn.x) {
-        return;
+        return
     }
 
     if (index < self.currentColumn.x) {
-        let column = self.currentColumn.previous;
+        let column = self.currentColumn.previous
         while (index !== column.x) {
-            column = column.previous;
+            column = column.previous
         }
         // todo out of bounds
-        self.currentColumn = column;
+        self.currentColumn = column
     } else {
-        let column = self.currentColumn.next;
+        let column = self.currentColumn.next
         while (index !== column.x) {
-            column = column.next;
+            column = column.next
         }
         // todo out of bounds
-        self.currentColumn = column;
+        self.currentColumn = column
     }
-
 }
-

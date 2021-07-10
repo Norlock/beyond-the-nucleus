@@ -1,5 +1,5 @@
-import * as PIXI from 'pixi.js';
-import { Promiser } from 'src/utils/Promiser';
+import * as PIXI from 'pixi.js'
+import { Promiser } from 'src/utils/Promiser'
 
 export const boardApp = new PIXI.Application({
     width: window.innerWidth,
@@ -7,30 +7,30 @@ export const boardApp = new PIXI.Application({
     resizeTo: window,
     resolution: window.devicePixelRatio || 1,
     antialias: true
-});
+})
 
-export let pixiResources: resourceNames;
+export let pixiResources: resourceNames
 
 interface resourceNames {
-    oceanStart: PIXI.Texture;
-    oceanTurtle: PIXI.Texture;
-    oceanBubble: PIXI.Texture;
-    oceanAnthozoa: PIXI.Texture;
-    zendoCard: PIXI.Texture;
+    oceanStart: PIXI.Texture
+    oceanTurtle: PIXI.Texture
+    oceanBubble: PIXI.Texture
+    oceanAnthozoa: PIXI.Texture
+    zendoCard: PIXI.Texture
 }
 
 export const preload = (): Promise<void> => {
-    boardApp.loader.baseUrl = 'src/assets';
+    boardApp.loader.baseUrl = 'src/assets'
     boardApp.loader
         .add('oceanStart', 'ocean/ocean.jpg')
         .add('oceanTurtle', 'ocean/ocean-turtle.jpg')
         .add('oceanBubble', 'ocean/bubble.png')
         .add('oceanAnthozoa', 'ocean/Anthozoa.jpg')
-        .add('zendoCard', 'zendo/card-background.jpg');
+        .add('zendoCard', 'zendo/card-background.jpg')
 
-    boardApp.loader.onError.add((err: any) => console.error(err));
+    boardApp.loader.onError.add((err: any) => console.error(err))
 
-    const promiser = Promiser<void>();
+    const promiser = Promiser<void>()
     boardApp.loader.load((loader, res) => {
         pixiResources = {
             oceanBubble: res.oceanBubble.texture,
@@ -38,17 +38,17 @@ export const preload = (): Promise<void> => {
             oceanTurtle: res.oceanTurtle.texture,
             oceanAnthozoa: res.oceanAnthozoa.texture,
             zendoCard: res.zendoCard.texture
-        };
-        promiser.resolve();
-    });
-    return promiser.promise;
-};
+        }
+        promiser.resolve()
+    })
+    return promiser.promise
+}
 
 export const isInViewport = (container: PIXI.Container): boolean => {
-    const minX = container.x;
-    const minY = container.y;
-    const maxX = minX + container.width;
-    const maxY = minY + container.height;
+    const minX = container.x
+    const minY = container.y
+    const maxX = minX + container.width
+    const maxY = minY + container.height
 
-    return minX < boardApp.stage.x && boardApp.stage.x < maxX && minY < boardApp.stage.y && boardApp.stage.y < maxY;
-};
+    return minX < boardApp.stage.x && boardApp.stage.x < maxX && minY < boardApp.stage.y && boardApp.stage.y < maxY
+}

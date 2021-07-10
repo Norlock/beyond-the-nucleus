@@ -5,7 +5,7 @@ import Dict exposing (Dict)
 
 type alias Model =
     { components : ComponentDict
-    , current : Maybe Component
+    , current : Component
     , ui : UI
     }
 
@@ -95,3 +95,4 @@ type JSComponentCommand
     = JSIdle
     | JSActivate
     | JSDeactivate
+    | JSInit

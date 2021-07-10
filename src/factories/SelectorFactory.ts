@@ -1,19 +1,18 @@
-import { Select, Selector, Unselect } from "src/modules/selector/Selector";
+import { Select, Selector, Unselect } from 'src/modules/selector/Selector'
 
 export const SelectorFactory = (self: Selector) => {
-
     const setSelect = (value: Select) => {
-        self.select = value;
-        return factory;
+        self.select = value
+        return factory
     }
 
     const setUnselect = (value: Unselect) => {
-        self.unselect = value;
-        return factory;
+        self.unselect = value
+        return factory
     }
 
     const build = (): Selector => {
-        return self;
+        return self
     }
 
     const factory = {
@@ -22,5 +21,5 @@ export const SelectorFactory = (self: Selector) => {
         build
     }
 
-    return factory;
+    return factory
 }
