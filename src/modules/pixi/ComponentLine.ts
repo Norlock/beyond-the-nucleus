@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { FlowComponent } from 'src/components/base/FlowComponent'
-import { SelectorFactory } from 'src/factories/SelectorFactory'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Selector, StandardSelectorTag } from '../selector/Selector'
 import { PixiSelector } from './Pixi'
@@ -40,25 +39,21 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
             .quadraticCurveTo(curveX1(), curveY1(), endX, endY)
     }
 
-    const select = async (): Promise<void> => {
+    const selector = new Selector(StandardSelectorTag.LINE)
+    selector.select = async (): Promise<void> => {
         count = 0
         curve.visible = true
         boardApp.ticker.add(animate)
     }
 
-    const unselect = async (): Promise<void> => {
-        // TODO Deactivate hide / idle show
+    selector.idle = async (): Promise<void> => {
         boardApp.ticker.remove(animate)
-
-        //if (action === ActionSelector.PREVIOUS) {
-        //curve.visible = false
-        //}
     }
 
-    const selector = SelectorFactory(new Selector(StandardSelectorTag.LINE))
-        .setSelect(select)
-        .setUnselect(unselect)
-        .build()
+    selector.unselect = async (): Promise<void> => {
+        boardApp.ticker.remove(animate)
+        curve.visible = false
+    }
 
     return { component: curve, selector }
 }

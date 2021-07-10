@@ -1,12 +1,24 @@
-import { Chapter } from 'src/chapters/base/Chapter'
+import { ChapterType } from 'src/chapters/base/ChapterType'
+import { chapters } from 'src/elm-bridge'
 import { Selector, SelectorModule } from 'src/modules/selector/Selector'
+import * as PIXI from 'pixi.js'
 
-export abstract class Component implements SelectorModule {
-    readonly chapter: Chapter
+export class Component implements SelectorModule {
+    readonly tag: string
+    readonly chapterId: ChapterType
+    readonly pixiComponents: PIXI.Container[] = []
+
     selector: Selector
-    tag: string
 
-    constructor(chapter: Chapter) {
-        this.chapter = chapter
+    constructor(tag: string, chapterId: ChapterType) {
+        this.tag = tag
+        this.chapterId = chapterId
+    }
+
+    init() {
+        const chapter = chapters.get(this.chapterId)
+        for (let item of this.pixiComponents) {
+            chapter.root.addChild(item)
+        }
     }
 }

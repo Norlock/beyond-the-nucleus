@@ -42,7 +42,7 @@ type alias JSComponentData =
     { id : String
     , chapter : String
     , command : String
-    , previous : List String
+    , previous : Maybe String
     , next : List String
     }
 

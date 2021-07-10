@@ -1,32 +1,13 @@
 import * as PIXI from 'pixi.js'
-import { ChapterType } from 'src/chapters/base/ChapterType'
 import { OceanName } from 'src/chapters/OceanChapter'
+import { ElmComponent } from 'src/elm-bridge'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
-import { PartChainFactory } from 'src/factories/PartChainFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
-import { LoaderType } from 'src/modules/partChain/PartLoader'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { FlowComponent } from '../base/FlowComponent'
-import { PartChain } from '../base/PartChain'
-import { defaultTestFlags, TestFlags } from '../base/PartTester'
-import { OceanPart2 } from './OceanPart2'
 
-export const OceanPart1 = (): PartChain => {
-    return PartChainFactory('Ocean1', ChapterType.OCEAN, undefined)
-        .mergeLoader(LoaderType.FLOW, component, undefined)
-        .setTestFlags(testFlags())
-        .setNextParts(OceanPart2)
-        .build()
-}
-
-const testFlags = (): TestFlags => {
-    const standard = defaultTestFlags()
-    standard.hasPrevious = false
-    standard.hasLine = false
-    return standard
-}
-
-const component = (factory: FlowComponentFactory): FlowComponent => {
+export const OceanPart1 = (data: ElmComponent): FlowComponent => {
+    //return PartChainFactory('Ocean1', ChapterType.OCEAN, undefined)
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -64,6 +45,7 @@ const component = (factory: FlowComponentFactory): FlowComponent => {
     paragraph.x = 30
     paragraph.y = 80
 
+    const component = FlowComponentFactory()
     const { component } = factory
     const param = PixiCardFactory(cardOptions, component.chapter, OceanName.START)
         .setColorCard(0x000000)

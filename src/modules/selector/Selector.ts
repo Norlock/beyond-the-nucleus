@@ -1,5 +1,3 @@
-import { ContainerSelector } from 'src/chapters/base/ContainerSelector'
-
 export interface SelectorModule {
     selector: Selector
 }
@@ -12,10 +10,10 @@ export enum StandardSelectorTag {
 
 export class Selector {
     tag: string // Tag for debug readability
-    isSelected: boolean
     next: Selector
     select: Select
     unselect: Unselect
+    idle: Idle
 
     constructor(tag: string) {
         this.tag = tag
@@ -60,11 +58,6 @@ export class Selector {
     }
 }
 
-export class ChapterSelector extends Selector {
-    containerSelector = new ContainerSelector()
-    chapterSelect: ChapterSelect
-}
-
 export type Select = () => Promise<void>
-export type ChapterSelect = (containerName: string) => Promise<void>
 export type Unselect = () => Promise<void>
+export type Idle = () => Promise<void>

@@ -310,7 +310,9 @@ handleJSComponent component command =
     , chapter = Components.chapterStr component.chapter
     , command = Components.commandStr command
     , next = Components.getConnectionIds component Next
-    , previous = Components.getConnectionIds component Previous
+    , previous =
+        List.head <|
+            Components.getConnectionIds component Previous
     }
         |> toJSComponent
 

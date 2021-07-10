@@ -1,5 +1,4 @@
 import { FlowComponent } from 'src/components/base/FlowComponent'
-import { SelectorFactory } from 'src/factories/SelectorFactory'
 import { GetAudio } from '../audio/GetAudio'
 import { Selector, StandardSelectorTag } from './Selector'
 
@@ -15,24 +14,16 @@ filter.connect(ctx.destination)
 export const MergeFlowSelector = (self: FlowComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW)
 
-    const select = async () => {
-        if (!selector.isSelected) {
-            selector.isSelected = true
+    selector.select = async () => {
+        audio.load()
+        audio.play()
 
-            audio.load()
-            audio.play()
-
-            await selector.next?.recursivelySelect()
-        }
+        await selector.next?.recursivelySelect()
     }
 
-    const unselect = async () => {
-        if (selector.isSelected) {
-            selector.isSelected = false
-
-            await selector.next?.recursivelyUnselect()
-        }
+    selector.unselect = async () => {
+        await selector.next?.recursivelyUnselect()
     }
 
-    self.selector = SelectorFactory(selector).setSelect(select).setUnselect(unselect).build()
+    self.selector = selector
 }

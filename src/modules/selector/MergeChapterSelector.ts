@@ -1,34 +1,27 @@
 import * as PIXI from 'pixi.js'
 import { Chapter } from 'src/chapters/base/Chapter'
-import { ChapterSelectorFactory } from 'src/factories/ChapterSelectorFactory'
 import { boardApp } from 'src/pixi/PixiApp'
-import { ChapterSelector } from './Selector'
+import { ChapterSelector } from './ChapterSelector'
 
 export const MergeChapterSelector = (self: Chapter): void => {
     const selector = new ChapterSelector('Chapter selector base')
 
-    const select = async (containerName: string) => {
-        if (!selector.isSelected) {
-            selector.isSelected = true
-            self.root.visible = true
+    selector.select = async (containerName: string) => {
+        self.root.visible = true
 
-            selector.next?.select()
-            self.root.updateTransform()
-        }
+        selector.next?.select()
+        self.root.updateTransform()
 
         selector.containerSelector.select(containerName)
     }
 
-    const unselect = async () => {
-        if (selector.isSelected) {
-            selector.isSelected = false
-            selector.next?.unselect()
+    selector.unselect = async () => {
+        selector.next?.unselect()
 
-            return new Promise<void>((resolve) => hideAnimation(self.root, resolve))
-        }
+        return new Promise<void>((resolve) => hideAnimation(self.root, resolve))
     }
 
-    self.selector = ChapterSelectorFactory(selector).setSelect(select).setUnselect(unselect).build()
+    self.selector = selector
 }
 
 const hideAnimation = (root: PIXI.Container, resolve: Function) => {

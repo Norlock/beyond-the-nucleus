@@ -1,25 +1,22 @@
 import { StaticComponent } from 'src/components/base/StaticComponent'
-import { SelectorFactory } from 'src/factories/SelectorFactory'
+import { chapters } from 'src/elm-bridge'
 import { Selector } from './Selector'
 
 export const MergeStaticSelector = (self: StaticComponent): void => {
     const selector = new Selector('Static selector base')
+    const chapter = chapters.get(self.chapterId)
 
-    const select = async () => {
-        if (!selector.isSelected) {
-            selector.isSelected = true
-            self.chapter.audio.selected?.fadeOut()
-            setTimeout(() => {
-                self.media.play()
-            }, 1500)
-        }
+    selector.select = async () => {
+        chapter.audio.selected?.fadeOut()
+        setTimeout(() => {
+            self.media.play()
+        }, 1500)
     }
 
-    const unselect = async () => {
-        selector.isSelected = false
+    selector.unselect = async () => {
         self.media.stop()
-        self.chapter.audio.selected?.fadeIn()
+        chapter.audio.selected?.fadeIn()
     }
 
-    self.selector = SelectorFactory(selector).setSelect(select).setUnselect(unselect).build()
+    self.selector = selector
 }

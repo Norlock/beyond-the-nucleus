@@ -1,15 +1,13 @@
 import * as PIXI from 'pixi.js'
-import { SelectorFactory } from 'src/factories/SelectorFactory'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Promiser } from 'src/utils/Promiser'
 import { Selector, StandardSelectorTag } from '../selector/Selector'
 import { Offset, PixiSelector } from './Pixi'
 
 export const ComponentCardSelector = (card: PIXI.Container, offset: Offset): PixiSelector => {
-    const selector = SelectorFactory(new Selector(StandardSelectorTag.CARD))
-        .setSelect(() => scrollToCard(card, offset))
-        .setUnselect(() => hideCard(card))
-        .build()
+    const selector = new Selector(StandardSelectorTag.CARD)
+    selector.select = () => scrollToCard(card, offset)
+    selector.unselect = () => hideCard(card)
 
     return { component: card, selector }
 }
@@ -69,8 +67,5 @@ const scrollToCard = async (card: PIXI.Container, offset: Offset) => {
 }
 
 const hideCard = async (card: PIXI.Container) => {
-    // TODO deactivate hide idle nothing
-    //if (action === ActionSelector.PREVIOUS) {
-    //card.visible = false
-    //}
+    card.visible = false
 }
