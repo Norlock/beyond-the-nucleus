@@ -56,15 +56,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         StepForwards ->
-            ( Components.step model Next, Cmd.none )
+            Components.step model Next
+                |> handleJSComponent
 
         StepBackwards ->
-            --let
-            --model =
-            --Components.step model Previous
-            --in
-            --( model, toJSComponent model.current )
-            ( Components.step model Previous, Cmd.none )
+            Components.step model Previous
+                |> handleJSComponent
 
         ToggleHelp ->
             ( { model | ui = toggleDialog model.ui }, Cmd.none )
@@ -304,6 +301,22 @@ errorView =
 
 
 -- Ports
+
+
+handleJSComponent : Model -> ( Model, Cmd Msg )
+handleJSComponent model =
+    case model.current of
+        Just current ->
+            ( model
+            , toJSComponent
+                { id = Components.idStr current.id
+                , chapter = Components.chapterStr current.chapter
+                , command = Components.commandStr JSActivate
+                }
+            )
+
+        Nothing ->
+            ( model, Cmd.none )
 
 
 port toJSComponent : JSComponentData -> Cmd msg
