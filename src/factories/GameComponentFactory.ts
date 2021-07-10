@@ -1,4 +1,4 @@
-import { Chapter } from 'src/chapters/base/Chapter'
+import { ChapterType } from 'src/chapters/base/ChapterType'
 import { GameComponent } from 'src/components/base/GameComponent'
 import { GameLoader } from 'src/modules/game/GameLoader'
 import { MergeDefaultGameLoader } from 'src/modules/game/MergeDefaultGameLoader'
@@ -9,9 +9,8 @@ import { MergeGameComponentSelector } from 'src/modules/selector/MergeGameCompon
 export class GameComponentFactory {
     readonly component: GameComponent
 
-    constructor(chapter: Chapter, tag: string) {
-        this.component = new GameComponent(chapter)
-        this.component.tag = tag
+    constructor(chapterId: ChapterType, tag: string) {
+        this.component = new GameComponent(tag, chapterId)
 
         MergeGameComponentSelector(this.component)
         MergeDefaultGameLoader(this.component)

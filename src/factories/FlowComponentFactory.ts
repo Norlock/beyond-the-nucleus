@@ -1,23 +1,28 @@
+import { ChapterType } from 'src/chapters/base/ChapterType'
 import { FlowComponent } from 'src/components/base/FlowComponent'
 import { MergePixiFlowCard, MergePixiFlowLine } from 'src/modules/pixi/MergeFlowPixi'
 import { PixiSelector } from 'src/modules/pixi/Pixi'
 import { MergeFlowSelector } from 'src/modules/selector/MergeFlowSelector'
 
-export class FlowComponentFactory {
-    readonly component: FlowComponent
+export function FlowComponentFactory(tag: string, chapterId: ChapterType) {
+    const component = new FlowComponent(tag, chapterId)
+    MergeFlowSelector(component)
 
-    constructor(tag: string) {
-        this.component = new FlowComponent(tag)
-        MergeFlowSelector(this.component)
+    const mergePixiCard = (containerName: string, card: PixiSelector) => {
+        MergePixiFlowCard(component, containerName, card)
+        return factory
     }
 
-    mergePixiCard(containerName: string, card: PixiSelector): FlowComponentFactory {
-        MergePixiFlowCard(this.component, containerName, card)
-        return this
+    const mergePixiLine = (previous: FlowComponent, color: number) => {
+        MergePixiFlowLine(component, previous, color)
+        return factory
     }
 
-    mergePixiLine(previous: FlowComponent, color: number): FlowComponentFactory {
-        MergePixiFlowLine(this.component, previous, color)
-        return this
+    const factory = {
+        mergePixiCard,
+        mergePixiLine,
+        component
     }
+
+    return factory
 }

@@ -8,13 +8,13 @@ export const MergePixiFlowCard = (self: FlowComponent, containerName: string, ca
     self.pixi.containerName = containerName
     self.pixi.card = card.component
 
-    self.pixiComponents.push(card.component)
     self.selector.append(card.selector)
+    self.pixiComponents.push(card.component)
 }
 
 export const MergePixiFlowLine = (self: FlowComponent, previous: FlowComponent, color: number): void => {
     const line = ComponentLineSelector(previous, self.pixi.card, color)
-    self.pixiComponents.push(line.component)
     self.pixi.line = line.component
     self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
+    self.pixiComponents.push(line.component)
 }

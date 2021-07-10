@@ -1,13 +1,12 @@
 import * as PIXI from 'pixi.js'
+import { ChapterType } from 'src/chapters/base/ChapterType'
 import { OceanName } from 'src/chapters/OceanChapter'
-import { ElmComponent } from 'src/elm-bridge'
+import { chapters, components, ElmComponent } from 'src/elm-bridge'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { FlowComponent } from '../base/FlowComponent'
 
-export const OceanPart1 = (data: ElmComponent): FlowComponent => {
-    //return PartChainFactory('Ocean1', ChapterType.OCEAN, undefined)
+export const OceanPart1 = (data: ElmComponent): void => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -45,14 +44,18 @@ export const OceanPart1 = (data: ElmComponent): FlowComponent => {
     paragraph.x = 30
     paragraph.y = 80
 
-    const component = FlowComponentFactory()
-    const { component } = factory
-    const param = PixiCardFactory(cardOptions, component.chapter, OceanName.START)
+    const chapter = chapters.get(data.chapterId)
+
+    const param = PixiCardFactory(cardOptions, chapter, OceanName.START)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(200, 200)
         .build()
 
+    const factory = FlowComponentFactory(data.id, ChapterType.OCEAN)
     factory.mergePixiCard(param.containerName, param.card)
-    return factory.component
+
+    const component = factory.component
+
+    components.set(component.tag, component)
 }

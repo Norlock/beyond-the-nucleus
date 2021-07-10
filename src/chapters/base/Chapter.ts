@@ -1,9 +1,10 @@
 import { ChapterType } from './ChapterType'
 import * as PIXI from 'pixi.js'
-import { ChapterSelector, Selector, SelectorModule } from 'src/modules/selector/Selector'
+import { Selector } from 'src/modules/selector/Selector'
 import { AudioModule, AudioUtility } from 'src/modules/audio/AudioComponent'
+import { ChapterSelector } from 'src/modules/selector/ChapterSelector'
 
-export class Chapter implements SelectorModule, AudioModule {
+export class Chapter implements AudioModule {
     readonly title: string
     root: PIXI.Container
     chapterType: ChapterType

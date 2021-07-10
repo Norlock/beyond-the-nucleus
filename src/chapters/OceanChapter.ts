@@ -8,7 +8,6 @@ import { gsap } from 'gsap'
 import { ChapterFactory } from 'src/factories/ChapterFactory'
 import { ChapterType } from './base/ChapterType'
 import { SelectState } from 'src/modules/audio/AudioComponent'
-import { SelectorFactory } from 'src/factories/SelectorFactory'
 import { Promiser } from 'src/utils/Promiser'
 
 gsap.registerPlugin(PixiPlugin)
@@ -63,7 +62,9 @@ const getBackground1 = (): ContainerData => {
         displacementWater.y = displacementWater.y + 1
     }
 
-    const select = async () => {
+    const selector = new Selector('Displacement background 1')
+
+    selector.select = async () => {
         const promiser = Promiser<void>()
         setTimeout(() => {
             boardApp.ticker.add(animateWater)
@@ -73,14 +74,9 @@ const getBackground1 = (): ContainerData => {
         return promiser.promise
     }
 
-    const unselect = async () => {
+    selector.unselect = async () => {
         boardApp.ticker.remove(animateWater)
     }
-
-    const selector = SelectorFactory(new Selector('Displacement background 1'))
-        .setSelect(select)
-        .setUnselect(unselect)
-        .build()
 
     return {
         container,
@@ -136,20 +132,16 @@ const getBackground2 = (): ContainerData => {
 
     const bubbleSelector = bubbleAnimation(background)
 
-    const select = async () => {
+    const selector = new Selector('Displacement background 1')
+    selector.select = async () => {
         boardApp.ticker.add(animateWater)
         bubbleSelector.select()
     }
 
-    const unselect = async () => {
+    selector.unselect = async () => {
         boardApp.ticker.remove(animateWater)
         bubbleSelector.unselect()
     }
-
-    const selector = SelectorFactory(new Selector('Displacement background 1'))
-        .setSelect(select)
-        .setUnselect(unselect)
-        .build()
 
     return {
         container,
@@ -165,7 +157,8 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
 
     let videoSprite: PIXI.Sprite
 
-    const select = async () => {
+    const selector = new Selector('Coral video')
+    selector.select = async () => {
         const video = document.createElement('video')
         video.preload = 'auto'
         video.loop = true
@@ -176,12 +169,10 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
         container.addChild(videoSprite)
     }
 
-    const unselect = async () => {
+    selector.unselect = async () => {
         container.removeChild(videoSprite)
         videoSprite.texture.baseTexture.destroy()
     }
-
-    const selector = SelectorFactory(new Selector('Coral video')).setSelect(select).setUnselect(unselect).build()
 
     return {
         container,
@@ -191,17 +182,16 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
 }
 
 const chapterSelector = (self: Chapter): Selector => {
-    const select = async () => {
+    const selector = new Selector('Chapter audio')
+    selector.select = async () => {
         setTimeout(() => {
             self.audio.select(AudioTag.AMBIENCE, SelectState.fadeIn)
         }, 200)
     }
 
-    const unselect = async () => {
+    selector.unselect = async () => {
         self.audio.selected.fadeOut()
     }
-
-    const selector = SelectorFactory(new Selector('Chapter audio')).setSelect(select).setUnselect(unselect).build()
 
     return selector
 }
@@ -210,11 +200,12 @@ const bubbleAnimation = (background: PIXI.Container): Selector => {
     let scale = 0.4
     const bubbles: gsap.core.Timeline[] = []
 
-    const select = async () => {
+    const selector = new Selector('Bubbles background 3')
+    selector.select = async () => {
         bubbles.forEach((bubble) => bubble.play())
     }
 
-    const unselect = async () => {
+    selector.unselect = async () => {
         bubbles.forEach((bubble) => bubble.pause())
     }
 
@@ -252,5 +243,5 @@ const bubbleAnimation = (background: PIXI.Container): Selector => {
         )
     }
 
-    return SelectorFactory(new Selector('Bubbles background 3')).setSelect(select).setUnselect(unselect).build()
+    return selector
 }

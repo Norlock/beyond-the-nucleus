@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { ChapterFactory } from 'src/factories/ChapterFactory'
-import { SelectorFactory } from 'src/factories/SelectorFactory'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { GetAudio } from 'src/modules/audio/GetAudio'
 import { Selector } from 'src/modules/selector/Selector'
@@ -70,8 +69,8 @@ const selector = (self: Chapter): Selector => {
             boardApp.ticker.add(animate)
         }, 500)
     }
-
-    const select = async () => {
+    const selector = new Selector('Blur Zendo intro')
+    selector.select = async () => {
         blurfilterLeft.blur = blurSize
         blurfilterRight.blur = blurSize
 
@@ -79,9 +78,9 @@ const selector = (self: Chapter): Selector => {
         return new Promise<void>((resolve) => doAnimate(resolve))
     }
 
-    const unselect = async () => {
+    selector.unselect = async () => {
         self.audio.stop()
     }
 
-    return SelectorFactory(new Selector('Blur Zendo intro')).setSelect(select).setUnselect(unselect).build()
+    return selector
 }

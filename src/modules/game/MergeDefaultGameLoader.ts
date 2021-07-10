@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { ComponentManager } from 'src/components/base/ComponentManager'
 import { GameComponent } from 'src/components/base/GameComponent'
 import { boardApp } from 'src/pixi/PixiApp'
 import { DefaultGameLoader } from './GameLoader'
@@ -32,7 +31,8 @@ export const MergeDefaultGameLoader = (self: GameComponent) => {
         game.app.destroy(true)
         boardApp.start()
 
-        ComponentManager.connectInputHandler()
+        // TODO do something with this (disable input in Elm)
+        //ComponentManager.connectInputHandler()
 
         game.busy = false
     }

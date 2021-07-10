@@ -14,4 +14,12 @@ export class ChapterSelector {
 
     select: (containerName: string) => Promise<void>
     unselect: () => Promise<void>
+
+    append(selector: Selector): void {
+        if (!this.next) {
+            this.next = selector
+        } else {
+            this.next.append(selector)
+        }
+    }
 }
