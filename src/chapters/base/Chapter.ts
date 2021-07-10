@@ -5,17 +5,17 @@ import { AudioModule, AudioUtility } from 'src/modules/audio/AudioComponent'
 import { ChapterSelector } from 'src/modules/selector/ChapterSelector'
 
 export class Chapter implements AudioModule {
-    readonly title: string
+    readonly chapterId: ChapterType
+
     root: PIXI.Container
-    chapterType: ChapterType
     selector: ChapterSelector
     audio: AudioUtility
 
-    constructor(title: string) {
+    constructor(chapterId: ChapterType) {
+        this.chapterId = chapterId
         this.root = new PIXI.Container()
         this.root.sortableChildren = true
         this.root.visible = false
-        this.title = title
     }
 
     find(name: string): PIXI.Container {

@@ -1,8 +1,13 @@
 import { Chapter } from './chapters/base/Chapter'
+import { IndigenousChapter } from './chapters/IndigenousChapter'
+import { OceanChapter, OceanName } from './chapters/OceanChapter'
+import { ZendoChapter } from './chapters/ZendoChapter'
 import { Component } from './components/base/Component'
 import { OceanPart1 } from './components/ocean/OceanPart1'
+import { OceanPart2 } from './components/ocean/OceanPart2'
 import { Elm } from './Main.elm'
-import { LOG } from './utils/Logger'
+import { boardApp } from './pixi/PixiApp'
+import { Promiser } from './utils/Promiser'
 
 export const components: Map<string, Component> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
@@ -23,30 +28,53 @@ export interface ElmComponent {
 }
 
 export function initElm() {
+    initChapters()
+
     const app = Elm.Main.init({
         node: document.getElementById('app')
     })
 
-    fillComponents([])
+    const loaded = Promiser<void>()
 
-    app.ports.toJSComponent.subscribe((component: ElmComponent) => {
-        console.log('elm component', component)
+    app.ports.toJSComponent.subscribe((elm: ElmComponent) => {
+        loaded.promise.then(() => {
+            const component = components.get(elm.id)
+            console.log('elm component', component)
+            if (component) {
+                chapters.get(component.chapterId).selector.select(OceanName.START)
+                component.init()
+                component.selector.select()
+            }
+        })
+    })
+
+    app.ports.toJSLoadComponents.subscribe((list: ElmComponent[]) => {
+        fillComponents(list)
+        loaded.resolve()
     })
 }
 
-const fillComponents = (list: ElmComponent[]) => {
-    const ocean1 = list.find((x) => x.id === 'ocean1')
-    if (ocean1) {
-        OceanPart1(ocean1)
-    } else {
-        console.error('component ocean1 is not implemented in Elm')
-    }
+const initChapters = () => {
+    const ocean = OceanChapter()
+    const zendo = ZendoChapter()
+    const indigenous = IndigenousChapter()
 
-    const ocean2 = list.find((x) => x.id === 'ocean2')
-    if (ocean2) {
-        OceanPart1(ocean2)
-    } else {
-        console.error('component ocean1 is not implemented in Elm')
+    chapters.set(ocean.chapterId, ocean)
+    chapters.set(zendo.chapterId, zendo)
+    chapters.set(indigenous.chapterId, indigenous)
+}
+
+// TODO check if not implemented components are there
+const fillComponents = (list: ElmComponent[]) => {
+    const pixiCanvas = document.getElementById('pixi-canvas')
+    pixiCanvas.appendChild(boardApp.view)
+
+    for (let component of list) {
+        if (component.id === 'ocean1') {
+            components.set(component.id, OceanPart1(component))
+        } else if (component.id === 'ocean2') {
+            components.set(component.id, OceanPart2(component))
+        }
     }
 }
 

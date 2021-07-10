@@ -33,7 +33,10 @@ init _ =
       , current = current
       , ui = initUI
       }
-    , handleJSComponent current JSActivate
+    , Cmd.batch
+        [ handleJSInitital (Dict.values components)
+        , handleJSComponent current JSActivate
+        ]
     )
 
 
@@ -304,17 +307,31 @@ errorView =
 -- Ports
 
 
-handleJSComponent : Component -> JSComponentCommand -> Cmd Msg
-handleJSComponent component command =
+getJSComponent : Component -> JSComponentCommand -> JSComponentData
+getJSComponent component command =
     { id = Components.idStr component.id
-    , chapter = Components.chapterStr component.chapter
+    , chapterId = Components.chapterStr component.chapter
     , command = Components.commandStr command
     , next = Components.getConnectionIds component Next
     , previous =
         List.head <|
             Components.getConnectionIds component Previous
     }
+
+
+handleJSInitital : List Component -> Cmd Msg
+handleJSInitital list =
+    List.map (\component -> getJSComponent component JSLoad) list
+        |> toJSLoadComponents
+
+
+handleJSComponent : Component -> JSComponentCommand -> Cmd Msg
+handleJSComponent component command =
+    getJSComponent component command
         |> toJSComponent
 
 
 port toJSComponent : JSComponentData -> Cmd msg
+
+
+port toJSLoadComponents : List JSComponentData -> Cmd msg

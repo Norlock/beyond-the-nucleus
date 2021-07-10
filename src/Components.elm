@@ -9,13 +9,13 @@ chapterStr : Chapter -> String
 chapterStr chapter =
     case chapter of
         Ocean ->
-            "Ocean"
+            "ocean"
 
         Zendo ->
-            "Zendo"
+            "zendo"
 
         Natives ->
-            "Natives"
+            "indigenous"
 
 
 commandStr : JSComponentCommand -> String
@@ -32,6 +32,9 @@ commandStr command =
 
         JSInit ->
             "init"
+
+        JSLoad ->
+            "load"
 
 
 idStr : ComponentId -> String

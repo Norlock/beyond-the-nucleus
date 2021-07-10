@@ -13,8 +13,10 @@ export const MergePixiFlowCard = (self: FlowComponent, containerName: string, ca
 }
 
 export const MergePixiFlowLine = (self: FlowComponent, previous: FlowComponent, color: number): void => {
-    const line = ComponentLineSelector(previous, self.pixi.card, color)
-    self.pixi.line = line.component
-    self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
-    self.pixiComponents.push(line.component)
+    if (self.pixi?.card) {
+        const line = ComponentLineSelector(previous, self.pixi.card, color)
+        self.pixi.line = line.component
+        self.selector.insertBefore(line.selector, StandardSelectorTag.CARD)
+        self.pixiComponents.push(line.component)
+    }
 }

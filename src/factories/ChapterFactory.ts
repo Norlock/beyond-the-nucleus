@@ -6,15 +6,15 @@ import { MergeChapterSelector } from 'src/modules/selector/MergeChapterSelector'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 
-export const ChapterFactory = (chapterType: ChapterType, x: number, y: number, name: string) => {
-    const self = new Chapter(name)
-    self.chapterType = chapterType
+export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) => {
+    const self = new Chapter(chapterType)
     self.root.x = x
     self.root.y = y
 
     MergeAudioUtility(self)
     MergeChapterSelector(self)
 
+    // TODO init function maybe
     boardApp.stage.addChild(self.root)
 
     const addAudio = (audio: AudioComponent, tag: string) => {

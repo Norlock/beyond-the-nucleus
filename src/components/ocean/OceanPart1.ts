@@ -5,8 +5,9 @@ import { chapters, components, ElmComponent } from 'src/elm-bridge'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
+import { FlowComponent } from '../base/FlowComponent'
 
-export const OceanPart1 = (data: ElmComponent): void => {
+export const OceanPart1 = (data: ElmComponent): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -55,7 +56,5 @@ export const OceanPart1 = (data: ElmComponent): void => {
     const factory = FlowComponentFactory(data.id, ChapterType.OCEAN)
     factory.mergePixiCard(param.containerName, param.card)
 
-    const component = factory.component
-
-    components.set(component.tag, component)
+    return factory.component
 }

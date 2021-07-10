@@ -40,7 +40,7 @@ type alias ErrorData =
 
 type alias JSComponentData =
     { id : String
-    , chapter : String
+    , chapterId : String
     , command : String
     , previous : Maybe String
     , next : List String
@@ -98,3 +98,4 @@ type JSComponentCommand
     | JSActivate
     | JSDeactivate
     | JSInit
+    | JSLoad

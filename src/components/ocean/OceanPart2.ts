@@ -8,7 +8,7 @@ import { CardOptions } from 'src/modules/pixi/Pixi'
 import { FlowComponent } from '../base/FlowComponent'
 import { oceanStyles } from './OceanStyles'
 
-export const Ocean2 = (data: ElmComponent): FlowComponent => {
+export const OceanPart2 = (data: ElmComponent): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -55,7 +55,6 @@ export const Ocean2 = (data: ElmComponent): FlowComponent => {
     const previous = components.get(data.previous) as FlowComponent
 
     const factory = FlowComponentFactory(data.id, ChapterType.OCEAN)
-    factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
 
     const chapter = chapters.get(data.chapterId)
 
@@ -65,5 +64,7 @@ export const Ocean2 = (data: ElmComponent): FlowComponent => {
         .setOffset(400, 300)
         .build()
 
-    return factory.mergePixiCard(cardData.containerName, cardData.card).component
+    factory.mergePixiCard(cardData.containerName, cardData.card)
+    factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
+    return factory.component
 }

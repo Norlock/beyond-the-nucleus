@@ -28,7 +28,7 @@ export const OceanChapter = (): Chapter => {
     const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
 
     const background2 = getBackground2()
-    const factory = ChapterFactory(ChapterType.OCEAN, 0, 0, 'Ocean')
+    const factory = ChapterFactory(ChapterType.OCEAN, 0, 0)
         .addContainer(getBackground1())
         .addContainer(background2)
         .addContainer(getBackground3(background2.container))
