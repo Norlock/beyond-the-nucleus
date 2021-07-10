@@ -1,4 +1,4 @@
-module Components exposing (chapterStr, commandStr, components, first, hasDirection, idStr, step)
+module Components exposing (chapterStr, commandStr, components, first, getConnectionIds, hasDirection, idStr, step)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
@@ -173,3 +173,10 @@ hasDirection component direction =
     getConnection component direction
         |> Maybe.map (\_ -> True)
         |> Maybe.withDefault False
+
+
+getConnectionIds : Component -> Direction -> List String
+getConnectionIds component direction =
+    component.connections
+        |> List.filter (\( dir, _ ) -> dir == direction)
+        |> List.map (\( _, id ) -> idStr id)

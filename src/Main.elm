@@ -37,14 +37,6 @@ init _ =
     )
 
 
-getJSComponentData : Component -> JSComponentCommand -> JSComponentData
-getJSComponentData component command =
-    { id = Components.idStr component.id
-    , chapter = Components.chapterStr component.chapter
-    , command = Components.commandStr command
-    }
-
-
 initUI : UI
 initUI =
     { dialog = Nothing
@@ -80,16 +72,20 @@ handleStep model direction previousCmd =
     let
         previous =
             model.current
+
+        newModel =
+            Components.step model direction
     in
-    Components.step model direction
-        |> (\newModel ->
-                ( newModel
-                , Cmd.batch
-                    [ handleJSComponent previous previousCmd
-                    , handleJSComponent newModel.current JSActivate
-                    ]
-                )
-           )
+    if newModel.current.id == previous.id then
+        ( newModel, Cmd.none )
+
+    else
+        ( newModel
+        , Cmd.batch
+            [ handleJSComponent previous previousCmd
+            , handleJSComponent newModel.current JSActivate
+            ]
+        )
 
 
 setDialog : Maybe Dialog -> UI -> UI
@@ -309,12 +305,14 @@ errorView =
 
 
 handleJSComponent : Component -> JSComponentCommand -> Cmd Msg
-handleJSComponent current command =
-    toJSComponent
-        { id = Components.idStr current.id
-        , chapter = Components.chapterStr current.chapter
-        , command = Components.commandStr command
-        }
+handleJSComponent component command =
+    { id = Components.idStr component.id
+    , chapter = Components.chapterStr component.chapter
+    , command = Components.commandStr command
+    , next = Components.getConnectionIds component Next
+    , previous = Components.getConnectionIds component Previous
+    }
+        |> toJSComponent
 
 
 port toJSComponent : JSComponentData -> Cmd msg
