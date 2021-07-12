@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { ChapterType } from 'src/chapters/base/ChapterType'
 import { OceanName } from 'src/chapters/OceanChapter'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
@@ -62,7 +61,7 @@ export const OceanPart2 = (data: ElmComponent): FlowComponent => {
         .setOffset(400, 300)
         .build()
 
-    const factory = FlowComponentFactory(data.id, ChapterType.OCEAN, pixiParams)
+    const factory = FlowComponentFactory(data.id, chapter.chapterId, pixiParams)
     factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
     return factory.component
 }
