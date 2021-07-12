@@ -4,14 +4,14 @@ import { Selector, SelectorModule } from 'src/modules/selector/Selector'
 import * as PIXI from 'pixi.js'
 
 export class Component implements SelectorModule {
-    readonly tag: string
+    readonly id: string
     readonly chapterId: ChapterType
     readonly pixiComponents: PIXI.Container[] = []
 
     selector: Selector
 
-    constructor(tag: string, chapterId: ChapterType) {
-        this.tag = tag
+    constructor(id: string, chapterId: ChapterType) {
+        this.id = id
         this.chapterId = chapterId
     }
 

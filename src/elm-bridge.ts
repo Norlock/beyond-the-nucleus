@@ -2,14 +2,16 @@ import { Chapter } from './chapters/base/Chapter'
 import { IndigenousChapter } from './chapters/IndigenousChapter'
 import { OceanChapter, OceanName } from './chapters/OceanChapter'
 import { ZendoChapter } from './chapters/ZendoChapter'
-import { Component } from './components/base/Component'
+import { FlowComponent } from './components/base/FlowComponent'
 import { OceanPart1 } from './components/ocean/OceanPart1'
 import { OceanPart2 } from './components/ocean/OceanPart2'
+import { OceanPart3 } from './components/ocean/OceanPart3'
+import { OceanPart4 } from './components/ocean/OceanPart4'
 import { Elm } from './Main.elm'
-import { boardApp } from './pixi/PixiApp'
+import { boardApp, boardScroll } from './pixi/PixiApp'
 import { Promiser } from './utils/Promiser'
 
-export const components: Map<string, Component> = new Map()
+export const components: Map<string, FlowComponent> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
 
 export interface ComponentBehaviour {
@@ -39,11 +41,19 @@ export function initElm() {
     app.ports.toJSComponent.subscribe((elm: ElmComponent) => {
         loaded.promise.then(() => {
             const component = components.get(elm.id)
-            console.log('elm component', component)
-            if (component) {
-                chapters.get(component.chapterId).selector.select(OceanName.START)
-                component.init()
+            if (!component) {
+                console.error("component doesn't exist on JS", elm)
+                return
+            }
+
+            console.log(elm.command)
+            if (elm.command === 'activate') {
+                chapters.get(component.chapterId).selector.select(component.containerName)
                 component.selector.select()
+            } else if (elm.command === 'idle') {
+                component.selector.idle()
+            } else if (elm.command === 'deactivate') {
+                component.selector.unselect()
             }
         })
     })
@@ -51,6 +61,10 @@ export function initElm() {
     app.ports.toJSLoadComponents.subscribe((list: ElmComponent[]) => {
         fillComponents(list)
         loaded.resolve()
+    })
+
+    app.ports.toJSScroll.subscribe((direction: string) => {
+        boardScroll(direction)
     })
 }
 
@@ -69,12 +83,37 @@ const fillComponents = (list: ElmComponent[]) => {
     const pixiCanvas = document.getElementById('pixi-canvas')
     pixiCanvas.appendChild(boardApp.view)
 
-    for (let component of list) {
-        if (component.id === 'ocean1') {
-            components.set(component.id, OceanPart1(component))
-        } else if (component.id === 'ocean2') {
-            components.set(component.id, OceanPart2(component))
-        }
+    const setComponent = (jsComponent: FlowComponent) => {
+        components.set(jsComponent.id, jsComponent)
+        jsComponent.init()
+    }
+
+    let elmComponent = list.find((x) => x.id === 'ocean1')
+    if (elmComponent) {
+        setComponent(OceanPart1(elmComponent))
+    } else {
+        console.error('ocean1 is not found')
+    }
+
+    elmComponent = list.find((x) => x.id === 'ocean2')
+    if (elmComponent) {
+        setComponent(OceanPart2(elmComponent))
+    } else {
+        console.error('ocean2 is not found')
+    }
+
+    elmComponent = list.find((x) => x.id === 'ocean3')
+    if (elmComponent) {
+        setComponent(OceanPart3(elmComponent))
+    } else {
+        console.error('ocean3 is not found')
+    }
+
+    elmComponent = list.find((x) => x.id === 'ocean4')
+    if (elmComponent) {
+        setComponent(OceanPart4(elmComponent))
+    } else {
+        console.error('ocean4 is not found')
     }
 }
 

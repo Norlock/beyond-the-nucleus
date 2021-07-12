@@ -10,7 +10,7 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
     const curve = new PIXI.Graphics()
 
     const centerStart = getCenter(dimensions)
-    const centerEnd = getCenter(previous.pixi.card)
+    const centerEnd = getCenter(previous.card)
 
     const endX = centerEnd.x - centerStart.x
     const endY = centerEnd.y - centerStart.y

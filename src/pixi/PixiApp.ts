@@ -44,6 +44,23 @@ export const preload = (): Promise<void> => {
     return promiser.promise
 }
 
+export const boardScroll = (direction: string) => {
+    switch (direction) {
+        case 'left':
+            boardApp.stage.x += 20
+            break
+        case 'right':
+            boardApp.stage.x -= 20
+            break
+        case 'up':
+            boardApp.stage.y += 20
+            break
+        case 'down':
+            boardApp.stage.y -= 20
+            break
+    }
+}
+
 export const isInViewport = (container: PIXI.Container): boolean => {
     const minX = container.x
     const minY = container.y

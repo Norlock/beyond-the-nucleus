@@ -66,8 +66,16 @@ update msg model =
         Highlight btn ->
             ( handleHighlight model btn, Cmd.none )
 
+        Scroll direction ->
+            ( model, handleScroll direction )
+
         Noop ->
             ( model, Cmd.none )
+
+
+handleScroll : String -> Cmd Msg
+handleScroll scrollDirection =
+    toJSScroll scrollDirection
 
 
 handleStep : Model -> Direction -> JSComponentCommand -> ( Model, Cmd Msg )
@@ -130,7 +138,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
         [ Browser.Events.onKeyPress (keyDecoder navKey)
-        , Browser.Events.onKeyDown (keyDecoder highlightKey)
+        , Browser.Events.onKeyDown (keyDecoder keyDown)
         , Browser.Events.onKeyUp (keyDecoder releaseHighlight)
         ]
 
@@ -145,9 +153,9 @@ releaseHighlight _ =
     Highlight Nothing
 
 
-highlightKey : String -> Msg
-highlightKey char =
-    case char of
+keyDown : String -> Msg
+keyDown key =
+    case key of
         "?" ->
             ToggleHelp
 
@@ -156,6 +164,18 @@ highlightKey char =
 
         "b" ->
             StepBackwards
+
+        "ArrowLeft" ->
+            Scroll "left"
+
+        "ArrowRight" ->
+            Scroll "right"
+
+        "ArrowUp" ->
+            Scroll "up"
+
+        "ArrowDown" ->
+            Scroll "down"
 
         _ ->
             Noop
@@ -335,3 +355,6 @@ port toJSComponent : JSComponentData -> Cmd msg
 
 
 port toJSLoadComponents : List JSComponentData -> Cmd msg
+
+
+port toJSScroll : String -> Cmd msg

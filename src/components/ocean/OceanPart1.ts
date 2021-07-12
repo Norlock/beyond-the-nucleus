@@ -53,8 +53,7 @@ export const OceanPart1 = (data: ElmComponent): FlowComponent => {
         .setOffset(200, 200)
         .build()
 
-    const factory = FlowComponentFactory(data.id, ChapterType.OCEAN)
-    factory.mergePixiCard(param.containerName, param.card)
+    const factory = FlowComponentFactory(data.id, ChapterType.OCEAN, param)
 
     return factory.component
 }

@@ -79,6 +79,7 @@ type Msg
     | ToggleHelp
     | StepForwards
     | StepBackwards
+    | Scroll String
     | Highlight (Maybe Button)
 
 

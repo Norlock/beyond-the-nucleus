@@ -54,17 +54,15 @@ export const OceanPart2 = (data: ElmComponent): FlowComponent => {
 
     const previous = components.get(data.previous) as FlowComponent
 
-    const factory = FlowComponentFactory(data.id, ChapterType.OCEAN)
-
     const chapter = chapters.get(data.chapterId)
 
-    const cardData = PixiCardFactory(cardOptions, chapter, OceanName.START)
+    const pixiParams = PixiCardFactory(cardOptions, chapter, OceanName.START)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(400, 300)
         .build()
 
-    factory.mergePixiCard(cardData.containerName, cardData.card)
+    const factory = FlowComponentFactory(data.id, ChapterType.OCEAN, pixiParams)
     factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
     return factory.component
 }

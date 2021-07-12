@@ -1,10 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Selector } from '../selector/Selector'
 
-export interface PixiModule {
-    pixi: FlowPixi
-}
-
 export class FlowPixi {
     containerName: string
     card: PIXI.Container
