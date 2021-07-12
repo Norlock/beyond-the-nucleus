@@ -9,14 +9,14 @@ export const MergeChapterSelector = (self: Chapter): void => {
     selector.select = async (containerName: string) => {
         self.root.visible = true
 
-        selector.next?.select()
+        selector.next?.activate()
         self.root.updateTransform()
 
         selector.containerSelector.select(containerName)
     }
 
     selector.unselect = async () => {
-        selector.next?.unselect()
+        selector.next?.deactivate()
 
         return new Promise<void>((resolve) => hideAnimation(self.root, resolve))
     }

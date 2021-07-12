@@ -1,4 +1,5 @@
 import { FlowComponent } from 'src/components/base/FlowComponent'
+import { chapters } from 'src/elm-bridge'
 import { GetAudio } from '../audio/GetAudio'
 import { Selector, StandardSelectorTag } from './Selector'
 
@@ -14,15 +15,22 @@ filter.connect(ctx.destination)
 export const MergeFlowSelector = (self: FlowComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW)
 
-    selector.select = async () => {
+    selector.activate = async () => {
         audio.load()
         audio.play()
 
-        await selector.next?.recursivelySelect()
+        // TODO container select
+        chapters.get(self.chapterId).selector.select(self.containerName)
+        await selector.next?.recursivelyActivate()
     }
 
-    selector.unselect = async () => {
-        await selector.next?.recursivelyUnselect()
+    selector.idle = async () => {
+        console.log('todo') // TODO
+        await selector.next.recursivelyIdle()
+    }
+
+    selector.deactivate = async () => {
+        await selector.next?.recursivelyDeactivate()
     }
 
     self.selector = selector

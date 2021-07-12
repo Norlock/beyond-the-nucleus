@@ -14,13 +14,6 @@ import { Promiser } from './utils/Promiser'
 export const components: Map<string, FlowComponent> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
 
-export interface ComponentBehaviour {
-    init(elmData: ElmComponent): void
-    idle: () => void
-    activate: () => void
-    deactivate: () => void
-}
-
 export interface ElmComponent {
     id: string
     chapterId: string
@@ -46,14 +39,12 @@ export function initElm() {
                 return
             }
 
-            console.log(elm.command)
             if (elm.command === 'activate') {
-                chapters.get(component.chapterId).selector.select(component.containerName)
-                component.selector.select()
+                component.selector.activate()
             } else if (elm.command === 'idle') {
                 component.selector.idle()
             } else if (elm.command === 'deactivate') {
-                component.selector.unselect()
+                component.selector.deactivate()
             }
         })
     })
@@ -88,32 +79,36 @@ const fillComponents = (list: ElmComponent[]) => {
         jsComponent.init()
     }
 
+    const errorMsg = (id: string): string => {
+        return id + ' is not found on the Elm side'
+    }
+
     let elmComponent = list.find((x) => x.id === 'ocean1')
     if (elmComponent) {
         setComponent(OceanPart1(elmComponent))
     } else {
-        console.error('ocean1 is not found')
+        errorMsg('ocean1')
     }
 
     elmComponent = list.find((x) => x.id === 'ocean2')
     if (elmComponent) {
         setComponent(OceanPart2(elmComponent))
     } else {
-        console.error('ocean2 is not found')
+        errorMsg('ocean2')
     }
 
     elmComponent = list.find((x) => x.id === 'ocean3')
     if (elmComponent) {
         setComponent(OceanPart3(elmComponent))
     } else {
-        console.error('ocean3 is not found')
+        errorMsg('ocean3')
     }
 
     elmComponent = list.find((x) => x.id === 'ocean4')
     if (elmComponent) {
         setComponent(OceanPart4(elmComponent))
     } else {
-        console.error('ocean4 is not found')
+        errorMsg('ocean3')
     }
 }
 

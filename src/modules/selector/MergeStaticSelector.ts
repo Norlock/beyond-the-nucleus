@@ -6,14 +6,14 @@ export const MergeStaticSelector = (self: StaticComponent): void => {
     const selector = new Selector('Static selector base')
     const chapter = chapters.get(self.chapterId)
 
-    selector.select = async () => {
+    selector.activate = async () => {
         chapter.audio.selected?.fadeOut()
         setTimeout(() => {
             self.media.play()
         }, 1500)
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         self.media.stop()
         chapter.audio.selected?.fadeIn()
     }

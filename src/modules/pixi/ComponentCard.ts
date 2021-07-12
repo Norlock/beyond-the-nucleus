@@ -6,8 +6,9 @@ import { Offset, PixiSelector } from './Pixi'
 
 export const ComponentCardSelector = (card: PIXI.Container, offset: Offset): PixiSelector => {
     const selector = new Selector(StandardSelectorTag.CARD)
-    selector.select = () => scrollToCard(card, offset)
-    selector.unselect = () => hideCard(card)
+    selector.activate = () => scrollToCard(card, offset)
+    selector.deactivate = () => hideCard(card)
+    selector.idle = async () => {}
 
     return { component: card, selector }
 }

@@ -40,7 +40,7 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
     }
 
     const selector = new Selector(StandardSelectorTag.LINE)
-    selector.select = async (): Promise<void> => {
+    selector.activate = async (): Promise<void> => {
         count = 0
         curve.visible = true
         boardApp.ticker.add(animate)
@@ -50,7 +50,7 @@ export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimen
         boardApp.ticker.remove(animate)
     }
 
-    selector.unselect = async (): Promise<void> => {
+    selector.deactivate = async (): Promise<void> => {
         boardApp.ticker.remove(animate)
         curve.visible = false
     }

@@ -1,19 +1,10 @@
-export interface SelectorModule {
-    selector: Selector
-}
+import { Activate, Deactivate, Selector } from './Selector'
 
-export enum StandardSelectorTag {
-    FLOW = 'flow',
-    CARD = 'card',
-    LINE = 'line'
-}
-
-export class Selector {
+export class SimpleSelector {
     tag: string // Tag for debug readability
-    next: Selector
+    next: SimpleSelector
     activate: Activate
     deactivate: Deactivate
-    idle: Idle
 
     constructor(tag: string) {
         this.tag = tag
@@ -28,14 +19,9 @@ export class Selector {
             console.warn('deactivate not implemented ' + tag)
             return
         }
-
-        this.idle = (): Promise<void> => {
-            console.warn('idle not implemented ' + this.tag)
-            return
-        }
     }
 
-    append(selector: Selector): void {
+    append(selector: SimpleSelector): void {
         if (!this.next) {
             this.next = selector
         } else {
@@ -43,7 +29,7 @@ export class Selector {
         }
     }
 
-    insertBefore(selector: Selector, tag: string): void {
+    insertBefore(selector: SimpleSelector, tag: string): void {
         if (this.next?.tag === tag) {
             selector.next = this.next
             this.next = selector
@@ -52,7 +38,7 @@ export class Selector {
         }
     }
 
-    insertAfter(selector: Selector, tag: string): void {
+    insertAfter(selector: SimpleSelector, tag: string): void {
         if (this.tag === tag) {
             selector.next = this.next
             this.next = selector
@@ -72,14 +58,4 @@ export class Selector {
         await this.next?.recursivelyDeactivate()
         await this.deactivate()
     }
-
-    // Select first one first
-    async recursivelyIdle(): Promise<void> {
-        await this.idle()
-        await this.next?.recursivelyIdle()
-    }
 }
-
-export type Activate = () => Promise<void>
-export type Deactivate = () => Promise<void>
-export type Idle = () => Promise<void>

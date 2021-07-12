@@ -68,7 +68,7 @@ const selector = (self: Chapter): Selector => {
         }, 500)
     }
     const selector = new Selector('Blur Zendo intro')
-    selector.select = async () => {
+    selector.activate = async () => {
         blurfilterLeft.blur = blurSize
         blurfilterRight.blur = blurSize
 
@@ -76,7 +76,7 @@ const selector = (self: Chapter): Selector => {
         return new Promise<void>((resolve) => doAnimate(resolve))
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         self.audio.stop()
     }
 

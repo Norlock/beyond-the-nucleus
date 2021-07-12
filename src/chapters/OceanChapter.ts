@@ -64,7 +64,7 @@ const getBackground1 = (): ContainerData => {
 
     const selector = new Selector('Displacement background 1')
 
-    selector.select = async () => {
+    selector.activate = async () => {
         const promiser = Promiser<void>()
         setTimeout(() => {
             boardApp.ticker.add(animateWater)
@@ -74,7 +74,7 @@ const getBackground1 = (): ContainerData => {
         return promiser.promise
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         boardApp.ticker.remove(animateWater)
     }
 
@@ -133,14 +133,14 @@ const getBackground2 = (): ContainerData => {
     const bubbleSelector = bubbleAnimation(background)
 
     const selector = new Selector('Displacement background 1')
-    selector.select = async () => {
+    selector.activate = async () => {
         boardApp.ticker.add(animateWater)
-        bubbleSelector.select()
+        bubbleSelector.activate()
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         boardApp.ticker.remove(animateWater)
-        bubbleSelector.unselect()
+        bubbleSelector.deactivate()
     }
 
     return {
@@ -158,7 +158,7 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
     let videoSprite: PIXI.Sprite
 
     const selector = new Selector('Coral video')
-    selector.select = async () => {
+    selector.activate = async () => {
         const video = document.createElement('video')
         video.preload = 'auto'
         video.loop = true
@@ -169,7 +169,7 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
         container.addChild(videoSprite)
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         container.removeChild(videoSprite)
         videoSprite.texture.baseTexture.destroy()
     }
@@ -183,13 +183,13 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
 
 const chapterSelector = (self: Chapter): Selector => {
     const selector = new Selector('Chapter audio')
-    selector.select = async () => {
+    selector.activate = async () => {
         setTimeout(() => {
             self.audio.select(AudioTag.AMBIENCE, SelectState.fadeIn)
         }, 200)
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         self.audio.selected.fadeOut()
     }
 
@@ -201,11 +201,11 @@ const bubbleAnimation = (background: PIXI.Container): Selector => {
     const bubbles: gsap.core.Timeline[] = []
 
     const selector = new Selector('Bubbles background 3')
-    selector.select = async () => {
+    selector.activate = async () => {
         bubbles.forEach((bubble) => bubble.play())
     }
 
-    selector.unselect = async () => {
+    selector.deactivate = async () => {
         bubbles.forEach((bubble) => bubble.pause())
     }
 

@@ -8,12 +8,14 @@ export const MergeGameComponentSelector = (self: GameComponent) => {
 
     const selector = new Selector('game')
 
-    selector.select = async () => {
-        document.body.classList.add(self.tag)
+    selector.activate = async () => {
+        document.body.classList.add(self.id)
     }
 
-    selector.unselect = async () => {
-        document.body.classList.remove(self.tag)
+    selector.idle = async () => {}
+
+    selector.deactivate = async () => {
+        document.body.classList.remove(self.id)
     }
 
     self.selector.append(selector)

@@ -7,8 +7,8 @@ export class ContainerSelector {
     select(name: string): void {
         if (name !== this.current && this.selectorMap.has(name)) {
             const selector = this.selectorMap.get(name)
-            selector.select()
-            this.selectorMap.get(this.current)?.unselect()
+            selector.activate()
+            this.selectorMap.get(this.current)?.deactivate()
             this.current = name
         }
     }
