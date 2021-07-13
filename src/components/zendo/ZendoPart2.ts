@@ -14,7 +14,7 @@ export const ZendoPart2 = (data: ElmComponent): FlowComponent => {
         x: 1400,
         y: 200,
         width: 400,
-        height: 180,
+        height: 200,
         pivotCenter: false
     }
 

@@ -61,6 +61,9 @@ type ComponentId
     | Zendo1
     | Zendo2
     | Zendo3
+    | Zendo4
+    | Zendo5
+    | Zendo6
 
 
 type Chapter

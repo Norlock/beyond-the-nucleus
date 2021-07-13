@@ -67,6 +67,15 @@ idStr id =
         Zendo3 ->
             "zendo3"
 
+        Zendo4 ->
+            "zendo4"
+
+        Zendo5 ->
+            "zendo5"
+
+        Zendo6 ->
+            "zendo6"
+
 
 first : Component
 first =
@@ -88,6 +97,9 @@ components =
         |> addComponent Zendo1 Ocean6 Zendo
         |> addComponent Zendo2 Zendo1 Zendo
         |> addComponent Zendo3 Zendo2 Zendo
+        |> addComponent Zendo4 Zendo3 Zendo
+        |> addComponent Zendo5 Zendo4 Zendo
+        |> addComponent Zendo6 Zendo5 Zendo
         |> connectNext
 
 

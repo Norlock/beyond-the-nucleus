@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { ChapterType } from 'src/chapters/base/ChapterType'
 import { ZendoName } from 'src/chapters/ZendoChapter'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { kungfuLoader } from 'src/games/kungfu/KungfuLoader'

@@ -1,12 +1,20 @@
 import { Chapter } from './chapters/base/Chapter'
 import { IndigenousChapter } from './chapters/IndigenousChapter'
-import { OceanChapter, OceanName } from './chapters/OceanChapter'
+import { OceanChapter } from './chapters/OceanChapter'
 import { ZendoChapter } from './chapters/ZendoChapter'
 import { FlowComponent } from './components/base/FlowComponent'
 import { OceanPart1 } from './components/ocean/OceanPart1'
 import { OceanPart2 } from './components/ocean/OceanPart2'
 import { OceanPart3 } from './components/ocean/OceanPart3'
 import { OceanPart4 } from './components/ocean/OceanPart4'
+import { OceanPart5 } from './components/ocean/OceanPart5'
+import { OceanPart6 } from './components/ocean/OceanPart6'
+import { ZendoPart1 } from './components/zendo/ZendoPart1'
+import { ZendoPart2 } from './components/zendo/ZendoPart2'
+import { ZendoPart3 } from './components/zendo/ZendoPart3'
+import { ZendoPart4 } from './components/zendo/ZendoPart4'
+import { ZendoPart5 } from './components/zendo/ZendoPart5'
+import { ZendoPart6 } from './components/zendo/ZendoPart6'
 import { Elm } from './Main.elm'
 import { boardApp, boardScroll } from './pixi/PixiApp'
 import { Promiser } from './utils/Promiser'
@@ -110,31 +118,60 @@ const fillComponents = (list: ElmComponent[]) => {
     } else {
         errorMsg('ocean3')
     }
-}
 
-export enum ActionUI {
-    TOGGLE_HELP = '?',
-    TOGGLE_MUTE = 'm',
-    TOGGLE_CANVAS_BLUR = 'blur',
-    LEFT = 'ArrowLeft',
-    RIGHT = 'ArrowRight',
-    UP = 'ArrowUp',
-    DOWN = 'ArrowDown'
-}
+    elmComponent = list.find((x) => x.id === 'ocean5')
+    if (elmComponent) {
+        setComponent(OceanPart5(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
 
-// keys will be passed from Elm
-//
-//switch (keyPressed) {
-//case ActionUI.LEFT:
-//boardApp.stage.x += 10
-//break
-//case ActionUI.RIGHT:
-//boardApp.stage.x -= 10
-//break
-//case ActionUI.UP:
-//boardApp.stage.y += 10
-//break
-//case ActionUI.DOWN:
-//boardApp.stage.y -= 10
-//break
-//}
+    elmComponent = list.find((x) => x.id === 'ocean6')
+    if (elmComponent) {
+        setComponent(OceanPart6(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+
+    elmComponent = list.find((x) => x.id === 'zendo1')
+    if (elmComponent) {
+        setComponent(ZendoPart1(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+
+    elmComponent = list.find((x) => x.id === 'zendo2')
+    if (elmComponent) {
+        setComponent(ZendoPart2(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+
+    elmComponent = list.find((x) => x.id === 'zendo3')
+    if (elmComponent) {
+        setComponent(ZendoPart3(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+
+    elmComponent = list.find((x) => x.id === 'zendo4')
+    if (elmComponent) {
+        setComponent(ZendoPart4(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+
+    elmComponent = list.find((x) => x.id === 'zendo5')
+    if (elmComponent) {
+        setComponent(ZendoPart5(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+
+    elmComponent = list.find((x) => x.id === 'zendo6')
+    if (elmComponent) {
+        setComponent(ZendoPart6(elmComponent))
+    } else {
+        errorMsg('ocean3')
+    }
+}

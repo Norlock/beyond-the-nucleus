@@ -6,22 +6,17 @@ import { MergePixiFlowCard } from 'src/modules/pixi/MergeFlowPixi'
 import { PixiParams } from 'src/modules/pixi/Pixi'
 import { MergeGameComponentSelector } from 'src/modules/selector/MergeGameComponentSelector'
 
-export class GameComponentFactory {
-    readonly component: GameComponent
+export const GameComponentFactory = (id: string, chapterId: ChapterType, pixiParams: PixiParams) => {
+    const component = new GameComponent(id, chapterId)
 
-    constructor(chapterId: ChapterType, tag: string, pixiParams: PixiParams) {
-        this.component = new GameComponent(tag, chapterId)
+    MergeGameComponentSelector(component)
+    MergeDefaultGameLoader(component)
+    MergePixiFlowCard(component, pixiParams.containerName, pixiParams.card)
 
-        MergeGameComponentSelector(this.component)
-        MergeDefaultGameLoader(this.component)
-        MergePixiFlowCard(this.component, pixiParams.containerName, pixiParams.card)
-    }
-
-    mergeGameLoader(custom: GameLoader) {
+    function mergeGameLoader(custom: GameLoader) {
         this.component.game.append(custom)
-        return this
+        return { component }
     }
 
-    // Todo maak functie en dit
-    //mergeResourceHandler
+    return { mergeGameLoader, component }
 }
