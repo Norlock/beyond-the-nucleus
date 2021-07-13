@@ -64,10 +64,13 @@ update msg model =
             ( { model | ui = toggleDialog model.ui }, Cmd.none )
 
         Highlight btn ->
-            ( handleHighlight model btn, Cmd.none )
+            ( handleHighlight model (Just btn), Cmd.none )
 
         Scroll direction ->
             ( model, handleScroll direction )
+
+        ReleaseKey ->
+            ( handleHighlight model Nothing, toJSScroll "" )
 
         Noop ->
             ( model, Cmd.none )
@@ -139,7 +142,7 @@ subscriptions _ =
     Sub.batch
         [ Browser.Events.onKeyPress (keyDecoder navKey)
         , Browser.Events.onKeyDown (keyDecoder keyDown)
-        , Browser.Events.onKeyUp (keyDecoder releaseHighlight)
+        , Browser.Events.onKeyUp (keyDecoder releaseKey)
         ]
 
 
@@ -148,9 +151,9 @@ keyDecoder keyFunction =
     Decode.map keyFunction (Decode.field "key" Decode.string)
 
 
-releaseHighlight : String -> Msg
-releaseHighlight _ =
-    Highlight Nothing
+releaseKey : String -> Msg
+releaseKey _ =
+    ReleaseKey
 
 
 keyDown : String -> Msg
@@ -185,13 +188,13 @@ navKey : String -> Msg
 navKey char =
     case char of
         "?" ->
-            Highlight (Just HelpButton)
+            Highlight HelpButton
 
         "s" ->
-            Highlight (Just NextButton)
+            Highlight NextButton
 
         "b" ->
-            Highlight (Just PreviousButton)
+            Highlight PreviousButton
 
         _ ->
             Noop

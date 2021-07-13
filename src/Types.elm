@@ -83,7 +83,8 @@ type Msg
     | StepForwards
     | StepBackwards
     | Scroll String
-    | Highlight (Maybe Button)
+    | Highlight Button
+    | ReleaseKey
 
 
 type Button
