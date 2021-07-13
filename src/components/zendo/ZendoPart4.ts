@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { ZendoName } from 'src/chapters/ZendoChapter'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
@@ -20,8 +19,8 @@ export const ZendoPart4 = (data: ElmComponent): FlowComponent => {
         pivotCenter: false
     }
 
-    const chapter = chapters.get(data.chapterId)
-    const cardData = PixiCardFactory(cardOptions, chapter, ZendoName.START)
+    const chapter = chapters.get(data.container.chapterId)
+    const cardData = PixiCardFactory(cardOptions, chapter, data.container.name)
         .setColorCard(0x000000)
         .setOffset(200, 50)
         .build()

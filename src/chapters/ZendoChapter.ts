@@ -11,10 +11,6 @@ enum AudioTag {
     INTRO = 'intro'
 }
 
-export enum ZendoName {
-    START = 'start'
-}
-
 const blurSize = 10
 const blurfilterLeft = new PIXI.filters.BlurFilter(blurSize)
 const blurfilterRight = new PIXI.filters.BlurFilter(blurSize)
@@ -47,7 +43,7 @@ const background1 = (): ContainerData => {
 
     return {
         container,
-        name: ZendoName.START
+        name: 'start'
     }
 }
 

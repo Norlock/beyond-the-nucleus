@@ -13,11 +13,10 @@ import { Promiser } from 'src/utils/Promiser'
 gsap.registerPlugin(PixiPlugin)
 PixiPlugin.registerPIXI(PIXI)
 
-export enum OceanName {
+enum OceanName {
     START = 'start',
     TURTLE = 'turtle',
-    CORAL = 'coral',
-    OCEAN = 'ocean'
+    CORAL = 'coral'
 }
 
 enum AudioTag {

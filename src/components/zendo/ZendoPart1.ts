@@ -1,15 +1,13 @@
 import * as PIXI from 'pixi.js'
-import { ZendoName } from 'src/chapters/ZendoChapter'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory'
 import { boardApp } from 'src/pixi/PixiApp'
 import { FlowComponent } from '../base/FlowComponent'
-import { ChapterType } from 'src/chapters/base/ChapterType'
 import { chapters, ElmComponent } from 'src/elm-bridge'
 
 export const ZendoPart1 = (data: ElmComponent): FlowComponent => {
-    const chapter = chapters.get(data.chapterId)
-    const background = chapter.find(ZendoName.START)
+    const chapter = chapters.get(data.container.chapterId)
+    const background = chapter.find(data.container.name)
     const left = background.getChildAt(0) as PIXI.Sprite
 
     const radius = 288
@@ -72,7 +70,7 @@ export const ZendoPart1 = (data: ElmComponent): FlowComponent => {
     paragraph2.y = radius + 80
     paragraph2.anchor.set(0.5, 0)
 
-    const cardData = CustomPixiCardFactory(background, ZendoName.START)
+    const cardData = CustomPixiCardFactory(background, data.container.name)
         .setCard(container)
         .addChild(header, paragraph, paragraph2)
         .setOffset(boardApp.screen.width / 2 - radius, boardApp.screen.height / 2 - radius)

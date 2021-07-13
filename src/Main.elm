@@ -214,7 +214,7 @@ view model =
 body : Component -> UI -> Html Msg
 body component ui =
     let
-        { index, chapter } =
+        { index, container } =
             component
 
         hasNext =
@@ -222,6 +222,9 @@ body component ui =
 
         hasPrevious =
             Components.hasDirection component Previous
+
+        { chapterId } =
+            Components.jsChapter container
 
         activate =
             "activate"
@@ -248,7 +251,8 @@ body component ui =
                 ]
                 [ text "?" ]
             ]
-        , h1 [ id "chapter-title", classList [ ( "animate", ui.showChapterAnimation ) ] ] [ text (Components.chapterStr chapter) ]
+        , h1 [ id "chapter-title", classList [ ( "animate", ui.showChapterAnimation ) ] ]
+            [ text chapterId ]
         , div [ id "toolbar-controls" ]
             [ span
                 [ id "game-control"
@@ -333,7 +337,7 @@ errorView =
 getJSComponent : Component -> JSComponentCommand -> JSComponentData
 getJSComponent component command =
     { id = Components.idStr component.id
-    , chapterId = Components.chapterStr component.chapter
+    , container = Components.jsChapter component.container
     , command = Components.commandStr command
     , next = Components.getConnectionIds component Next
     , previous =

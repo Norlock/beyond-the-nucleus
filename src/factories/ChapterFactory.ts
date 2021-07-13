@@ -2,7 +2,7 @@ import { Chapter, ContainerData } from 'src/chapters/base/Chapter'
 import { ChapterType } from 'src/chapters/base/ChapterType'
 import { AudioComponent } from 'src/modules/audio/AudioComponent'
 import { MergeAudioUtility } from 'src/modules/audio/MergeAudioUtility'
-import { MergeChapterSelector } from 'src/modules/selector/MergeChapterSelector'
+import { ChapterSelector } from 'src/modules/selector/ChapterSelector'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 
@@ -10,9 +10,9 @@ export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) =
     const self = new Chapter(chapterType)
     self.root.x = x
     self.root.y = y
+    self.selector = new ChapterSelector(self)
 
     MergeAudioUtility(self)
-    MergeChapterSelector(self)
 
     // TODO init function maybe
     boardApp.stage.addChild(self.root)
@@ -34,7 +34,7 @@ export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) =
         self.root.addChild(container)
 
         if (selector) {
-            self.selector.containerSelector.addSelector(name, selector)
+            self.selector.addSelector(name, selector)
         }
 
         return factory

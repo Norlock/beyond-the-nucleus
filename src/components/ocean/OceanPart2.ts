@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { OceanName } from 'src/chapters/OceanChapter'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
 import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
@@ -53,9 +52,9 @@ export const OceanPart2 = (data: ElmComponent): FlowComponent => {
 
     const previous = components.get(data.previous) as FlowComponent
 
-    const chapter = chapters.get(data.chapterId)
+    const chapter = chapters.get(data.container.chapterId)
 
-    const pixiParams = PixiCardFactory(cardOptions, chapter, OceanName.START)
+    const pixiParams = PixiCardFactory(cardOptions, chapter, data.container.name)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(400, 300)

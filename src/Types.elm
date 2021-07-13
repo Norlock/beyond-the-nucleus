@@ -12,7 +12,7 @@ type alias Model =
 
 type alias Component =
     { id : ComponentId
-    , chapter : Chapter
+    , container : Chapter ContainerName
     , connections : List Connection
     , index : Int
     }
@@ -40,10 +40,16 @@ type alias ErrorData =
 
 type alias JSComponentData =
     { id : String
-    , chapterId : String
+    , container : JSChapterData
     , command : String
     , previous : Maybe String
     , next : List String
+    }
+
+
+type alias JSChapterData =
+    { chapterId : String
+    , name : String
     }
 
 
@@ -66,10 +72,10 @@ type ComponentId
     | Zendo6
 
 
-type Chapter
-    = Ocean
-    | Zendo
-    | Natives
+type Chapter a
+    = Ocean a
+    | Zendo a
+    | Natives a
 
 
 type Dialog
@@ -104,3 +110,9 @@ type JSComponentCommand
     | JSDeactivate
     | JSInit
     | JSLoad
+
+
+type ContainerName
+    = Start
+    | Turtle
+    | Coral

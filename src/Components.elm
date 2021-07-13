@@ -1,21 +1,50 @@
-module Components exposing (chapterStr, commandStr, components, first, getConnectionIds, hasDirection, idStr, step)
+module Components exposing
+    ( chapterStr
+    , commandStr
+    , components
+    , first
+    , getConnectionIds
+    , hasDirection
+    , idStr
+    , jsChapter
+    , step
+    )
 
 import Dict exposing (Dict)
 import Json.Decode exposing (dict)
 import Types exposing (..)
 
 
-chapterStr : Chapter -> String
-chapterStr chapter =
+jsContainerName : ContainerName -> String
+jsContainerName name =
+    case name of
+        Start ->
+            "start"
+
+        Turtle ->
+            "turtle"
+
+        Coral ->
+            "coral"
+
+
+jsChapter : Chapter ContainerName -> JSChapterData
+jsChapter chapter =
     case chapter of
-        Ocean ->
-            "ocean"
+        Ocean name ->
+            { chapterId = "ocean"
+            , name = jsContainerName name
+            }
 
-        Zendo ->
-            "zendo"
+        Zendo name ->
+            { chapterId = "zendo"
+            , name = jsContainerName name
+            }
 
-        Natives ->
-            "indigenous"
+        Natives name ->
+            { chapterId = "natives"
+            , name = jsContainerName name
+            }
 
 
 commandStr : JSComponentCommand -> String
@@ -80,7 +109,7 @@ idStr id =
 first : Component
 first =
     { id = Ocean1
-    , chapter = Ocean
+    , container = Ocean Start
     , connections = []
     , index = 1
     }
@@ -89,17 +118,17 @@ first =
 components : ComponentDict
 components =
     insertComponent first Dict.empty
-        |> addComponent Ocean2 Ocean1 Ocean
-        |> addComponent Ocean3 Ocean2 Ocean
-        |> addComponent Ocean4 Ocean3 Ocean
-        |> addComponent Ocean5 Ocean4 Ocean
-        |> addComponent Ocean6 Ocean5 Ocean
-        |> addComponent Zendo1 Ocean6 Zendo
-        |> addComponent Zendo2 Zendo1 Zendo
-        |> addComponent Zendo3 Zendo2 Zendo
-        |> addComponent Zendo4 Zendo3 Zendo
-        |> addComponent Zendo5 Zendo4 Zendo
-        |> addComponent Zendo6 Zendo5 Zendo
+        |> addComponent Ocean2 Ocean1 (Ocean Start)
+        |> addComponent Ocean3 Ocean2 (Ocean Start)
+        |> addComponent Ocean4 Ocean3 (Ocean Turtle)
+        |> addComponent Ocean5 Ocean4 (Ocean Turtle)
+        |> addComponent Ocean6 Ocean5 (Ocean Coral)
+        |> addComponent Zendo1 Ocean6 (Zendo Start)
+        |> addComponent Zendo2 Zendo1 (Zendo Start)
+        |> addComponent Zendo3 Zendo2 (Zendo Start)
+        |> addComponent Zendo4 Zendo3 (Zendo Start)
+        |> addComponent Zendo5 Zendo4 (Zendo Start)
+        |> addComponent Zendo6 Zendo5 (Zendo Start)
         |> connectNext
 
 
@@ -107,19 +136,17 @@ components =
 -- TODO in case of nothing return error!
 
 
-addComponent : ComponentId -> ComponentId -> Chapter -> ComponentDict -> ComponentDict
+addComponent : ComponentId -> ComponentId -> Chapter ContainerName -> ComponentDict -> ComponentDict
 addComponent id previousId chapter dict =
     case findComponent previousId dict of
         Just previous ->
-            let
-                component =
+            dict
+                |> insertComponent
                     { id = id
-                    , chapter = chapter
+                    , container = chapter
                     , connections = [ ( Previous, previousId ) ]
                     , index = previous.index + 1
                     }
-            in
-            insertComponent component dict
 
         Nothing ->
             dict

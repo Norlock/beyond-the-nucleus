@@ -19,13 +19,13 @@ export const MergeFlowSelector = (self: FlowComponent): void => {
         audio.load()
         audio.play()
 
-        // TODO container select
-        chapters.get(self.chapterId).selector.select(self.containerName)
+        // TODO container select uit component halen is nu niet duidelijk
+
+        chapters.get(self.chapterId).selector.activate(self.containerName)
         await selector.next?.recursivelyActivate()
     }
 
     selector.idle = async () => {
-        console.log('todo') // TODO
         await selector.next.recursivelyIdle()
     }
 

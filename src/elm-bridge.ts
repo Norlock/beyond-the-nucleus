@@ -22,9 +22,14 @@ import { Promiser } from './utils/Promiser'
 export const components: Map<string, FlowComponent> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
 
+export interface ElmContainer {
+    chapterId: string
+    name: string
+}
+
 export interface ElmComponent {
     id: string
-    chapterId: string
+    container: ElmContainer
     previous: string | null
     next: string[]
     command: string

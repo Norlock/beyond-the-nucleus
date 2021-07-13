@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { ZendoName } from 'src/chapters/ZendoChapter'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { kungfuLoader } from 'src/games/kungfu/KungfuLoader'
 import { CardOptions } from 'src/modules/pixi/Pixi'
@@ -47,8 +46,8 @@ export const ZendoPart6 = (data: ElmComponent): FlowComponent => {
     logoContainer.x = 100
     logoContainer.y = 150
 
-    const chapter = chapters.get(data.chapterId)
-    const cardData = PixiCardFactory(cardOptions, chapter, ZendoName.START)
+    const chapter = chapters.get(data.container.chapterId)
+    const cardData = PixiCardFactory(cardOptions, chapter, data.container.name)
         .setImageCard(zendoCardImage(400, 400))
         .addChild(header, paragraph, logoContainer)
         .setOffset(150, 130)
