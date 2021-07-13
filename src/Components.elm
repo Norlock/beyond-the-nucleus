@@ -1,6 +1,5 @@
 module Components exposing
-    ( chapterStr
-    , commandStr
+    ( commandStr
     , components
     , first
     , getConnectionIds
