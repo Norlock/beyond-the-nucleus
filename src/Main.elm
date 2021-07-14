@@ -46,10 +46,9 @@ initUI : UI
 initUI =
     { dialog = Nothing
     , highlighted = Nothing
-    , showGameControl = False
-    , showVideoControl = False
-    , showChapterAnimation = False
+    , showGame = False
     , showCanvasBlur = False
+    , showHelp = False
     }
 
 
@@ -137,11 +136,148 @@ handleHighlight model maybeButton =
 
 toggleDialog : UI -> UI
 toggleDialog ui =
-    if ui.dialog == Just ShowHelp then
-        { ui | dialog = Nothing }
+    { ui | showHelp = not ui.showHelp }
 
-    else
-        { ui | dialog = Just ShowHelp }
+
+view : Model -> Browser.Document Msg
+view model =
+    { title = "Beyond the nucleus"
+    , body = [ body model.current model.ui ]
+    }
+
+
+body : Component -> UI -> Html Msg
+body component ui =
+    let
+        { index, container } =
+            component
+
+        hasNext =
+            Components.hasDirection component Next
+
+        hasPrevious =
+            Components.hasDirection component Previous
+
+        hasGame =
+            case component.game of
+                Just _ ->
+                    True
+
+                Nothing ->
+                    False
+
+        gameStr =
+            component.game
+                |> Maybe.map (\str -> str)
+                |> Maybe.withDefault ""
+
+        activate =
+            "activate"
+
+        disable =
+            "disable"
+
+        hide =
+            "hide"
+    in
+    div [ class ("container " ++ gameStr), classList [ ( Components.chapterStr container.chapterId, True ) ] ]
+        [ div [ id "pixi-canvas", classList [ ( "blur", ui.showGame || ui.showHelp ) ] ] []
+        , div [ id "game-canvas", classList [ ( "show", ui.showGame ) ] ] []
+        , div
+            [ id "help-overlay"
+            , classList [ ( "show", ui.showHelp ) ]
+            ]
+            [ helpContainer ]
+        , div [ id "help-control-wrapper" ]
+            [ span
+                [ id "help-control"
+                , class "info-control"
+                , classList [ ( activate, ui.highlighted == Just HelpButton ) ]
+                ]
+                [ text "?" ]
+            ]
+        , h1 [ id "chapter-title", class "animate" ]
+            [ text (Components.chapterStr container.chapterId) ]
+        , div [ id "toolbar-controls" ]
+            [ span
+                [ id "game-control"
+                , class "info-control additional"
+                , classList [ ( hide, not hasGame ) ]
+                ]
+                [ text "P" ]
+
+            --, span
+            --[ id "video-control"
+            --, class "info-control additional"
+            --, classList [ ( hide, not ui.showVideoControl ) ]
+            --]
+            --[ text "V" ]
+            , span
+                [ id "next-control"
+                , class "info-control"
+                , classList
+                    [ ( disable, not hasNext )
+                    , ( activate, ui.highlighted == Just NextButton )
+                    ]
+                ]
+                [ text "S" ]
+            , span
+                [ id "previous-control"
+                , class "info-control"
+                , classList
+                    [ ( disable, not hasPrevious )
+                    , ( activate, ui.highlighted == Just PreviousButton )
+                    ]
+                ]
+                [ text "B" ]
+            , span [ id "page-number", class "info-control" ] [ text (String.fromInt index) ]
+            ]
+        ]
+
+
+helpContainer : Html Msg
+helpContainer =
+    div [ id "help-container", class "show" ]
+        [ ul []
+            [ helpContainerListItem "s" " => step forward"
+            , helpContainerListItem "b" " => step backward"
+            , helpContainerListItem "v" " => toggle video"
+            , helpContainerListItem "c" " => toggle credits"
+            , helpContainerListItem "?" " => toggle help"
+            ]
+        ]
+
+
+helpContainerListItem : String -> String -> Html Msg
+helpContainerListItem key action =
+    li []
+        [ span [ class "left" ] [ text key ]
+        , span [ class "right" ] [ text action ]
+        ]
+
+
+errorView : Html Msg
+errorView =
+    div [ class "container" ]
+        [ div [ id "pixi-canvas" ] []
+        , div [ id "game-canvas" ] []
+        , div [ id "help-overlay" ] [ helpContainer ]
+        , div [ id "help-control-wrapper" ]
+            [ span [ id "help-control", class "info-control" ] [ text "?" ]
+            ]
+        , h1 [ id "chapter-title" ] [ text "" ]
+        , div [ id "toolbar-controls" ]
+            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
+            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
+            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
+            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
+            , span [ id "page-number", class "info-control" ] [ text "-" ]
+            ]
+        ]
+
+
+
+-- Subscriptions
 
 
 subscriptions : Model -> Sub Msg
@@ -205,133 +341,6 @@ navKey char =
 
         _ ->
             Noop
-
-
-view : Model -> Browser.Document Msg
-view model =
-    { title = "Beyond the nucleus"
-    , body = [ body model.current model.ui ]
-    }
-
-
-
--- TODO hide / show canvas blur
-
-
-body : Component -> UI -> Html Msg
-body component ui =
-    let
-        { index, container } =
-            component
-
-        hasNext =
-            Components.hasDirection component Next
-
-        hasPrevious =
-            Components.hasDirection component Previous
-
-        activate =
-            "activate"
-
-        disable =
-            "disable"
-
-        hide =
-            "hide"
-    in
-    div [ class "container" ]
-        [ div [ id "pixi-canvas", classList [ ( "blur", ui.showCanvasBlur ) ] ] []
-        , div [ id "game-canvas", classList [ ( "show", False ) ] ] []
-        , div
-            [ id "help-overlay"
-            , classList [ ( "show", ui.dialog == Just ShowHelp ) ]
-            ]
-            [ helpContainer ]
-        , div [ id "help-control-wrapper" ]
-            [ span
-                [ id "help-control"
-                , class "info-control"
-                , classList [ ( activate, ui.highlighted == Just HelpButton ) ]
-                ]
-                [ text "?" ]
-            ]
-        , h1 [ id "chapter-title", classList [ ( "animate", ui.showChapterAnimation ) ] ]
-            [ text (Components.chapterStr container.chapterId) ]
-        , div [ id "toolbar-controls" ]
-            [ span
-                [ id "game-control"
-                , class "info-control additional"
-                , classList [ ( hide, not ui.showGameControl ) ]
-                ]
-                [ text "P" ]
-            , span
-                [ id "video-control"
-                , class "info-control additional"
-                , classList [ ( hide, not ui.showVideoControl ) ]
-                ]
-                [ text "V" ]
-            , span
-                [ id "next-control"
-                , class "info-control"
-                , classList
-                    [ ( disable, not hasNext )
-                    , ( activate, ui.highlighted == Just NextButton )
-                    ]
-                ]
-                [ text "S" ]
-            , span
-                [ id "previous-control"
-                , class "info-control"
-                , classList
-                    [ ( disable, not hasPrevious )
-                    , ( activate, ui.highlighted == Just PreviousButton )
-                    ]
-                ]
-                [ text "B" ]
-            , span [ id "page-number", class "info-control" ] [ text (String.fromInt index) ]
-            ]
-        ]
-
-
-helpContainer : Html Msg
-helpContainer =
-    div [ id "help-container", class "show" ]
-        [ ul []
-            [ helpContainerListItem "s" " => step forward"
-            , helpContainerListItem "b" " => step backward"
-            , helpContainerListItem "v" " => toggle video"
-            , helpContainerListItem "c" " => toggle credits"
-            , helpContainerListItem "?" " => toggle help"
-            ]
-        ]
-
-
-helpContainerListItem : String -> String -> Html Msg
-helpContainerListItem key action =
-    li []
-        [ span [ class "left" ] [ text key ]
-        , span [ class "right" ] [ text action ]
-        ]
-
-
-errorView : Html Msg
-errorView =
-    div [ class "container" ]
-        [ div [ id "pixi-canvas" ] []
-        , div [ id "game-canvas" ] []
-        , div [ id "help-overlay" ] [ helpContainer ]
-        , div [ id "help-control-wrapper" ]
-            [ span [ id "help-control", class "info-control" ] [ text "?" ]
-            ]
-        , h1 [ id "chapter-title" ] [ text "" ]
-        , div [ id "toolbar-controls" ]
-            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
-            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
-            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
-            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
-            , span [ id "page-number", class "info-control" ] [ text "-" ]
-            ]
-        ]
 
 
 

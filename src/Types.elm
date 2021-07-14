@@ -14,6 +14,7 @@ type alias Component =
     { id : ComponentId
     , container : ChapterData
     , connections : List Connection
+    , game : Maybe String
     , index : Int
     }
 
@@ -25,10 +26,9 @@ type alias Connection =
 type alias UI =
     { dialog : Maybe Dialog
     , highlighted : Maybe Button
-    , showGameControl : Bool
-    , showVideoControl : Bool
-    , showChapterAnimation : Bool
     , showCanvasBlur : Bool
+    , showGame : Bool
+    , showHelp : Bool
     }
 
 
@@ -94,7 +94,6 @@ type Chapter
 
 type Dialog
     = Error ErrorData
-    | ShowHelp
 
 
 type Msg

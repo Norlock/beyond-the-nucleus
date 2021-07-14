@@ -21,6 +21,7 @@ first =
     { id = Ocean1
     , container = { chapterId = Ocean, name = Start }
     , connections = []
+    , game = Nothing
     , index = 1
     }
 
@@ -28,22 +29,22 @@ first =
 components : ComponentDict
 components =
     insertComponent first Dict.empty
-        |> addComponent Ocean2 Ocean1 ( Ocean, Start )
-        |> addComponent Ocean3 Ocean2 ( Ocean, Start )
-        |> addComponent Ocean4 Ocean3 ( Ocean, Turtle )
-        |> addComponent Ocean5 Ocean4 ( Ocean, Turtle )
-        |> addComponent Ocean6 Ocean5 ( Ocean, Coral )
-        |> addComponent Zendo1 Ocean6 ( Zendo, Start )
-        |> addComponent Zendo2 Zendo1 ( Zendo, Start )
-        |> addComponent Zendo3 Zendo2 ( Zendo, Start )
-        |> addComponent Zendo4 Zendo3 ( Zendo, Start )
-        |> addComponent Zendo5 Zendo4 ( Zendo, Start )
-        |> addComponent Zendo6 Zendo5 ( Zendo, Start )
+        |> addComponent ( Ocean2, Ocean1 ) ( Ocean, Start ) Nothing
+        |> addComponent ( Ocean3, Ocean2 ) ( Ocean, Start ) Nothing
+        |> addComponent ( Ocean4, Ocean3 ) ( Ocean, Turtle ) Nothing
+        |> addComponent ( Ocean5, Ocean4 ) ( Ocean, Turtle ) Nothing
+        |> addComponent ( Ocean6, Ocean5 ) ( Ocean, Coral ) Nothing
+        |> addComponent ( Zendo1, Ocean6 ) ( Zendo, Start ) Nothing
+        |> addComponent ( Zendo2, Zendo1 ) ( Zendo, Start ) Nothing
+        |> addComponent ( Zendo3, Zendo2 ) ( Zendo, Start ) Nothing
+        |> addComponent ( Zendo4, Zendo3 ) ( Zendo, Start ) Nothing
+        |> addComponent ( Zendo5, Zendo4 ) ( Zendo, Start ) Nothing
+        |> addComponent ( Zendo6, Zendo5 ) ( Zendo, Start ) (Just "kungfu")
         |> connectNext
 
 
-addComponent : ComponentId -> ComponentId -> ( Chapter, ContainerName ) -> ComponentDict -> ComponentDict
-addComponent id previousId ( chapterId, name ) dict =
+addComponent : ( ComponentId, ComponentId ) -> ( Chapter, ContainerName ) -> Maybe String -> ComponentDict -> ComponentDict
+addComponent ( id, previousId ) ( chapterId, name ) game dict =
     case findComponent previousId dict of
         Just previous ->
             dict
@@ -52,6 +53,7 @@ addComponent id previousId ( chapterId, name ) dict =
                     , container = { chapterId = chapterId, name = name }
                     , connections = [ ( Previous, previousId ) ]
                     , index = previous.index + 1
+                    , game = game
                     }
 
         Nothing ->
