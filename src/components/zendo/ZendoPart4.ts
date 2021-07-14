@@ -19,8 +19,8 @@ export const ZendoPart4 = (data: ElmComponent): FlowComponent => {
         pivotCenter: false
     }
 
-    const chapter = chapters.get(data.container.chapterId)
-    const cardData = PixiCardFactory(cardOptions, chapter, data.container.name)
+    const chapter = chapters.get(data.chapterId)
+    const cardData = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
         .setOffset(200, 50)
         .build()

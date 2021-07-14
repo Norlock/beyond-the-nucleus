@@ -49,8 +49,8 @@ export const OceanPart6 = (data: ElmComponent): FlowComponent => {
     paragraph.x = 20
     paragraph.y = 75
 
-    const chapter = chapters.get(data.container.chapterId)
-    const cardData = PixiCardFactory(cardOptions, chapter, data.container.name)
+    const chapter = chapters.get(data.chapterId)
+    const cardData = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(100, 100)

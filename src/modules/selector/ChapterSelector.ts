@@ -16,20 +16,24 @@ export class ChapterSelector {
         this.chapter = chapter
     }
 
-    activate(name: string): void {
+    activate(): void {
         if (!this.isSelected) {
-            this.next?.activate()
+            this.chapter.root.visible = true
             this.chapter.root.updateTransform()
-        }
-
-        if (name !== this.current && this.selectorMap.has(name)) {
-            const selector = this.selectorMap.get(name)
-            selector.activate()
-            this.selectorMap.get(this.current)?.deactivate()
-            this.current = name
+            this.next?.activate()
         }
 
         this.isSelected = true
+    }
+
+    selectContainer(name: string) {
+        if (this.selectorMap.has(name)) {
+            const selector = this.selectorMap.get(name)
+            selector.activate()
+
+            this.selectorMap.get(this.current)?.deactivate()
+            this.current = name
+        }
     }
 
     deactivate() {

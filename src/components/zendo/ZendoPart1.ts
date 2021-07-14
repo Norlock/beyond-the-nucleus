@@ -6,8 +6,8 @@ import { FlowComponent } from '../base/FlowComponent'
 import { chapters, ElmComponent } from 'src/elm-bridge'
 
 export const ZendoPart1 = (data: ElmComponent): FlowComponent => {
-    const chapter = chapters.get(data.container.chapterId)
-    const background = chapter.find(data.container.name)
+    const chapter = chapters.get(data.chapterId)
+    const background = chapter.find(data.containerName)
     const left = background.getChildAt(0) as PIXI.Sprite
 
     const radius = 288
@@ -70,7 +70,7 @@ export const ZendoPart1 = (data: ElmComponent): FlowComponent => {
     paragraph2.y = radius + 80
     paragraph2.anchor.set(0.5, 0)
 
-    const cardData = CustomPixiCardFactory(background, data.container.name)
+    const cardData = CustomPixiCardFactory(background, data.containerName)
         .setCard(container)
         .addChild(header, paragraph, paragraph2)
         .setOffset(boardApp.screen.width / 2 - radius, boardApp.screen.height / 2 - radius)

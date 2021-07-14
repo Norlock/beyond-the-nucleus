@@ -22,18 +22,32 @@ import { Promiser } from './utils/Promiser'
 export const components: Map<string, FlowComponent> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
 
-export interface ElmContainer {
-    chapterId: string
-    name: string
-}
-
 export interface ElmComponent {
     id: string
-    container: ElmContainer
+    chapterId: string
+    containerName: string
     previous: string | null
     next: string[]
     command: string
 }
+
+interface ComponentCommand {
+    id: string
+    command: string
+}
+
+interface ChapterCommand {
+    chapterId: string
+    containerName: string
+    command: string
+}
+
+const ACTIVATE = 'activate'
+const DEACTIVATE = 'deactivate'
+const IDLE = 'idle'
+const LOAD = 'load'
+const INIT = 'init'
+const SELECT = 'select'
 
 export function initElm() {
     initChapters()
@@ -44,25 +58,43 @@ export function initElm() {
 
     const loaded = Promiser<void>()
 
-    app.ports.toJSComponent.subscribe((elm: ElmComponent) => {
+    app.ports.toJSComponent.subscribe((command: ComponentCommand) => {
         loaded.promise.then(() => {
-            const component = components.get(elm.id)
+            const component = components.get(command.id)
             if (!component) {
-                console.error("component doesn't exist on JS", elm)
+                console.error("component doesn't exist on JS", command)
                 return
             }
 
-            if (elm.command === 'activate') {
+            if (command.command === ACTIVATE) {
                 component.selector.activate()
-            } else if (elm.command === 'idle') {
+            } else if (command.command === IDLE) {
                 component.selector.idle()
-            } else if (elm.command === 'deactivate') {
+            } else if (command.command === DEACTIVATE) {
                 component.selector.deactivate()
             }
         })
     })
 
+    app.ports.toJSChapter.subscribe((data: ChapterCommand) => {
+        console.log('command', data)
+        const chapter = chapters.get(data.chapterId)
+        if (!chapter) {
+            console.error("chapter doesn't exist on JS", data)
+            return
+        }
+
+        if (data.command === ACTIVATE) {
+            chapter.selector.activate()
+        } else if (data.command === DEACTIVATE) {
+            chapter.selector.deactivate()
+        } else if (data.command === SELECT) {
+            chapter.selector.selectContainer(data.containerName)
+        }
+    })
+
     app.ports.toJSLoadComponents.subscribe((list: ElmComponent[]) => {
+        console.log('command', list)
         fillComponents(list)
         loaded.resolve()
     })

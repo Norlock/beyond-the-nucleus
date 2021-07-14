@@ -37,8 +37,8 @@ export const ZendoPart3 = (data: ElmComponent): FlowComponent => {
     quote.x = 20
     quote.y = 120
 
-    const chapter = chapters.get(data.container.chapterId)
-    const cardData = PixiCardFactory(cardOptions, chapter, data.container.name)
+    const chapter = chapters.get(data.chapterId)
+    const cardData = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setImageCard(zendoCardImage(cardOptions.width, cardOptions.height))
         .addChild(header, paragraph, quote)
         .setOffset(300, 200)

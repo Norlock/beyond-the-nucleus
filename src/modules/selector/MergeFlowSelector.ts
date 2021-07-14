@@ -1,5 +1,4 @@
 import { FlowComponent } from 'src/components/base/FlowComponent'
-import { chapters } from 'src/elm-bridge'
 import { GetAudio } from '../audio/GetAudio'
 import { Selector, StandardSelectorTag } from './Selector'
 
@@ -19,9 +18,6 @@ export const MergeFlowSelector = (self: FlowComponent): void => {
         audio.load()
         audio.play()
 
-        // TODO container select uit component halen is nu niet duidelijk
-
-        chapters.get(self.chapterId).selector.activate(self.containerName)
         await selector.next?.recursivelyActivate()
     }
 

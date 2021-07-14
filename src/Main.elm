@@ -34,8 +34,10 @@ init _ =
       , ui = initUI
       }
     , Cmd.batch
-        [ handleJSInitital (Dict.values components)
-        , handleJSComponent current JSActivate
+        [ handleJSLoad (Dict.values components)
+        , toJSChapter (getJSChapter current.container ActivateChapter)
+        , toJSChapter (getJSChapter current.container SelectChapter)
+        , handleJSCommand current Activate
         ]
     )
 
@@ -55,10 +57,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         StepForwards ->
-            handleStep model Next JSIdle
+            handleStep model Next Idle
 
         StepBackwards ->
-            handleStep model Previous JSDeactivate
+            handleStep model Previous Deactivate
 
         ToggleHelp ->
             ( { model | ui = toggleDialog model.ui }, Cmd.none )
@@ -81,7 +83,7 @@ handleScroll scrollDirection =
     toJSScroll scrollDirection
 
 
-handleStep : Model -> Direction -> JSComponentCommand -> ( Model, Cmd Msg )
+handleStep : Model -> Direction -> ComponentCommand -> ( Model, Cmd Msg )
 handleStep model direction previousCmd =
     let
         previous =
@@ -89,6 +91,9 @@ handleStep model direction previousCmd =
 
         newModel =
             Components.step model direction
+
+        newCurrent =
+            newModel.current
     in
     if newModel.current.id == previous.id then
         ( newModel, Cmd.none )
@@ -96,9 +101,11 @@ handleStep model direction previousCmd =
     else
         ( newModel
         , Cmd.batch
-            [ handleJSComponent previous previousCmd
-            , handleJSComponent newModel.current JSActivate
-            ]
+            ([ handleJSCommand previous previousCmd
+             , handleJSCommand newModel.current Activate
+             ]
+                ++ handleChapterCommands newCurrent.container previous.container
+            )
         )
 
 
@@ -223,9 +230,6 @@ body component ui =
         hasPrevious =
             Components.hasDirection component Previous
 
-        { chapterId } =
-            Components.jsChapter container
-
         activate =
             "activate"
 
@@ -252,7 +256,7 @@ body component ui =
                 [ text "?" ]
             ]
         , h1 [ id "chapter-title", classList [ ( "animate", ui.showChapterAnimation ) ] ]
-            [ text chapterId ]
+            [ text (Components.chapterStr container.chapterId) ]
         , div [ id "toolbar-controls" ]
             [ span
                 [ id "game-control"
@@ -334,10 +338,15 @@ errorView =
 -- Ports
 
 
-getJSComponent : Component -> JSComponentCommand -> JSComponentData
+getJSComponent : Component -> ComponentCommand -> JSComponentData
 getJSComponent component command =
+    let
+        { chapterId, name } =
+            component.container
+    in
     { id = Components.idStr component.id
-    , container = Components.jsChapter component.container
+    , chapterId = Components.chapterStr chapterId
+    , containerName = Components.containerStr name
     , command = Components.commandStr command
     , next = Components.getConnectionIds component Next
     , previous =
@@ -346,19 +355,54 @@ getJSComponent component command =
     }
 
 
-handleJSInitital : List Component -> Cmd Msg
-handleJSInitital list =
-    List.map (\component -> getJSComponent component JSLoad) list
+handleJSLoad : List Component -> Cmd Msg
+handleJSLoad list =
+    List.map (\component -> getJSComponent component Load) list
         |> toJSLoadComponents
 
 
-handleJSComponent : Component -> JSComponentCommand -> Cmd Msg
-handleJSComponent component command =
-    getJSComponent component command
+handleJSCommand : Component -> ComponentCommand -> Cmd Msg
+handleJSCommand component command =
+    { id = Components.idStr component.id
+    , command = Components.commandStr command
+    }
         |> toJSComponent
 
 
-port toJSComponent : JSComponentData -> Cmd msg
+handleChapterCommands : ChapterData -> ChapterData -> List (Cmd msg)
+handleChapterCommands current previous =
+    let
+        newChapter =
+            current.chapterId /= previous.chapterId
+
+        newContainer =
+            current.name /= previous.name
+    in
+    if newChapter then
+        [ toJSChapter (getJSChapter previous DeactivateChapter)
+        , toJSChapter (getJSChapter current ActivateChapter)
+        , toJSChapter (getJSChapter current SelectChapter)
+        ]
+
+    else if newContainer then
+        [ toJSChapter (getJSChapter current SelectChapter) ]
+
+    else
+        []
+
+
+getJSChapter : ChapterData -> ChapterCommand -> JSChapterCommand
+getJSChapter container command =
+    { chapterId = Components.chapterStr container.chapterId
+    , containerName = Components.containerStr container.name
+    , command = Components.chapterCommandStr command
+    }
+
+
+port toJSComponent : JSComponentCommand -> Cmd msg
+
+
+port toJSChapter : JSChapterCommand -> Cmd msg
 
 
 port toJSLoadComponents : List JSComponentData -> Cmd msg

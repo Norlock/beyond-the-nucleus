@@ -1,11 +1,13 @@
 module Components exposing
-    ( commandStr
+    ( chapterCommandStr
+    , chapterStr
+    , commandStr
     , components
+    , containerStr
     , first
     , getConnectionIds
     , hasDirection
     , idStr
-    , jsChapter
     , step
     )
 
@@ -14,101 +16,10 @@ import Json.Decode exposing (dict)
 import Types exposing (..)
 
 
-jsContainerName : ContainerName -> String
-jsContainerName name =
-    case name of
-        Start ->
-            "start"
-
-        Turtle ->
-            "turtle"
-
-        Coral ->
-            "coral"
-
-
-jsChapter : Chapter ContainerName -> JSChapterData
-jsChapter chapter =
-    case chapter of
-        Ocean name ->
-            { chapterId = "ocean"
-            , name = jsContainerName name
-            }
-
-        Zendo name ->
-            { chapterId = "zendo"
-            , name = jsContainerName name
-            }
-
-        Natives name ->
-            { chapterId = "natives"
-            , name = jsContainerName name
-            }
-
-
-commandStr : JSComponentCommand -> String
-commandStr command =
-    case command of
-        JSActivate ->
-            "activate"
-
-        JSDeactivate ->
-            "deactivate"
-
-        JSIdle ->
-            "idle"
-
-        JSInit ->
-            "init"
-
-        JSLoad ->
-            "load"
-
-
-idStr : ComponentId -> String
-idStr id =
-    case id of
-        Ocean1 ->
-            "ocean1"
-
-        Ocean2 ->
-            "ocean2"
-
-        Ocean3 ->
-            "ocean3"
-
-        Ocean4 ->
-            "ocean4"
-
-        Ocean5 ->
-            "ocean5"
-
-        Ocean6 ->
-            "ocean6"
-
-        Zendo1 ->
-            "zendo1"
-
-        Zendo2 ->
-            "zendo2"
-
-        Zendo3 ->
-            "zendo3"
-
-        Zendo4 ->
-            "zendo4"
-
-        Zendo5 ->
-            "zendo5"
-
-        Zendo6 ->
-            "zendo6"
-
-
 first : Component
 first =
     { id = Ocean1
-    , container = Ocean Start
+    , container = { chapterId = Ocean, name = Start }
     , connections = []
     , index = 1
     }
@@ -117,32 +28,28 @@ first =
 components : ComponentDict
 components =
     insertComponent first Dict.empty
-        |> addComponent Ocean2 Ocean1 (Ocean Start)
-        |> addComponent Ocean3 Ocean2 (Ocean Start)
-        |> addComponent Ocean4 Ocean3 (Ocean Turtle)
-        |> addComponent Ocean5 Ocean4 (Ocean Turtle)
-        |> addComponent Ocean6 Ocean5 (Ocean Coral)
-        |> addComponent Zendo1 Ocean6 (Zendo Start)
-        |> addComponent Zendo2 Zendo1 (Zendo Start)
-        |> addComponent Zendo3 Zendo2 (Zendo Start)
-        |> addComponent Zendo4 Zendo3 (Zendo Start)
-        |> addComponent Zendo5 Zendo4 (Zendo Start)
-        |> addComponent Zendo6 Zendo5 (Zendo Start)
+        |> addComponent Ocean2 Ocean1 ( Ocean, Start )
+        |> addComponent Ocean3 Ocean2 ( Ocean, Start )
+        |> addComponent Ocean4 Ocean3 ( Ocean, Turtle )
+        |> addComponent Ocean5 Ocean4 ( Ocean, Turtle )
+        |> addComponent Ocean6 Ocean5 ( Ocean, Coral )
+        |> addComponent Zendo1 Ocean6 ( Zendo, Start )
+        |> addComponent Zendo2 Zendo1 ( Zendo, Start )
+        |> addComponent Zendo3 Zendo2 ( Zendo, Start )
+        |> addComponent Zendo4 Zendo3 ( Zendo, Start )
+        |> addComponent Zendo5 Zendo4 ( Zendo, Start )
+        |> addComponent Zendo6 Zendo5 ( Zendo, Start )
         |> connectNext
 
 
-
--- TODO in case of nothing return error!
-
-
-addComponent : ComponentId -> ComponentId -> Chapter ContainerName -> ComponentDict -> ComponentDict
-addComponent id previousId chapter dict =
+addComponent : ComponentId -> ComponentId -> ( Chapter, ContainerName ) -> ComponentDict -> ComponentDict
+addComponent id previousId ( chapterId, name ) dict =
     case findComponent previousId dict of
         Just previous ->
             dict
                 |> insertComponent
                     { id = id
-                    , container = chapter
+                    , container = { chapterId = chapterId, name = name }
                     , connections = [ ( Previous, previousId ) ]
                     , index = previous.index + 1
                     }
@@ -221,3 +128,105 @@ getConnectionIds component direction =
     component.connections
         |> List.filter (\( dir, _ ) -> dir == direction)
         |> List.map (\( _, id ) -> idStr id)
+
+
+
+-- to string functions
+
+
+commandStr : ComponentCommand -> String
+commandStr command =
+    case command of
+        Activate ->
+            "activate"
+
+        Deactivate ->
+            "deactivate"
+
+        Idle ->
+            "idle"
+
+        Init ->
+            "init"
+
+        Load ->
+            "load"
+
+
+chapterCommandStr : ChapterCommand -> String
+chapterCommandStr command =
+    case command of
+        ActivateChapter ->
+            "activate"
+
+        DeactivateChapter ->
+            "deactivate"
+
+        SelectChapter ->
+            "select"
+
+
+idStr : ComponentId -> String
+idStr id =
+    case id of
+        Ocean1 ->
+            "ocean1"
+
+        Ocean2 ->
+            "ocean2"
+
+        Ocean3 ->
+            "ocean3"
+
+        Ocean4 ->
+            "ocean4"
+
+        Ocean5 ->
+            "ocean5"
+
+        Ocean6 ->
+            "ocean6"
+
+        Zendo1 ->
+            "zendo1"
+
+        Zendo2 ->
+            "zendo2"
+
+        Zendo3 ->
+            "zendo3"
+
+        Zendo4 ->
+            "zendo4"
+
+        Zendo5 ->
+            "zendo5"
+
+        Zendo6 ->
+            "zendo6"
+
+
+containerStr : ContainerName -> String
+containerStr name =
+    case name of
+        Start ->
+            "start"
+
+        Turtle ->
+            "turtle"
+
+        Coral ->
+            "coral"
+
+
+chapterStr : Chapter -> String
+chapterStr chapter =
+    case chapter of
+        Ocean ->
+            "ocean"
+
+        Zendo ->
+            "zendo"
+
+        Natives ->
+            "natives"
