@@ -4,6 +4,7 @@ import Browser
 import Browser.Events
 import Components
 import Dict
+import HelperFunctions
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as Decode
@@ -153,23 +154,16 @@ body component ui =
             component
 
         hasNext =
-            Components.hasDirection component Next
+            not (List.isEmpty component.next)
 
         hasPrevious =
-            Components.hasDirection component Previous
+            HelperFunctions.hasItem component.previous
 
         hasGame =
-            case component.game of
-                Just _ ->
-                    True
-
-                Nothing ->
-                    False
+            HelperFunctions.hasItem component.game
 
         gameStr =
-            component.game
-                |> Maybe.map (\str -> str)
-                |> Maybe.withDefault ""
+            Maybe.withDefault "" component.game
 
         activate =
             "activate"
@@ -357,10 +351,8 @@ getJSComponent component command =
     , chapterId = Components.chapterStr chapterId
     , containerName = Components.containerStr name
     , command = Components.commandStr command
-    , next = Components.getConnectionIds component Next
-    , previous =
-        List.head <|
-            Components.getConnectionIds component Previous
+    , next = Components.getJSNext component
+    , previous = Maybe.map (\id -> Components.idStr id) component.previous
     }
 
 

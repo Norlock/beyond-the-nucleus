@@ -13,14 +13,11 @@ type alias Model =
 type alias Component =
     { id : ComponentId
     , container : ChapterData
-    , connections : List Connection
+    , next : List ComponentId
+    , previous : Maybe ComponentId
     , game : Maybe String
     , index : Int
     }
-
-
-type alias Connection =
-    ( Direction, ComponentId )
 
 
 type alias UI =

@@ -5,8 +5,7 @@ module Components exposing
     , components
     , containerStr
     , first
-    , getConnectionIds
-    , hasDirection
+    , getJSNext
     , idStr
     , step
     )
@@ -20,7 +19,8 @@ first : Component
 first =
     { id = Ocean1
     , container = { chapterId = Ocean, name = Start }
-    , connections = []
+    , next = []
+    , previous = Nothing
     , game = Nothing
     , index = 1
     }
@@ -51,7 +51,8 @@ addComponent ( id, previousId ) ( chapterId, name ) game dict =
                 |> insertComponent
                     { id = id
                     , container = { chapterId = chapterId, name = name }
-                    , connections = [ ( Previous, previousId ) ]
+                    , next = []
+                    , previous = Just previousId
                     , index = previous.index + 1
                     , game = game
                     }
@@ -80,56 +81,49 @@ connectNext dict =
 setNextComponents : Component -> ComponentDict -> Component
 setNextComponents component dict =
     Dict.values dict
-        |> List.filter (\compare -> hasPreviousDirection component.id compare)
-        |> List.map (\compare -> ( Next, compare.id ))
-        |> (\nextConnections ->
-                { component | connections = component.connections ++ nextConnections }
-           )
+        |> List.filter (\compare -> hasPreviousDirection component.id compare.previous)
+        |> List.map (\compare -> compare.id)
+        |> (\nextConnections -> { component | next = nextConnections })
 
 
-hasPreviousDirection : ComponentId -> Component -> Bool
-hasPreviousDirection id comparable =
-    List.member ( Previous, id )
-        comparable.connections
+hasPreviousDirection : ComponentId -> Maybe ComponentId -> Bool
+hasPreviousDirection id maybe =
+    case maybe of
+        Just previousId ->
+            id == previousId
+
+        Nothing ->
+            False
 
 
 step : Model -> Direction -> Model
 step model direction =
-    let
-        component =
-            model.current
-    in
-    getComponent component model.components direction
+    getComponent model.current model.components direction
         |> Maybe.map (\new -> { model | current = new })
         |> Maybe.withDefault model
 
 
-getConnection : Component -> Direction -> Maybe Connection
-getConnection component directionCompare =
-    component.connections
-        |> List.filter (\( direction, _ ) -> direction == directionCompare)
-        |> List.head
-
-
 getComponent : Component -> ComponentDict -> Direction -> Maybe Component
 getComponent component dict direction =
-    getConnection component direction
-        |> Maybe.map (\( _, id ) -> findComponent id dict)
-        |> Maybe.withDefault Nothing
+    case direction of
+        Next ->
+            List.head component.next
+                |> Maybe.map
+                    (\nextId ->
+                        Maybe.withDefault component (findComponent nextId dict)
+                    )
+
+        Previous ->
+            component.previous
+                |> Maybe.map
+                    (\previousId ->
+                        Maybe.withDefault component (findComponent previousId dict)
+                    )
 
 
-hasDirection : Component -> Direction -> Bool
-hasDirection component direction =
-    getConnection component direction
-        |> Maybe.map (\_ -> True)
-        |> Maybe.withDefault False
-
-
-getConnectionIds : Component -> Direction -> List String
-getConnectionIds component direction =
-    component.connections
-        |> List.filter (\( dir, _ ) -> dir == direction)
-        |> List.map (\( _, id ) -> idStr id)
+getJSNext : Component -> List String
+getJSNext component =
+    List.map (\item -> idStr item) component.next
 
 
 
