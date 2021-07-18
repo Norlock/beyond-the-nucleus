@@ -100,6 +100,7 @@ type Msg
     | StepBackwards
     | Scroll String
     | Highlight Button
+    | LoadGame Bool
     | ReleaseKey
 
 
@@ -125,7 +126,7 @@ type ComponentCommand
     | Activate
     | Deactivate
     | Init
-    | Load
+    | StartGame
 
 
 type ContainerName

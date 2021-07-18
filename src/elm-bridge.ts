@@ -3,6 +3,7 @@ import { IndigenousChapter } from './chapters/IndigenousChapter'
 import { OceanChapter } from './chapters/OceanChapter'
 import { ZendoChapter } from './chapters/ZendoChapter'
 import { FlowComponent } from './components/base/FlowComponent'
+import { GameComponent } from './components/base/GameComponent'
 import { OceanPart1 } from './components/ocean/OceanPart1'
 import { OceanPart2 } from './components/ocean/OceanPart2'
 import { OceanPart3 } from './components/ocean/OceanPart3'
@@ -45,15 +46,16 @@ interface ChapterCommand {
 const ACTIVATE = 'activate'
 const DEACTIVATE = 'deactivate'
 const IDLE = 'idle'
-const LOAD = 'load'
+const START_GAME = 'start'
 const INIT = 'init'
 const SELECT = 'select'
 const STORAGE_KEY = 'current_component'
+let app: any
 
 export function initElm() {
     initChapters()
 
-    const app = Elm.Main.init({
+    app = Elm.Main.init({
         node: document.getElementById('app'),
         flags: window.localStorage.getItem(STORAGE_KEY)
     })
@@ -75,6 +77,10 @@ export function initElm() {
                 component.selector.idle()
             } else if (command.command === DEACTIVATE) {
                 component.selector.deactivate()
+            } else if (command.command === START_GAME) {
+                setTimeout(() => {
+                    ;(component as GameComponent).game.init()
+                }, 2000)
             }
         })
     })
@@ -103,6 +109,10 @@ export function initElm() {
     app.ports.toJSScroll.subscribe((direction: string) => {
         boardScroll(direction)
     })
+}
+
+export function stopGame(): void {
+    app.ports.toElmStopGame.send('')
 }
 
 const initChapters = () => {

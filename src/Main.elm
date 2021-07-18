@@ -24,9 +24,6 @@ main =
 init : Maybe String -> ( Model, Cmd Msg )
 init maybeId =
     let
-        _ =
-            Debug.log "maybe" maybeId
-
         componentId =
             Maybe.withDefault "ocean1" maybeId
 
@@ -42,7 +39,7 @@ init maybeId =
       , ui = initUI
       }
     , Cmd.batch
-        [ handleJSLoad (Dict.values components)
+        [ handleJSInit (Dict.values components)
         , toJSChapter (getJSChapter current.container ActivateChapter)
         , toJSChapter (getJSChapter current.container SelectChapter)
         , handleJSCommand current Activate
@@ -81,8 +78,29 @@ update msg model =
         ReleaseKey ->
             ( handleHighlight model Nothing, toJSScroll "" )
 
+        LoadGame val ->
+            if val then
+                ( { model | ui = toggleGameCanvas val model.ui }
+                , loadGame model.current
+                )
+
+            else
+                ( { model | ui = toggleGameCanvas val model.ui }
+                , Cmd.none
+                )
+
         Noop ->
             ( model, Cmd.none )
+
+
+loadGame : Component -> Cmd Msg
+loadGame current =
+    case current.game of
+        Just _ ->
+            handleJSCommand current StartGame
+
+        Nothing ->
+            Cmd.none
 
 
 handleScroll : String -> Cmd Msg
@@ -114,6 +132,11 @@ handleStep model direction previousCmd =
                 ++ handleChapterCommands newCurrent.container previous.container
             )
         )
+
+
+toggleGameCanvas : Bool -> UI -> UI
+toggleGameCanvas toggle ui =
+    { ui | showGame = toggle }
 
 
 setDialog : Maybe Dialog -> UI -> UI
@@ -265,22 +288,21 @@ helpContainerListItem key action =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.batch
-        [ Browser.Events.onKeyPress (keyDecoder navKey)
-        , Browser.Events.onKeyDown (keyDecoder keyDown)
-        , Browser.Events.onKeyUp (keyDecoder releaseKey)
-        ]
+subscriptions model =
+    if model.ui.showGame then
+        toElmStopGame (\_ -> LoadGame False)
+
+    else
+        Sub.batch
+            [ Browser.Events.onKeyPress (keyDecoder navKey)
+            , Browser.Events.onKeyDown (keyDecoder keyDown)
+            , Browser.Events.onKeyUp (keyDecoder (\_ -> ReleaseKey))
+            ]
 
 
 keyDecoder : (String -> Msg) -> Decode.Decoder Msg
 keyDecoder keyFunction =
     Decode.map keyFunction (Decode.field "key" Decode.string)
-
-
-releaseKey : String -> Msg
-releaseKey _ =
-    ReleaseKey
 
 
 keyDown : String -> Msg
@@ -294,6 +316,9 @@ keyDown key =
 
         "b" ->
             StepBackwards
+
+        "p" ->
+            LoadGame True
 
         "ArrowLeft" ->
             Scroll "left"
@@ -312,8 +337,8 @@ keyDown key =
 
 
 navKey : String -> Msg
-navKey char =
-    case char of
+navKey key =
+    case key of
         "?" ->
             Highlight HelpButton
 
@@ -346,9 +371,9 @@ getJSComponent component command =
     }
 
 
-handleJSLoad : List Component -> Cmd Msg
-handleJSLoad list =
-    List.map (\component -> getJSComponent component Load) list
+handleJSInit : List Component -> Cmd Msg
+handleJSInit list =
+    List.map (\component -> getJSComponent component Init) list
         |> toJSLoadComponents
 
 
@@ -400,3 +425,6 @@ port toJSLoadComponents : List JSComponentData -> Cmd msg
 
 
 port toJSScroll : String -> Cmd msg
+
+
+port toElmStopGame : (String -> msg) -> Sub msg

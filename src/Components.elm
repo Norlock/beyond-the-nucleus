@@ -145,8 +145,8 @@ commandStr command =
         Init ->
             "init"
 
-        Load ->
-            "load"
+        StartGame ->
+            "start"
 
 
 chapterCommandStr : ChapterCommand -> String

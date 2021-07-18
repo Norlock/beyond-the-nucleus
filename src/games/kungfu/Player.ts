@@ -106,7 +106,9 @@ const inputHandler = (self: Player, component: GameComponent): InputHandler => {
         isKeyDown = true
         //console.log('keypress', event.key);
 
-        //if (event.key
+        if (event.key === 'Escape') {
+            component.game.cleanup()
+        }
     }
 
     const keyPress = (event: KeyboardEvent): void => {

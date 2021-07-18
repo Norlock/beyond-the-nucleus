@@ -3,8 +3,6 @@ import { GameComponent } from 'src/components/base/GameComponent'
 import { boardApp } from 'src/pixi/PixiApp'
 import { DefaultGameLoader } from './GameLoader'
 
-const gameCanvas = document.getElementById('game-canvas')
-
 export const MergeDefaultGameLoader = (self: GameComponent) => {
     self.game = new DefaultGameLoader()
     const { game } = self
@@ -12,15 +10,8 @@ export const MergeDefaultGameLoader = (self: GameComponent) => {
     const init = (): void => {
         game.busy = true
 
-        // TODO apply in Elm
-        //UIUtils.showCanvasBlur()
-        //UIUtils.doAction(ActionSelector.GAME)
-        //UIUtils.hideAllControls()
-
         boardApp.stop()
         game.app = gameApp()
-
-        gameCanvas.appendChild(game.app.view)
 
         game.next?.init()
     }
@@ -42,11 +33,15 @@ export const MergeDefaultGameLoader = (self: GameComponent) => {
 }
 
 const gameApp = (): PIXI.Application => {
-    return new PIXI.Application({
+    const gameCanvas = document.getElementById('game-canvas')
+    const app = new PIXI.Application({
         width: gameCanvas.clientWidth,
         height: gameCanvas.clientHeight,
         resizeTo: gameCanvas,
         resolution: window.devicePixelRatio || 1,
         antialias: true
     })
+
+    gameCanvas.appendChild(app.view)
+    return app
 }
