@@ -161,7 +161,7 @@ const getBackground3 = (container2: PIXI.Container): ContainerData => {
         const video = document.createElement('video')
         video.preload = 'auto'
         video.loop = true
-        video.src = '/src/assets/ocean/Coral.mp4'
+        video.src = '/src/assets/ocean/coral.mp4'
         videoSprite = PIXI.Sprite.from(PIXI.Texture.from(video))
         videoSprite.width = boardApp.screen.width
         videoSprite.height = boardApp.screen.height
