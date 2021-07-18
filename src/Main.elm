@@ -7,6 +7,7 @@ import Dict
 import HelperFunctions
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Json.Decode as Decode
 import Types exposing (..)
 
@@ -20,14 +21,20 @@ main =
         }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : Maybe String -> ( Model, Cmd Msg )
+init maybeId =
     let
+        _ =
+            Debug.log "maybe" maybeId
+
+        componentId =
+            Maybe.withDefault "ocean1" maybeId
+
         components =
             Components.components
 
         current =
-            List.head (Dict.values components)
+            Dict.get componentId components
                 |> Maybe.withDefault Components.first
     in
     ( { components = components
@@ -187,6 +194,7 @@ body component ui =
                 [ id "help-control"
                 , class "info-control"
                 , classList [ ( activate, ui.highlighted == Just HelpButton ) ]
+                , onClick ToggleHelp
                 ]
                 [ text "?" ]
             ]
@@ -213,6 +221,7 @@ body component ui =
                     [ ( disable, not hasNext )
                     , ( activate, ui.highlighted == Just NextButton )
                     ]
+                , onClick StepForwards
                 ]
                 [ text "S" ]
             , span
@@ -222,6 +231,7 @@ body component ui =
                     [ ( disable, not hasPrevious )
                     , ( activate, ui.highlighted == Just PreviousButton )
                     ]
+                , onClick StepBackwards
                 ]
                 [ text "B" ]
             , span [ id "page-number", class "info-control" ] [ text (String.fromInt index) ]
@@ -247,26 +257,6 @@ helpContainerListItem key action =
     li []
         [ span [ class "left" ] [ text key ]
         , span [ class "right" ] [ text action ]
-        ]
-
-
-errorView : Html Msg
-errorView =
-    div [ class "container" ]
-        [ div [ id "pixi-canvas" ] []
-        , div [ id "game-canvas" ] []
-        , div [ id "help-overlay" ] [ helpContainer ]
-        , div [ id "help-control-wrapper" ]
-            [ span [ id "help-control", class "info-control" ] [ text "?" ]
-            ]
-        , h1 [ id "chapter-title" ] [ text "" ]
-        , div [ id "toolbar-controls" ]
-            [ span [ id "game-control", class "info-control additional hide" ] [ text "P" ]
-            , span [ id "video-control", class "info-control additional hide" ] [ text "V" ]
-            , span [ id "next-control", class "info-control disable" ] [ text "S" ]
-            , span [ id "previous-control", class "info-control disable" ] [ text "B" ]
-            , span [ id "page-number", class "info-control" ] [ text "-" ]
-            ]
         ]
 
 

@@ -48,12 +48,14 @@ const IDLE = 'idle'
 const LOAD = 'load'
 const INIT = 'init'
 const SELECT = 'select'
+const STORAGE_KEY = 'current_component'
 
 export function initElm() {
     initChapters()
 
     const app = Elm.Main.init({
-        node: document.getElementById('app')
+        node: document.getElementById('app'),
+        flags: window.localStorage.getItem(STORAGE_KEY)
     })
 
     const loaded = Promiser<void>()
@@ -67,6 +69,7 @@ export function initElm() {
             }
 
             if (command.command === ACTIVATE) {
+                window.localStorage.setItem(STORAGE_KEY, command.id)
                 component.selector.activate()
             } else if (command.command === IDLE) {
                 component.selector.idle()
@@ -77,7 +80,6 @@ export function initElm() {
     })
 
     app.ports.toJSChapter.subscribe((data: ChapterCommand) => {
-        console.log('command', data)
         const chapter = chapters.get(data.chapterId)
         if (!chapter) {
             console.error("chapter doesn't exist on JS", data)
@@ -94,7 +96,6 @@ export function initElm() {
     })
 
     app.ports.toJSLoadComponents.subscribe((list: ElmComponent[]) => {
-        console.log('command', list)
         fillComponents(list)
         loaded.resolve()
     })
