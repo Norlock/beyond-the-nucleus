@@ -81,12 +81,14 @@ type ComponentId
     | Zendo4
     | Zendo5
     | Zendo6
+    | Space1
 
 
 type Chapter
     = Ocean
     | Zendo
     | Natives
+    | Space
 
 
 type Dialog

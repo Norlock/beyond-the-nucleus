@@ -1,5 +1,6 @@
 export enum ChapterType {
     OCEAN = 'ocean',
     ZENDO = 'zendo',
-    INDIGENOUS = 'indigenous'
+    INDIGENOUS = 'indigenous',
+    SPACE = 'space'
 }

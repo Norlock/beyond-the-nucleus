@@ -40,6 +40,7 @@ components =
         |> addComponent ( Zendo4, Zendo3 ) ( Zendo, Start ) Nothing
         |> addComponent ( Zendo5, Zendo4 ) ( Zendo, Start ) Nothing
         |> addComponent ( Zendo6, Zendo5 ) ( Zendo, Start ) (Just "kungfu")
+        |> addComponent ( Space1, Zendo6 ) ( Space, Start ) Nothing
         |> connectNext
 
 
@@ -201,6 +202,9 @@ idStr id =
         Zendo6 ->
             "zendo6"
 
+        Space1 ->
+            "space1"
+
 
 containerStr : ContainerName -> String
 containerStr name =
@@ -226,3 +230,6 @@ chapterStr chapter =
 
         Natives ->
             "natives"
+
+        Space ->
+            "space"

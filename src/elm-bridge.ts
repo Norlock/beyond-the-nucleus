@@ -1,6 +1,7 @@
 import { Chapter } from './chapters/base/Chapter'
 import { IndigenousChapter } from './chapters/IndigenousChapter'
 import { OceanChapter } from './chapters/OceanChapter'
+import { SpaceChapter } from './chapters/SpaceChapter'
 import { ZendoChapter } from './chapters/ZendoChapter'
 import { FlowComponent } from './components/base/FlowComponent'
 import { GameComponent } from './components/base/GameComponent'
@@ -10,6 +11,7 @@ import { OceanPart3 } from './components/ocean/OceanPart3'
 import { OceanPart4 } from './components/ocean/OceanPart4'
 import { OceanPart5 } from './components/ocean/OceanPart5'
 import { OceanPart6 } from './components/ocean/OceanPart6'
+import { SpacePart1 } from './components/space/SpacePart1'
 import { ZendoPart1 } from './components/zendo/ZendoPart1'
 import { ZendoPart2 } from './components/zendo/ZendoPart2'
 import { ZendoPart3 } from './components/zendo/ZendoPart3'
@@ -119,10 +121,12 @@ const initChapters = () => {
     const ocean = OceanChapter()
     const zendo = ZendoChapter()
     const indigenous = IndigenousChapter()
+    const space = SpaceChapter()
 
     chapters.set(ocean.chapterId, ocean)
     chapters.set(zendo.chapterId, zendo)
     chapters.set(indigenous.chapterId, indigenous)
+    chapters.set(space.chapterId, space)
 }
 
 // TODO check if not implemented components are there
@@ -164,62 +168,74 @@ const fillComponents = (list: ElmComponent[]) => {
     if (elmComponent) {
         setComponent(OceanPart4(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg('ocean4')
     }
 
     elmComponent = list.find((x) => x.id === 'ocean5')
     if (elmComponent) {
         setComponent(OceanPart5(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg('ocean5')
     }
 
     elmComponent = list.find((x) => x.id === 'ocean6')
     if (elmComponent) {
         setComponent(OceanPart6(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg('ocean6')
     }
 
     elmComponent = list.find((x) => x.id === 'zendo1')
     if (elmComponent) {
         setComponent(ZendoPart1(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg('zendo1')
     }
 
     elmComponent = list.find((x) => x.id === 'zendo2')
     if (elmComponent) {
         setComponent(ZendoPart2(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg('zendo2')
     }
 
-    elmComponent = list.find((x) => x.id === 'zendo3')
+    const ZENDO3 = 'zendo3'
+    elmComponent = list.find((x) => x.id === ZENDO3)
     if (elmComponent) {
         setComponent(ZendoPart3(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg(ZENDO3)
     }
 
-    elmComponent = list.find((x) => x.id === 'zendo4')
+    const ZENDO4 = 'zendo4'
+    elmComponent = list.find((x) => x.id === ZENDO4)
     if (elmComponent) {
         setComponent(ZendoPart4(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg(ZENDO4)
     }
 
-    elmComponent = list.find((x) => x.id === 'zendo5')
+    const ZENDO5 = 'zendo5'
+    elmComponent = list.find((x) => x.id === ZENDO5)
     if (elmComponent) {
         setComponent(ZendoPart5(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg(ZENDO5)
     }
 
-    elmComponent = list.find((x) => x.id === 'zendo6')
+    const ZENDO6 = 'zendo6'
+    elmComponent = list.find((x) => x.id === ZENDO6)
     if (elmComponent) {
         setComponent(ZendoPart6(elmComponent))
     } else {
-        errorMsg('ocean3')
+        errorMsg(ZENDO6)
+    }
+
+    const SPACE1 = 'space1'
+    elmComponent = list.find((x) => x.id === SPACE1)
+    if (elmComponent) {
+        setComponent(SpacePart1(elmComponent))
+    } else {
+        errorMsg(SPACE1)
     }
 }
