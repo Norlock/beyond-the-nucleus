@@ -16,18 +16,17 @@ export const SpaceChapter = (): Chapter => {
     return factory.chapter
 }
 
-const CONTAINER_SIZE = 5000
-
 const background = (): ContainerData => {
     const container = new PIXI.Container()
 
-    const background = new PIXI.Container()
-    //background.width = CONTAINER_SIZE
-    //background.height = CONTAINER_SIZE
+    //const background = new PIXI.Sprite(PIXI.Texture.WHITE)
+    //background.width = 4000
+    //background.height = 4000
     //background.tint = 0x040404
-    container.addChild(background)
-    createStars(background)
 
+    //container.addChild(background)
+
+    const starContainers = createStars(container)
     console.log('background', background)
     return {
         container,
@@ -39,9 +38,10 @@ function createStars(background: PIXI.Container) {
     // Get the texture for rope.
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
 
-    const CELL_SIZE = 100
-    const GRID_LENGTH = 50
-    const STARS_COUNT = 10
+    const CELL_SIZE = 400
+    const STARS_COUNT = 100
+
+    const GRID_LENGTH = 20
 
     const createCell = (): PIXI.Sprite[] => {
         let offset = 40
@@ -49,13 +49,18 @@ function createStars(background: PIXI.Container) {
         let currentY = 0
         const stars: PIXI.Sprite[] = []
 
+        function rgbToHex(r: number, g: number, b: number) {
+            const hexString = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+            return parseInt(hexString, 16)
+        }
+
         for (let i = 0; i < STARS_COUNT; i++) {
             const starSprite = new PIXI.Sprite(starTexture)
             starSprite.x = Math.random() * offset + currentX
             starSprite.y = Math.random() * offset + currentY
             starSprite.scale.x = starSprite.scale.x / (20 + Math.random() * 20)
             starSprite.scale.y = starSprite.scale.y / (20 + Math.random() * 20)
-            starSprite.anchor.set(0.5)
+            starSprite.tint = rgbToHex(220, 220, 220 + Math.random() * 35)
             stars.push(starSprite)
 
             if (currentX < CELL_SIZE - offset) {
@@ -69,27 +74,30 @@ function createStars(background: PIXI.Container) {
         return stars
     }
 
-    const createGrid = (y: number, stars: PIXI.Sprite[][]): PIXI.Sprite[][] => {
+    // For each cell add stars to container
+    //
+    const createGrid = (y: number, starContainers: PIXI.Container[]): PIXI.Container[] => {
         for (let i = 0; i < GRID_LENGTH; i++) {
-            stars.push(createCell())
+            const container = new PIXI.Container()
+            const cellStars = createCell()
+            cellStars.forEach((star) => container.addChild(star))
+            starContainers.push(container)
         }
 
         if (++y < GRID_LENGTH) {
-            return createGrid(y, stars)
+            return createGrid(y, starContainers)
         } else {
-            return stars
+            return starContainers
         }
     }
 
-    const stars = createGrid(0, [])
+    const starContainers = createGrid(0, [])
     let currentX = 0
     let currentY = 0
-    for (let starArray of stars) {
-        for (let star of starArray) {
-            star.x += currentX * CELL_SIZE
-            star.y += currentY * CELL_SIZE
-            background.addChild(star)
-        }
+    for (let container of starContainers) {
+        container.x += currentX * CELL_SIZE
+        container.y += currentY * CELL_SIZE
+        background.addChild(container)
 
         if (currentX < GRID_LENGTH - 1) {
             currentX++
@@ -98,4 +106,6 @@ function createStars(background: PIXI.Container) {
             currentX = 0
         }
     }
+
+    return starContainers
 }
