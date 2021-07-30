@@ -39,12 +39,12 @@ function createStars(background: PIXI.Container) {
     // Get the texture for rope.
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
 
-    const CELL_SIZE = 50
-    const GRID_LENGTH = 100
+    const CELL_SIZE = 100
+    const GRID_LENGTH = 50
     const STARS_COUNT = 10
 
     const createCell = (): PIXI.Sprite[] => {
-        let offset = 5
+        let offset = 40
         let currentX = 0
         let currentY = 0
         const stars: PIXI.Sprite[] = []
@@ -53,8 +53,9 @@ function createStars(background: PIXI.Container) {
             const starSprite = new PIXI.Sprite(starTexture)
             starSprite.x = Math.random() * offset + currentX
             starSprite.y = Math.random() * offset + currentY
-            starSprite.scale.x = starSprite.scale.x / 50
-            starSprite.scale.y = starSprite.scale.y / 50
+            starSprite.scale.x = starSprite.scale.x / (20 + Math.random() * 20)
+            starSprite.scale.y = starSprite.scale.y / (20 + Math.random() * 20)
+            starSprite.anchor.set(0.5)
             stars.push(starSprite)
 
             if (currentX < CELL_SIZE - offset) {
@@ -81,8 +82,6 @@ function createStars(background: PIXI.Container) {
     }
 
     const stars = createGrid(0, [])
-
-    console.log('stars', stars)
     let currentX = 0
     let currentY = 0
     for (let starArray of stars) {
