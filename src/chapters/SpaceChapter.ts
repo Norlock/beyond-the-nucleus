@@ -10,6 +10,7 @@ enum SpaceName {
 }
 
 const CELL_SIZE = 400
+const GRID_LENGTH = 20
 
 export const SpaceChapter = (): Chapter => {
     //const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
@@ -44,8 +45,6 @@ function createStars(background: PIXI.Container) {
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
 
     const STARS_COUNT = 100
-
-    const GRID_LENGTH = 20
 
     const createCell = (): PIXI.Sprite[] => {
         let offset = 40
@@ -114,10 +113,10 @@ function createStars(background: PIXI.Container) {
 }
 
 const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
-    // Max container size after this the container will beremoved
-    const maxContainerSize = 5000
-
-    //console.log('dimensions', x, y, maxX, maxY)
+    // Max container size add extra cell_size for margin out of scope
+    const MAX_SIZE = GRID_LENGTH * CELL_SIZE
+    const X_DISPLACEMENT = 0.1
+    const Y_DISPLACEMENT = 0.1
 
     const moveStars = () => {
         const x = boardApp.stage.x * -1 - root.x
@@ -126,8 +125,8 @@ const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
         const screenY = y + boardApp.screen.height
 
         for (let container of starContainers) {
-            container.x += 0.1
-            container.y += 0.1
+            container.x += X_DISPLACEMENT
+            container.y += Y_DISPLACEMENT
 
             const insideTopLeft = () => {
                 return x - CELL_SIZE * 2 < container.x && y - CELL_SIZE * 2 < container.y
@@ -137,7 +136,18 @@ const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
                 return container.x < screenX + CELL_SIZE && container.y < screenY + CELL_SIZE
             }
 
+            const moveIfOutOfScope = () => {
+                if (MAX_SIZE < container.x) {
+                    container.x = 0
+                    container.y -= CELL_SIZE
+                } else if (MAX_SIZE < container.y) {
+                    container.y = 0
+                    container.x -= CELL_SIZE
+                }
+            }
+
             container.visible = insideTopLeft() && insideBottomRight()
+            moveIfOutOfScope()
         }
     }
 

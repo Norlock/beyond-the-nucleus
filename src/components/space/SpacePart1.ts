@@ -9,8 +9,8 @@ export const SpacePart1 = (data: ElmComponent): FlowComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
-        x: 200,
-        y: 200,
+        x: 800,
+        y: 800,
         width: 400,
         height: 190,
         pivotCenter: false
@@ -26,7 +26,7 @@ export const SpacePart1 = (data: ElmComponent): FlowComponent => {
         lineJoin: 'round'
     })
 
-    const header = new PIXI.Text('The Ocean', headerStyle)
+    const header = new PIXI.Text('Space', headerStyle)
     header.x = 30
     header.y = 25
 
@@ -48,7 +48,7 @@ export const SpacePart1 = (data: ElmComponent): FlowComponent => {
     const param = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
-        .setOffset(200, 200)
+        .setOffset(300, 300)
         .build()
 
     const factory = FlowComponentFactory(data.id, chapter.chapterId, param)
