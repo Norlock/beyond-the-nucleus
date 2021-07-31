@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { ChapterFactory } from 'src/factories/ChapterFactory'
+import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Chapter, ContainerData } from './base/Chapter'
 import { ChapterType } from './base/ChapterType'
@@ -7,6 +8,8 @@ import { ChapterType } from './base/ChapterType'
 enum SpaceName {
     START = 'start'
 }
+
+const CELL_SIZE = 400
 
 export const SpaceChapter = (): Chapter => {
     //const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
@@ -27,10 +30,11 @@ const background = (): ContainerData => {
     //container.addChild(background)
 
     const starContainers = createStars(container)
-    console.log('background', background)
+
     return {
         container,
-        name: SpaceName.START
+        name: SpaceName.START,
+        selector: selector(starContainers)
     }
 }
 
@@ -38,7 +42,6 @@ function createStars(background: PIXI.Container) {
     // Get the texture for rope.
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
 
-    const CELL_SIZE = 400
     const STARS_COUNT = 100
 
     const GRID_LENGTH = 20
@@ -75,7 +78,6 @@ function createStars(background: PIXI.Container) {
     }
 
     // For each cell add stars to container
-    //
     const createGrid = (y: number, starContainers: PIXI.Container[]): PIXI.Container[] => {
         for (let i = 0; i < GRID_LENGTH; i++) {
             const container = new PIXI.Container()
@@ -108,4 +110,46 @@ function createStars(background: PIXI.Container) {
     }
 
     return starContainers
+}
+
+const selector = (starContainers: PIXI.Container[]) => {
+    // Max container size after this the container will beremoved
+    const maxContainerSize = 5000
+
+    //console.log('dimensions', x, y, maxX, maxY)
+
+    const moveStars = () => {
+        const x = boardApp.screen.x
+        const y = boardApp.screen.y
+        const screenX = x + boardApp.screen.width
+        const screenY = y + boardApp.screen.height
+
+        for (let container of starContainers) {
+            container.x += 0.1
+            container.y += 0.1
+            //for (let star of container.children) {
+            //star.x += 0.1
+            //star.y += 0.1
+            //}
+
+            if (screenX + CELL_SIZE < container.x) {
+                container.visible = false
+            }
+
+            if (screenY + CELL_SIZE < container.y) {
+                container.visible = false
+            }
+        }
+    }
+
+    const selector = new Selector('Move stars')
+    selector.activate = async () => {
+        boardApp.ticker.add(moveStars)
+    }
+
+    selector.deactivate = async () => {
+        boardApp.ticker.remove(moveStars)
+    }
+
+    return selector
 }
