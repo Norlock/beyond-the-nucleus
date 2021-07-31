@@ -14,12 +14,13 @@ const CELL_SIZE = 400
 export const SpaceChapter = (): Chapter => {
     //const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
 
-    const factory = ChapterFactory(ChapterType.SPACE, 2000, -6000).addContainer(background())
+    const factory = ChapterFactory(ChapterType.SPACE, 2000, -6000)
+    factory.addContainer(background(factory.chapter.root))
 
     return factory.chapter
 }
 
-const background = (): ContainerData => {
+const background = (root: PIXI.Container): ContainerData => {
     const container = new PIXI.Container()
 
     //const background = new PIXI.Sprite(PIXI.Texture.WHITE)
@@ -34,7 +35,7 @@ const background = (): ContainerData => {
     return {
         container,
         name: SpaceName.START,
-        selector: selector(starContainers)
+        selector: selector(starContainers, root)
     }
 }
 
@@ -112,33 +113,31 @@ function createStars(background: PIXI.Container) {
     return starContainers
 }
 
-const selector = (starContainers: PIXI.Container[]) => {
+const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
     // Max container size after this the container will beremoved
     const maxContainerSize = 5000
 
     //console.log('dimensions', x, y, maxX, maxY)
 
     const moveStars = () => {
-        const x = boardApp.screen.x
-        const y = boardApp.screen.y
+        const x = boardApp.stage.x * -1 - root.x
+        const y = boardApp.stage.y * -1 - root.y
         const screenX = x + boardApp.screen.width
         const screenY = y + boardApp.screen.height
 
         for (let container of starContainers) {
             container.x += 0.1
             container.y += 0.1
-            //for (let star of container.children) {
-            //star.x += 0.1
-            //star.y += 0.1
-            //}
 
-            if (screenX + CELL_SIZE < container.x) {
-                container.visible = false
+            const insideTopLeft = () => {
+                return x - CELL_SIZE * 2 < container.x && y - CELL_SIZE * 2 < container.y
             }
 
-            if (screenY + CELL_SIZE < container.y) {
-                container.visible = false
+            const insideBottomRight = () => {
+                return container.x < screenX + CELL_SIZE && container.y < screenY + CELL_SIZE
             }
+
+            container.visible = insideTopLeft() && insideBottomRight()
         }
     }
 
