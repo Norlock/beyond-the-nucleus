@@ -12,6 +12,26 @@ enum SpaceName {
 const CELL_SIZE = 400
 const GRID_LENGTH = 20
 
+class StarContainer extends PIXI.Container {
+    readonly xDisplacement: number
+    readonly yDisplacement: number
+    readonly xyRatio: number
+    readonly xOutBoundOffsetY: number
+    readonly yOutBoundOffsetX: number
+
+    constructor(xDisplacement: number, yDisplacement: number) {
+        super()
+        this.interactiveChildren = false
+        this.xDisplacement = xDisplacement
+        this.yDisplacement = yDisplacement
+        this.xyRatio = this.yDisplacement / this.xDisplacement
+        this.yOutBoundOffsetX = CELL_SIZE / this.xyRatio
+        this.xOutBoundOffsetY = CELL_SIZE * this.xyRatio
+    }
+}
+
+// todo paralax effect with multiple layers so it creates depth effect
+
 export const SpaceChapter = (): Chapter => {
     //const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
 
@@ -24,12 +44,12 @@ export const SpaceChapter = (): Chapter => {
 const background = (root: PIXI.Container): ContainerData => {
     const container = new PIXI.Container()
 
-    //const background = new PIXI.Sprite(PIXI.Texture.WHITE)
-    //background.width = 4000
-    //background.height = 4000
-    //background.tint = 0x040404
+    const background = new PIXI.Sprite(PIXI.Texture.WHITE)
+    background.width = CELL_SIZE * GRID_LENGTH
+    background.height = CELL_SIZE * GRID_LENGTH
+    background.tint = 0x040404
 
-    //container.addChild(background)
+    container.addChild(background)
 
     const starContainers = createStars(container)
 
@@ -46,11 +66,10 @@ function createStars(background: PIXI.Container) {
 
     const STARS_COUNT = 100
 
-    const createCell = (): PIXI.Sprite[] => {
+    const createCell = (containers: StarContainer[]): void => {
         let offset = 40
         let currentX = 0
         let currentY = 0
-        const stars: PIXI.Sprite[] = []
 
         function rgbToHex(r: number, g: number, b: number) {
             const hexString = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
@@ -61,10 +80,22 @@ function createStars(background: PIXI.Container) {
             const starSprite = new PIXI.Sprite(starTexture)
             starSprite.x = Math.random() * offset + currentX
             starSprite.y = Math.random() * offset + currentY
+
             starSprite.scale.x = starSprite.scale.x / (20 + Math.random() * 20)
             starSprite.scale.y = starSprite.scale.y / (20 + Math.random() * 20)
-            starSprite.tint = rgbToHex(220, 220, 220 + Math.random() * 35)
-            stars.push(starSprite)
+
+            const randomColor = () => {
+                return 200 + 55 * Math.random()
+            }
+
+            const tintColor = Math.random() * 10
+            if (tintColor < 1) {
+                starSprite.tint = rgbToHex(randomColor(), 200, 200)
+            } else if (tintColor < 2) {
+                starSprite.tint = rgbToHex(200, randomColor(), 200)
+            } else if (tintColor < 3) {
+                starSprite.tint = rgbToHex(200, 200, randomColor())
+            }
 
             if (currentX < CELL_SIZE - offset) {
                 currentX += offset
@@ -72,18 +103,31 @@ function createStars(background: PIXI.Container) {
                 currentY += offset
                 currentX = 0
             }
-        }
 
-        return stars
+            containers[Math.floor(Math.random() * containers.length)].addChild(starSprite)
+        }
     }
 
     // For each cell add stars to container
-    const createGrid = (y: number, starContainers: PIXI.Container[]): PIXI.Container[] => {
+    const createGrid = (y: number, starContainers: StarContainer[]): StarContainer[] => {
+        const getContainers = (x: number) => {
+            const container1 = new StarContainer(0.11, 0.11)
+            const container2 = new StarContainer(0.1, 0.1)
+            container1.x = x * CELL_SIZE
+            container2.x = x * CELL_SIZE
+            container1.y = y * CELL_SIZE
+            container2.y = y * CELL_SIZE
+
+            return [container1, container2]
+        }
+
         for (let i = 0; i < GRID_LENGTH; i++) {
-            const container = new PIXI.Container()
-            const cellStars = createCell()
-            cellStars.forEach((star) => container.addChild(star))
-            starContainers.push(container)
+            const containers = getContainers(i)
+            createCell(containers)
+            containers.forEach((container) => {
+                starContainers.push(container)
+                background.addChild(container)
+            })
         }
 
         if (++y < GRID_LENGTH) {
@@ -93,35 +137,12 @@ function createStars(background: PIXI.Container) {
         }
     }
 
-    const starContainers = createGrid(0, [])
-    let currentX = 0
-    let currentY = 0
-    for (let container of starContainers) {
-        container.x += currentX * CELL_SIZE
-        container.y += currentY * CELL_SIZE
-        background.addChild(container)
-
-        if (currentX < GRID_LENGTH - 1) {
-            currentX++
-        } else {
-            currentY++
-            currentX = 0
-        }
-    }
-
-    return starContainers
+    return createGrid(0, [])
 }
 
-const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
+const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     // Max container size add extra cell_size for margin out of scope
     const MAX_SIZE = GRID_LENGTH * CELL_SIZE
-    const X_DISPLACEMENT = 0.1
-    const Y_DISPLACEMENT = 0.1
-
-    const xyRatio = Y_DISPLACEMENT / X_DISPLACEMENT
-
-    const Y_OUTBOUND_X_OFFSET = CELL_SIZE / xyRatio
-    const X_OUTBOUND_Y_OFFSET = CELL_SIZE * xyRatio
 
     const moveStars = () => {
         const x = boardApp.stage.x * -1 - root.x
@@ -130,8 +151,8 @@ const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
         const screenY = y + boardApp.screen.height
 
         for (let container of starContainers) {
-            container.x += X_DISPLACEMENT
-            container.y += Y_DISPLACEMENT
+            container.x += container.xDisplacement
+            container.y += container.yDisplacement
 
             const insideTopLeft = () => {
                 return x - CELL_SIZE * 2 < container.x && y - CELL_SIZE * 2 < container.y
@@ -141,18 +162,15 @@ const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
                 return container.x < screenX + CELL_SIZE && container.y < screenY + CELL_SIZE
             }
 
-            const moveIfOutOfScope = () => {
-                if (MAX_SIZE < container.x) {
-                    container.x = 0
-                    container.y -= X_OUTBOUND_Y_OFFSET
-                } else if (MAX_SIZE < container.y) {
-                    container.y = 0
-                    container.x -= Y_OUTBOUND_X_OFFSET
-                }
+            if (MAX_SIZE < container.x) {
+                container.x = 0
+                container.y -= container.xOutBoundOffsetY
+            } else if (MAX_SIZE < container.y) {
+                container.y = 0
+                container.x -= container.yOutBoundOffsetX
             }
 
             container.visible = insideTopLeft() && insideBottomRight()
-            moveIfOutOfScope()
         }
     }
 
