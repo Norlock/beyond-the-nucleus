@@ -118,6 +118,11 @@ const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
     const X_DISPLACEMENT = 0.1
     const Y_DISPLACEMENT = 0.1
 
+    const xyRatio = Y_DISPLACEMENT / X_DISPLACEMENT
+
+    const Y_OUTBOUND_X_OFFSET = CELL_SIZE / xyRatio
+    const X_OUTBOUND_Y_OFFSET = CELL_SIZE * xyRatio
+
     const moveStars = () => {
         const x = boardApp.stage.x * -1 - root.x
         const y = boardApp.stage.y * -1 - root.y
@@ -139,10 +144,10 @@ const selector = (starContainers: PIXI.Container[], root: PIXI.Container) => {
             const moveIfOutOfScope = () => {
                 if (MAX_SIZE < container.x) {
                     container.x = 0
-                    container.y -= CELL_SIZE
+                    container.y -= X_OUTBOUND_Y_OFFSET
                 } else if (MAX_SIZE < container.y) {
                     container.y = 0
-                    container.x -= CELL_SIZE
+                    container.x -= Y_OUTBOUND_X_OFFSET
                 }
             }
 
