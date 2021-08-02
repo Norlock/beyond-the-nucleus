@@ -189,6 +189,12 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     return selector
 }
 
+// TODO auto generate galaxy
+//
+// Take 6 dots inside a square
+// add displacement filters
+// add random circles with colors
+
 const createGalaxies = (container: StarContainer | PIXI.Container) => {
     console.log('create galaxy', container)
 
@@ -204,24 +210,51 @@ const createGalaxies = (container: StarContainer | PIXI.Container) => {
         .beginFill(0x3366ff)
         .drawPolygon(path2)
         .endFill()
+        .beginFill(0xeeeeff)
+        .drawCircle(650, 500, 70)
+        .beginFill(0x0f00ff, 0.6)
+        .drawCircle(450, 380, 30)
+        .beginFill(0xffffff, 0.6)
+        .drawCircle(750, 580, 40)
+        .endFill()
 
     const displacementSprite = PIXI.Sprite.from('src/assets/ocean/displacement.png')
     const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite)
 
-    displacementFilter.scale.x = 110
-    displacementFilter.scale.y = 110
+    const noiseFilter = new PIXI.filters.NoiseFilter(4, 4)
+
+    displacementFilter.scale.x = 10
+    displacementFilter.scale.y = 100
     displacementSprite.anchor.set(0.5)
 
-    const blurFilter = new PIXI.filters.BlurFilter(15)
+    const blurFilter = new PIXI.filters.BlurFilter(5)
     const texture = boardApp.renderer.generateTexture(graphic, PIXI.SCALE_MODES.NEAREST, boardApp.renderer.resolution)
     const galaxy = new PIXI.Sprite(texture)
-    galaxy.filters = [blurFilter, displacementFilter]
+    galaxy.filters = [noiseFilter, blurFilter, displacementFilter]
     galaxy.addChild(displacementSprite)
 
     //galaxy.width = 400
     //galaxy.height = 400
     galaxy.x = 1600
     galaxy.y = 1000
+    galaxy.scale.set(0.5)
 
-    container.addChild(galaxy)
+    const galaxy2 = new PIXI.Sprite(galaxy.texture.clone())
+    galaxy2.angle = 120
+    galaxy2.x = 1900
+    galaxy2.y = 1200
+    galaxy2.filters = [noiseFilter, blurFilter, displacementFilter]
+    galaxy2.scale.set(0.15)
+    //galaxy.addChild(displacementSprite)
+
+    container.addChild(galaxy, galaxy2)
+
+    const starTexture = PIXI.Texture.from('src/assets/space/star.png')
+    for (let i = 0; i < 30; i++) {
+        const star = new PIXI.Sprite(starTexture)
+        star.scale.set(0.02)
+        star.x = galaxy.x + galaxy.width * Math.random()
+        star.y = galaxy.y + galaxy.height * Math.random()
+        container.addChild(star)
+    }
 }
