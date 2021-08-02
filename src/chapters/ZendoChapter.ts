@@ -12,8 +12,8 @@ enum AudioTag {
 }
 
 const blurSize = 10
-const blurfilterLeft = new PIXI.filters.BlurFilter(blurSize)
-const blurfilterRight = new PIXI.filters.BlurFilter(blurSize)
+const blurFilterLeft = new PIXI.filters.BlurFilter(blurSize)
+const blurFilterRight = new PIXI.filters.BlurFilter(blurSize)
 
 export const ZendoChapter = (): Chapter => {
     //const intro = GetAudio('src/assets/zendo/bell.wav', false, 0.2);
@@ -31,13 +31,13 @@ const background1 = (): ContainerData => {
     const left = PIXI.Sprite.from('src/assets/zendo/zendo-left.jpg')
     left.width = 4856
     left.height = 3238
-    left.filters = [blurfilterLeft]
+    left.filters = [blurFilterLeft]
 
     const right = PIXI.Sprite.from('src/assets/zendo/zendo-right.jpg')
     right.width = 5857
     right.height = 3905
     right.x = 4856 + 50
-    right.filters = [blurfilterRight]
+    right.filters = [blurFilterRight]
 
     container.addChild(left, right)
 
@@ -50,9 +50,9 @@ const background1 = (): ContainerData => {
 const selector = (self: Chapter): Selector => {
     const doAnimate = (resolve: Function) => {
         const animate = (): void => {
-            if (blurfilterLeft.blur > 0) {
-                blurfilterLeft.blur -= 0.1
-                blurfilterRight.blur -= 0.1
+            if (blurFilterLeft.blur > 0) {
+                blurFilterLeft.blur -= 0.1
+                blurFilterRight.blur -= 0.1
             } else {
                 boardApp.ticker.remove(animate)
                 resolve()
@@ -65,8 +65,8 @@ const selector = (self: Chapter): Selector => {
     }
     const selector = new Selector('Blur Zendo intro')
     selector.activate = async () => {
-        blurfilterLeft.blur = blurSize
-        blurfilterRight.blur = blurSize
+        blurFilterLeft.blur = blurSize
+        blurFilterRight.blur = blurSize
 
         self.audio.select(AudioTag.INTRO, SelectState.play, 5000)
         return new Promise<void>((resolve) => doAnimate(resolve))

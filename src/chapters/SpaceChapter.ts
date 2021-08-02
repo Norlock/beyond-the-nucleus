@@ -44,12 +44,14 @@ export const SpaceChapter = (): Chapter => {
 const background = (root: PIXI.Container): ContainerData => {
     const container = new PIXI.Container()
 
-    const background = new PIXI.Sprite(PIXI.Texture.WHITE)
-    background.width = CELL_SIZE * GRID_LENGTH
-    background.height = CELL_SIZE * GRID_LENGTH
-    background.tint = 0x040404
+    //const background = new PIXI.Sprite(PIXI.Texture.WHITE)
+    //background.width = CELL_SIZE * GRID_LENGTH
+    //background.height = CELL_SIZE * GRID_LENGTH
+    //background.tint = 0x040404
 
-    container.addChild(background)
+    container.addChild(container)
+
+    createGalaxies(container)
 
     const starContainers = createStars(container)
 
@@ -121,8 +123,9 @@ function createStars(background: PIXI.Container) {
             return [container1, container2]
         }
 
-        for (let i = 0; i < GRID_LENGTH; i++) {
-            const containers = getContainers(i)
+        for (let x = 0; x < GRID_LENGTH; x++) {
+            const containers = getContainers(x)
+
             createCell(containers)
             containers.forEach((container) => {
                 starContainers.push(container)
@@ -184,4 +187,41 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     }
 
     return selector
+}
+
+const createGalaxies = (container: StarContainer | PIXI.Container) => {
+    console.log('create galaxy', container)
+
+    const path = [500, 270, 700, 460, 880, 420, 730, 570, 700, 800, 590, 520]
+    const path2 = [400, 200, 650, 340, 820, 220, 630, 470, 600, 700, 490, 420]
+
+    const graphic = new PIXI.Graphics()
+    graphic
+        .lineStyle(0)
+        .beginFill(0x3366dd)
+        .drawPolygon(path)
+        .endFill() // prettier-ignore
+        .beginFill(0x3366ff)
+        .drawPolygon(path2)
+        .endFill()
+
+    const displacementSprite = PIXI.Sprite.from('src/assets/ocean/displacement.png')
+    const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite)
+
+    displacementFilter.scale.x = 110
+    displacementFilter.scale.y = 110
+    displacementSprite.anchor.set(0.5)
+
+    const blurFilter = new PIXI.filters.BlurFilter(15)
+    const texture = boardApp.renderer.generateTexture(graphic, PIXI.SCALE_MODES.NEAREST, boardApp.renderer.resolution)
+    const galaxy = new PIXI.Sprite(texture)
+    galaxy.filters = [blurFilter, displacementFilter]
+    galaxy.addChild(displacementSprite)
+
+    //galaxy.width = 400
+    //galaxy.height = 400
+    galaxy.x = 1600
+    galaxy.y = 1000
+
+    container.addChild(galaxy)
 }
