@@ -66,29 +66,22 @@ function createStars(background: PIXI.Container) {
     // Get the texture for rope.
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
 
-    const STARS_COUNT = 100
+    const STARS_COUNT = 150
+
+    const OFFSET = CELL_SIZE / Math.sqrt(STARS_COUNT)
 
     const createCell = (containers: StarContainer[]): void => {
-        let offset = 40
         let currentX = 0
         let currentY = 0
 
-        function rgbToHex(r: number, g: number, b: number) {
-            const hexString = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
-            return parseInt(hexString, 16)
-        }
-
         for (let i = 0; i < STARS_COUNT; i++) {
             const starSprite = new PIXI.Sprite(starTexture)
-            starSprite.x = Math.random() * offset + currentX
-            starSprite.y = Math.random() * offset + currentY
+            starSprite.x = Math.random() * OFFSET + currentX
+            starSprite.y = Math.random() * OFFSET + currentY
 
+            starSprite.alpha = Math.random()
             starSprite.scale.x = starSprite.scale.x / (20 + Math.random() * 20)
             starSprite.scale.y = starSprite.scale.y / (20 + Math.random() * 20)
-
-            const randomColor = () => {
-                return 200 + 55 * Math.random()
-            }
 
             const tintColor = Math.random() * 10
             if (tintColor < 1) {
@@ -99,10 +92,10 @@ function createStars(background: PIXI.Container) {
                 starSprite.tint = rgbToHex(200, 200, randomColor())
             }
 
-            if (currentX < CELL_SIZE - offset) {
-                currentX += offset
-            } else if (currentY < CELL_SIZE - offset) {
-                currentY += offset
+            if (currentX < CELL_SIZE - OFFSET) {
+                currentX += OFFSET
+            } else if (currentY < CELL_SIZE - OFFSET) {
+                currentY += OFFSET
                 currentX = 0
             }
 
@@ -147,15 +140,23 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     // Max container size add extra cell_size for margin out of scope
     const MAX_SIZE = GRID_LENGTH * CELL_SIZE
 
-    const moveStars = () => {
+    let count = 0
+
+    const moveStars = (delta: number) => {
         const x = boardApp.stage.x * -1 - root.x
         const y = boardApp.stage.y * -1 - root.y
         const screenX = x + boardApp.screen.width
         const screenY = y + boardApp.screen.height
+        count += 0.01 * delta
 
         for (let container of starContainers) {
             container.x += container.xDisplacement
             container.y += container.yDisplacement
+
+            let stars = container.children
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].alpha = Math.sin(count + i)
+            }
 
             const insideTopLeft = () => {
                 return x - CELL_SIZE * 2 < container.x && y - CELL_SIZE * 2 < container.y
@@ -195,66 +196,88 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
 // add displacement filters
 // add random circles with colors
 
-const createGalaxies = (container: StarContainer | PIXI.Container) => {
-    console.log('create galaxy', container)
+const createGalaxies = (container: PIXI.Container) => {
+    createGalaxy(container, 500, 2000, 800)
+}
 
-    const path = [500, 270, 700, 460, 880, 420, 730, 570, 700, 800, 590, 520]
-    const path2 = [400, 200, 650, 340, 820, 220, 630, 470, 600, 700, 490, 420]
+const createGalaxy = (container: PIXI.Container, x: number, y: number, radius: number) => {
+    const polygonCount = 9
 
-    const graphic = new PIXI.Graphics()
-    graphic
-        .lineStyle(0)
-        .beginFill(0x3366dd)
-        .drawPolygon(path)
-        .endFill() // prettier-ignore
-        .beginFill(0x3366ff)
-        .drawPolygon(path2)
-        .endFill()
-        .beginFill(0xeeeeff)
-        .drawCircle(650, 500, 70)
-        .beginFill(0x0f00ff, 0.6)
-        .drawCircle(450, 380, 30)
-        .beginFill(0xffffff, 0.6)
-        .drawCircle(750, 580, 40)
-        .endFill()
+    const create = () => {
+        const path: number[] = []
 
-    const displacementSprite = PIXI.Sprite.from('src/assets/ocean/displacement.png')
-    const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite)
+        for (let i = 0; i < polygonCount; i++) {
+            let pathX = Math.random() * radius + x
+            let pathY = Math.random() * radius + y
+            path.push(pathX, pathY)
+        }
 
-    const noiseFilter = new PIXI.filters.NoiseFilter(4, 4)
+        const graphic = new PIXI.Graphics()
+        for (let i = 0; i < 3; i++) {
+            let circleX = Math.random() * radius + x
+            let circleY = Math.random() * radius + y
 
-    displacementFilter.scale.x = 10
-    displacementFilter.scale.y = 100
-    displacementSprite.anchor.set(0.5)
+            graphic
+                .lineStyle(0)
+                .beginFill(0xeeeeff)
+                .drawCircle(circleX, circleY, Math.random() * 80)
+        }
 
-    const blurFilter = new PIXI.filters.BlurFilter(5)
-    const texture = boardApp.renderer.generateTexture(graphic, PIXI.SCALE_MODES.NEAREST, boardApp.renderer.resolution)
-    const galaxy = new PIXI.Sprite(texture)
-    galaxy.filters = [noiseFilter, blurFilter, displacementFilter]
-    galaxy.addChild(displacementSprite)
+        graphic
+          .lineStyle(0)
+          .beginFill(rgbToHex(100 + Math.random() * 50, 20, randomColor()))
+          .drawPolygon(path)
+          .endFill() // prettier-ignore
 
-    //galaxy.width = 400
-    //galaxy.height = 400
-    galaxy.x = 1600
-    galaxy.y = 1000
-    galaxy.scale.set(0.5)
+        const displacementSprite = PIXI.Sprite.from('src/assets/ocean/displacement.png')
+        const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite)
 
-    const galaxy2 = new PIXI.Sprite(galaxy.texture.clone())
-    galaxy2.angle = 120
-    galaxy2.x = 1900
-    galaxy2.y = 1200
-    galaxy2.filters = [noiseFilter, blurFilter, displacementFilter]
-    galaxy2.scale.set(0.15)
-    //galaxy.addChild(displacementSprite)
+        const noiseFilter = new PIXI.filters.NoiseFilter(4, 4)
 
-    container.addChild(galaxy, galaxy2)
+        displacementFilter.scale.x = 10
+        displacementFilter.scale.y = 100
+        displacementSprite.anchor.set(Math.random())
 
-    const starTexture = PIXI.Texture.from('src/assets/space/star.png')
-    for (let i = 0; i < 30; i++) {
-        const star = new PIXI.Sprite(starTexture)
-        star.scale.set(0.02)
-        star.x = galaxy.x + galaxy.width * Math.random()
-        star.y = galaxy.y + galaxy.height * Math.random()
-        container.addChild(star)
+        const blurFilter = new PIXI.filters.BlurFilter(5)
+        const blurFilter2 = new PIXI.filters.BlurFilter(1)
+
+        const texture = boardApp.renderer.generateTexture(
+            graphic,
+            PIXI.SCALE_MODES.NEAREST,
+            boardApp.renderer.resolution
+        )
+        const galaxy = new PIXI.Sprite(texture)
+        galaxy.filters = [noiseFilter, blurFilter, displacementFilter, blurFilter2]
+        galaxy.addChild(displacementSprite)
+
+        galaxy.x = x
+        galaxy.y = y
+        return galaxy
     }
+
+    const total = new PIXI.Container()
+
+    for (let i = 0; i < polygonCount; i++) {
+        const galaxy = create()
+        galaxy.scale.set(1 / polygonCount)
+        galaxy.angle = Math.random() * 360
+        if (i % 3 === 0) {
+            galaxy.tint = rgbToHex(randomColor(), 100, 100)
+        } else {
+            galaxy.tint = rgbToHex(100, 100, randomColor())
+        }
+
+        total.addChild(galaxy)
+    }
+
+    container.addChild(total)
+}
+
+const randomColor = () => {
+    return 200 + 55 * Math.random()
+}
+
+const rgbToHex = (r: number, g: number, b: number) => {
+    const hexString = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+    return parseInt(hexString, 16)
 }
