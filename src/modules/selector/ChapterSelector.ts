@@ -20,7 +20,7 @@ export class ChapterSelector {
         if (!this.isSelected) {
             this.chapter.root.visible = true
             this.chapter.root.updateTransform()
-            this.next?.activate()
+            this.next?.recursivelyActivate()
         }
 
         this.isSelected = true
@@ -39,7 +39,7 @@ export class ChapterSelector {
 
     deactivate() {
         if (this.isSelected) {
-            this.next?.deactivate()
+            this.next?.recursivelyDeactivate()
             this.isSelected = false
             this.selectorMap.get(this.current)?.deactivate()
             return new Promise<void>((resolve) => hideAnimation(this.chapter.root, resolve))

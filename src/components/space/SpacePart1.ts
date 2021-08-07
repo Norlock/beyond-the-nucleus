@@ -21,7 +21,7 @@ export const SpacePart1 = (data: ElmComponent): FlowComponent => {
     header.x = 30
     header.y = 25
 
-    const paragraphText = `On April 12, 1968 aboard the spacecraft Vostok 1, Soviet cosmonaut Yuri Alekseyevich Gagarin became the first human being to travel into space`
+    const paragraphText = `On April 12, 1968 aboard the spacecraft Vostok 1, Soviet cosmonaut Yuri Alekseyevich Gagarin became the first human being to travel into space.`
     const paragraph = new PIXI.Text(paragraphText, spaceStyles.paragraphStyle(cardOptions.width - 40))
     paragraph.x = 30
     paragraph.y = 100

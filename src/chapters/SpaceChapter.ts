@@ -148,8 +148,13 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     const MAX_SIZE = GRID_LENGTH * CELL_SIZE
 
     let count = 0
+    let angle = 0.1
+    let astronautDelta = 0
 
     const moveStars = (delta: number) => {
+        galaxy.x += 0.03
+        galaxy.y += 0.03
+
         const x = boardApp.stage.x * -1 - root.x
         const y = boardApp.stage.y * -1 - root.y
         const screenX = x + boardApp.screen.width
@@ -183,6 +188,18 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
 
             container.visible = insideTopLeft() && insideBottomRight()
         }
+
+        const moveAstronaut = () => {
+            if (astronaut.angle >= 10) {
+                angle = -0.1 // invert multiplier
+            } else if (astronaut.angle <= -30) {
+                angle = 0.1
+            }
+            astronaut.angle += angle
+            astronautDelta += 0.02
+            astronaut.y = astronaut.y + Math.sin(astronautDelta) / 2
+        }
+        moveAstronaut()
     }
 
     const selector = new Selector('Move stars')
@@ -197,25 +214,18 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     return selector
 }
 
-// TODO auto generate galaxy
-//
-// Take 6 dots inside a square
-// add displacement filters
-// add random circles with colors
+let galaxy: PIXI.Sprite
+let astronaut: PIXI.Sprite
 
 const createGalaxies = (container: PIXI.Container) => {
     //createGalaxy(container, 500, 2000, 800)
-    const galaxy = PIXI.Sprite.from('src/assets/space/galaxy.png')
+    galaxy = PIXI.Sprite.from('src/assets/space/galaxy.png')
     galaxy.x = 1800
     galaxy.y = 600
     galaxy.scale.set(0.7)
     galaxy.alpha = 0.5
     galaxy.angle = 45
 
-    boardApp.ticker.add(() => {
-        galaxy.x += 0.08
-        galaxy.y += 0.08
-    })
     container.addChild(galaxy)
 }
 
@@ -224,9 +234,10 @@ const createAstronaut = (container: PIXI.Container) => {
     background.x = 1700
     background.y = 800 + 150
 
-    const astronaut = PIXI.Sprite.from('src/assets/space/astronaut.png')
-    astronaut.x -= 400
-    astronaut.y -= 230
+    astronaut = PIXI.Sprite.from('src/assets/space/astronaut.png')
+    astronaut.anchor.set(0.5)
+    astronaut.y -= 30
+    astronaut.x += 20
 
     background.addChild(astronaut)
     container.addChild(background)
