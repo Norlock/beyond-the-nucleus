@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { ChapterFactory } from 'src/factories/ChapterFactory'
+import { SelectState } from 'src/modules/audio/AudioComponent'
+import { GetAudio } from 'src/modules/audio/GetAudio'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Chapter, ContainerData } from './base/Chapter'
@@ -7,6 +9,10 @@ import { ChapterType } from './base/ChapterType'
 
 enum SpaceName {
     START = 'start'
+}
+
+enum AudioTag {
+    AMBIENCE = 'ambience'
 }
 
 const CELL_SIZE = 400
@@ -33,10 +39,12 @@ class StarContainer extends PIXI.Container {
 // todo paralax effect with multiple layers so it creates depth effect
 
 export const SpaceChapter = (): Chapter => {
-    //const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
+    const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.3)
 
     const factory = ChapterFactory(ChapterType.SPACE, 2000, -6000)
     factory.addContainer(background(factory.chapter.root))
+    factory.addAudio(audio, AudioTag.AMBIENCE)
+    factory.appendSelector(chapterSelector(factory.chapter))
 
     return factory.chapter
 }
@@ -49,8 +57,9 @@ const background = (root: PIXI.Container): ContainerData => {
     //background.height = CELL_SIZE * GRID_LENGTH
     //background.tint = 0x040404
 
-    //createGalaxies(container)
+    createGalaxies(container)
     const starContainers = createStars(container)
+    createAstronaut(container)
 
     return {
         container,
@@ -117,6 +126,7 @@ function createStars(background: PIXI.Container) {
             const containers = getContainers(x)
 
             createCell(containers)
+
             containers.forEach((container) => {
                 starContainers.push(container)
                 background.addChild(container)
@@ -177,13 +187,11 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
 
     const selector = new Selector('Move stars')
     selector.activate = async () => {
-        console.log(starContainers[0].x)
         boardApp.ticker.add(moveStars)
     }
 
     selector.deactivate = async () => {
         boardApp.ticker.remove(moveStars)
-        console.log(starContainers[0].x)
     }
 
     return selector
@@ -209,6 +217,34 @@ const createGalaxies = (container: PIXI.Container) => {
         galaxy.y += 0.08
     })
     container.addChild(galaxy)
+}
+
+const createAstronaut = (container: PIXI.Container) => {
+    const background = new PIXI.Graphics().lineStyle(8, 0x778899).beginFill(0x000000).drawCircle(0, 0, 300).endFill()
+    background.x = 1700
+    background.y = 800 + 150
+
+    const astronaut = PIXI.Sprite.from('src/assets/space/astronaut.png')
+    astronaut.x -= 400
+    astronaut.y -= 230
+
+    background.addChild(astronaut)
+    container.addChild(background)
+}
+
+const chapterSelector = (self: Chapter): Selector => {
+    const selector = new Selector('Chapter audio')
+    selector.activate = async () => {
+        setTimeout(() => {
+            self.audio.select(AudioTag.AMBIENCE, SelectState.fadeIn)
+        }, 200)
+    }
+
+    selector.deactivate = async () => {
+        self.audio.selected.fadeOut()
+    }
+
+    return selector
 }
 
 const createGalaxy = (container: PIXI.Container, x: number, y: number, radius: number) => {

@@ -4,44 +4,27 @@ import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { FlowComponent } from '../base/FlowComponent'
+import { spaceStyles } from './SpaceStyles'
 
 export const SpacePart1 = (data: ElmComponent): FlowComponent => {
     const cardOptions: CardOptions = {
-        borderColor: 0x44aaff,
+        borderColor: 0x778899,
         alpha: 1,
         x: 800,
         y: 800,
         width: 400,
-        height: 190,
+        height: 390,
         pivotCenter: false
     }
 
-    const headerStyle = new PIXI.TextStyle({
-        fontSize: 35,
-        fontStyle: 'bold',
-        fill: ['#44aaee'], // gradient
-        align: 'center',
-        wordWrap: true,
-        wordWrapWidth: cardOptions.width,
-        lineJoin: 'round'
-    })
-
-    const header = new PIXI.Text('Space', headerStyle)
+    const header = new PIXI.Text('Space', spaceStyles.headerStyle())
     header.x = 30
     header.y = 25
 
-    const paragraghStyle = new PIXI.TextStyle({
-        fontSize: 25,
-        fill: ['#FFFFFF'], // gradient
-        wordWrap: true,
-        wordWrapWidth: cardOptions.width - 40,
-        lineJoin: 'round'
-    })
-
-    const paragraphText = 'Space is very big'
-    const paragraph = new PIXI.Text(paragraphText, paragraghStyle)
+    const paragraphText = `On April 12, 1968 aboard the spacecraft Vostok 1, Soviet cosmonaut Yuri Alekseyevich Gagarin became the first human being to travel into space`
+    const paragraph = new PIXI.Text(paragraphText, spaceStyles.paragraphStyle(cardOptions.width - 40))
     paragraph.x = 30
-    paragraph.y = 80
+    paragraph.y = 100
 
     const chapter = chapters.get(data.chapterId)
 
