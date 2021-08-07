@@ -28,11 +28,12 @@ export class ChapterSelector {
 
     selectContainer(name: string) {
         if (this.selectorMap.has(name)) {
-            const selector = this.selectorMap.get(name)
-            selector.activate()
-
-            this.selectorMap.get(this.current)?.deactivate()
-            this.current = name
+            if (this.current !== name || !this.isSelected) {
+                this.selectorMap.get(this.current)?.deactivate()
+                const selector = this.selectorMap.get(name)
+                selector.activate()
+                this.current = name
+            }
         }
     }
 
@@ -40,6 +41,7 @@ export class ChapterSelector {
         if (this.isSelected) {
             this.next?.deactivate()
             this.isSelected = false
+            this.selectorMap.get(this.current)?.deactivate()
             return new Promise<void>((resolve) => hideAnimation(this.chapter.root, resolve))
         }
     }

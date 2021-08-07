@@ -49,10 +49,7 @@ const background = (root: PIXI.Container): ContainerData => {
     //background.height = CELL_SIZE * GRID_LENGTH
     //background.tint = 0x040404
 
-    container.addChild(container)
-
-    createGalaxies(container)
-
+    //createGalaxies(container)
     const starContainers = createStars(container)
 
     return {
@@ -147,7 +144,7 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
         const y = boardApp.stage.y * -1 - root.y
         const screenX = x + boardApp.screen.width
         const screenY = y + boardApp.screen.height
-        count += 0.01 * delta
+        count += 0.003 * delta
 
         for (let container of starContainers) {
             container.x += container.xDisplacement
@@ -180,11 +177,13 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
 
     const selector = new Selector('Move stars')
     selector.activate = async () => {
+        console.log(starContainers[0].x)
         boardApp.ticker.add(moveStars)
     }
 
     selector.deactivate = async () => {
         boardApp.ticker.remove(moveStars)
+        console.log(starContainers[0].x)
     }
 
     return selector
@@ -197,7 +196,19 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
 // add random circles with colors
 
 const createGalaxies = (container: PIXI.Container) => {
-    createGalaxy(container, 500, 2000, 800)
+    //createGalaxy(container, 500, 2000, 800)
+    const galaxy = PIXI.Sprite.from('src/assets/space/galaxy.png')
+    galaxy.x = 1800
+    galaxy.y = 600
+    galaxy.scale.set(0.7)
+    galaxy.alpha = 0.5
+    galaxy.angle = 45
+
+    boardApp.ticker.add(() => {
+        galaxy.x += 0.08
+        galaxy.y += 0.08
+    })
+    container.addChild(galaxy)
 }
 
 const createGalaxy = (container: PIXI.Container, x: number, y: number, radius: number) => {
