@@ -111,7 +111,7 @@ const getBackground2 = (): ContainerData => {
     circle.filters = [new PIXI.filters.BlurFilter(blurSize)]
 
     const bounds = new PIXI.Rectangle(0, 0, (radius + blurSize) * 2, (radius + blurSize) * 2)
-    const texture = boardApp.renderer.generateTexture(circle, PIXI.SCALE_MODES.NEAREST, 1, bounds)
+    const texture = boardApp.renderer.generateTexture(circle, { scaleMode: PIXI.SCALE_MODES.NEAREST, region: bounds })
     const focus = new PIXI.Sprite(texture)
     focus.position.x = 0
     focus.position.y = 0

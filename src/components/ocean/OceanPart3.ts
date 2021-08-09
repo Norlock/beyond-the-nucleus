@@ -24,7 +24,7 @@ export const OceanPart3 = (data: ElmComponent): FlowComponent => {
 
     const headerStyle = new PIXI.TextStyle({
         fontSize: 35,
-        fontStyle: 'bold',
+        fontWeight: 'bold',
         fill: ['#FF00FF'], // gradient
         align: 'center',
         wordWrap: true,

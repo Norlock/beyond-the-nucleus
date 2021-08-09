@@ -82,6 +82,7 @@ type ComponentId
     | Zendo5
     | Zendo6
     | Space1
+    | Space2
 
 
 type Chapter

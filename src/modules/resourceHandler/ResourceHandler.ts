@@ -5,7 +5,7 @@ export interface ResourceHandler {
     load: () => Promise<void>
     cleanup: () => void
     devContainer: PIXI.Container
-    resources: PIXI.IResourceDictionary
+    resources: PIXI.utils.Dict<PIXI.LoaderResource>
     characterGrid: Grid
     backgroundGrid: Grid
 

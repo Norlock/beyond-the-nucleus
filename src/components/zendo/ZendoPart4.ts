@@ -49,7 +49,7 @@ export const ZendoPart4 = (data: ElmComponent): FlowComponent => {
     }
 
     const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
-    factory.component.selector.append(selector)
+    factory.appendSelector(selector)
     factory.mergePixiLine(components.get(data.previous), LINE_COLOR)
     return factory.component
 }

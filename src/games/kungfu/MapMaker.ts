@@ -4,7 +4,7 @@ import { Cell } from './Cell'
 import { Grid } from './Grid'
 import { Player } from './Player'
 
-let resources: PIXI.IResourceDictionary
+let resources: PIXI.utils.Dict<PIXI.LoaderResource>
 let tileSize: number
 
 export const GenerateMap = (self: GameComponent): void => {

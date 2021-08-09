@@ -17,8 +17,9 @@ enum AudioTag {
 
 const CELL_SIZE = 400
 const GRID_LENGTH = 20
+const STARS_COUNT = 150
 
-class StarContainer extends PIXI.Container {
+class StarContainer extends PIXI.ParticleContainer {
     readonly xDisplacement: number
     readonly yDisplacement: number
     readonly xyRatio: number
@@ -26,7 +27,7 @@ class StarContainer extends PIXI.Container {
     readonly yOutBoundOffsetX: number
 
     constructor(xDisplacement: number, yDisplacement: number) {
-        super()
+        super(STARS_COUNT, { tint: true, alpha: true }, STARS_COUNT * 2)
         this.interactiveChildren = false
         this.xDisplacement = xDisplacement
         this.yDisplacement = yDisplacement
@@ -39,7 +40,7 @@ class StarContainer extends PIXI.Container {
 // todo paralax effect with multiple layers so it creates depth effect
 
 export const SpaceChapter = (): Chapter => {
-    const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.3)
+    const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.1)
 
     const factory = ChapterFactory(ChapterType.SPACE, 2000, -6000)
     factory.addContainer(background(factory.chapter.root))
@@ -71,8 +72,6 @@ const background = (root: PIXI.Container): ContainerData => {
 function createStars(background: PIXI.Container) {
     // Get the texture for rope.
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
-
-    const STARS_COUNT = 150
 
     const OFFSET = CELL_SIZE / Math.sqrt(STARS_COUNT)
 
@@ -148,8 +147,9 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     const MAX_SIZE = GRID_LENGTH * CELL_SIZE
 
     let count = 0
-    let angle = 0.1
+    let angle = 0.05
     let astronautDelta = 0
+    let astronautAngle = astronaut.angle
 
     const moveStars = (delta: number) => {
         galaxy.x += 0.03
@@ -159,7 +159,7 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
         const y = boardApp.stage.y * -1 - root.y
         const screenX = x + boardApp.screen.width
         const screenY = y + boardApp.screen.height
-        count += 0.003 * delta
+        count += 0.0002 * delta
 
         for (let container of starContainers) {
             container.x += container.xDisplacement
@@ -190,14 +190,14 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
         }
 
         const moveAstronaut = () => {
-            if (astronaut.angle >= 10) {
-                angle = -0.1 // invert multiplier
-            } else if (astronaut.angle <= -30) {
-                angle = 0.1
+            if (astronaut.angle > astronautAngle + 10) {
+                angle = -0.05 // invert angle
+            } else if (astronaut.angle < astronautAngle - 10) {
+                angle = 0.05
             }
+
             astronaut.angle += angle
-            astronautDelta += 0.02
-            astronaut.y = astronaut.y + Math.sin(astronautDelta) / 2
+            astronaut.y = astronaut.y + Math.sin((astronautDelta += 0.02)) / 2
         }
         moveAstronaut()
     }
@@ -223,9 +223,13 @@ const createGalaxies = (container: PIXI.Container) => {
     galaxy.x = 1800
     galaxy.y = 600
     galaxy.scale.set(0.7)
-    galaxy.alpha = 0.5
+    galaxy.alpha = 1
     galaxy.angle = 45
 
+    const filter = new PIXI.filters.FXAAFilter()
+    filter.enabled = true
+
+    galaxy.filters = [filter]
     container.addChild(galaxy)
 }
 
@@ -236,8 +240,9 @@ const createAstronaut = (container: PIXI.Container) => {
 
     astronaut = PIXI.Sprite.from('src/assets/space/astronaut.png')
     astronaut.anchor.set(0.5)
-    astronaut.y -= 30
+    astronaut.y -= 40
     astronaut.x += 20
+    astronaut.angle = -34
 
     background.addChild(astronaut)
     container.addChild(background)
@@ -256,79 +261,6 @@ const chapterSelector = (self: Chapter): Selector => {
     }
 
     return selector
-}
-
-const createGalaxy = (container: PIXI.Container, x: number, y: number, radius: number) => {
-    const polygonCount = 9
-
-    const create = () => {
-        const path: number[] = []
-
-        for (let i = 0; i < polygonCount; i++) {
-            let pathX = Math.random() * radius + x
-            let pathY = Math.random() * radius + y
-            path.push(pathX, pathY)
-        }
-
-        const graphic = new PIXI.Graphics()
-        for (let i = 0; i < 3; i++) {
-            let circleX = Math.random() * radius + x
-            let circleY = Math.random() * radius + y
-
-            graphic
-                .lineStyle(0)
-                .beginFill(0xeeeeff)
-                .drawCircle(circleX, circleY, Math.random() * 80)
-        }
-
-        graphic
-          .lineStyle(0)
-          .beginFill(rgbToHex(100 + Math.random() * 50, 20, randomColor()))
-          .drawPolygon(path)
-          .endFill() // prettier-ignore
-
-        const displacementSprite = PIXI.Sprite.from('src/assets/ocean/displacement.png')
-        const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite)
-
-        const noiseFilter = new PIXI.filters.NoiseFilter(4, 4)
-
-        displacementFilter.scale.x = 10
-        displacementFilter.scale.y = 100
-        displacementSprite.anchor.set(Math.random())
-
-        const blurFilter = new PIXI.filters.BlurFilter(5)
-        const blurFilter2 = new PIXI.filters.BlurFilter(1)
-
-        const texture = boardApp.renderer.generateTexture(
-            graphic,
-            PIXI.SCALE_MODES.NEAREST,
-            boardApp.renderer.resolution
-        )
-        const galaxy = new PIXI.Sprite(texture)
-        galaxy.filters = [noiseFilter, blurFilter, displacementFilter, blurFilter2]
-        galaxy.addChild(displacementSprite)
-
-        galaxy.x = x
-        galaxy.y = y
-        return galaxy
-    }
-
-    const total = new PIXI.Container()
-
-    for (let i = 0; i < polygonCount; i++) {
-        const galaxy = create()
-        galaxy.scale.set(1 / polygonCount)
-        galaxy.angle = Math.random() * 360
-        if (i % 3 === 0) {
-            galaxy.tint = rgbToHex(randomColor(), 100, 100)
-        } else {
-            galaxy.tint = rgbToHex(100, 100, randomColor())
-        }
-
-        total.addChild(galaxy)
-    }
-
-    container.addChild(total)
 }
 
 const randomColor = () => {

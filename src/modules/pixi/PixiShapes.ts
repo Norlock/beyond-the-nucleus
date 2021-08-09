@@ -48,41 +48,32 @@ export interface Dimensions {
 }
 
 export const imageFrame = (
-    imageTexture: PIXI.Texture,
+    imageUrl: string,
     dimensions: Dimensions,
     borderWidth: number,
     filters?: PIXI.Filter[]
-): PIXI.Graphics => {
-    const maskWidth = dimensions.width + borderWidth * 2
-    const maskHeight = dimensions.height + borderWidth * 2
+): PIXI.Sprite => {
+    const frameWidth = dimensions.width + borderWidth * 2
+    const frameHeight = dimensions.height + borderWidth * 2
 
-    imageTexture.baseTexture.setSize(dimensions.width, dimensions.height)
-    const clone = imageTexture.clone()
-    clone.updateUvs()
+    //const colorFilter = new PIXI.filters.ColorMatrixFilter()
 
-    const blurFilter = new PIXI.filters.ColorMatrixFilter()
+    //filters?.push(colorFilter)
 
-    filters?.push(blurFilter)
-
-    const image = PIXI.Sprite.from(clone)
+    const image = PIXI.Sprite.from(imageUrl)
     image.filters = filters
+    image.x = dimensions.x
+    image.y = dimensions.y
+    image.width = frameWidth
+    image.height = frameHeight
 
-    const frame = new PIXI.Graphics().beginFill(0x000000).drawRoundedRect(0, 0, maskWidth, maskHeight, 20).endFill()
+    const frame = new PIXI.Graphics().beginFill(0xffffff).drawRoundedRect(0, 0, frameWidth, frameHeight, 20).endFill()
+    frame.x = 5
+    frame.y = 5
 
-    const mask = new PIXI.Graphics()
-        .beginFill(0xffffff)
-        .drawRoundedRect(0, 0, dimensions.width, dimensions.height, 20)
-        .endFill()
+    console.log('dimensions', dimensions)
 
-    frame.x = dimensions.x
-    frame.y = dimensions.y
-
-    image.x = borderWidth
-    image.y = borderWidth
-
-    image.addChild(mask)
-    image.mask = mask
-
-    frame.addChild(image)
-    return frame
+    image.addChild(frame)
+    image.mask = frame
+    return image
 }

@@ -17,7 +17,7 @@ export const SpacePart1 = (data: ElmComponent): FlowComponent => {
         pivotCenter: false
     }
 
-    const header = new PIXI.Text('Space', spaceStyles.headerStyle())
+    const header = new PIXI.Text('First in space', spaceStyles.headerStyle())
     header.x = 30
     header.y = 25
 

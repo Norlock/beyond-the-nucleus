@@ -93,7 +93,6 @@ const selector = (component: FlowComponent): Selector => {
     const { root } = chapters.get(component.chapterId)
     const { card } = component
 
-    const zazenTexture = PIXI.Texture.from('src/assets/zendo/zazen.jpg')
     const zazenDimensions: Dimensions = {
         width: 400,
         height: 532,
@@ -101,9 +100,6 @@ const selector = (component: FlowComponent): Selector => {
         y: card.y - 100
     }
 
-    const zazenFrame = imageFrame(zazenTexture, zazenDimensions, 5)
-
-    const bonsaiTexture = PIXI.Texture.from('src/assets/zendo/bonsai.jpg')
     const colorFilter = new PIXI.filters.ColorMatrixFilter()
     colorFilter.greyscale(0.3, true)
 
@@ -114,14 +110,17 @@ const selector = (component: FlowComponent): Selector => {
         y: zazenDimensions.y
     }
 
-    const bonsaiFrame = imageFrame(bonsaiTexture, bonsaiDimensions, 5, [colorFilter])
-
-    bonsaiFrame.alpha = zazenFrame.alpha = 0
+    let zazenFrame: PIXI.Sprite
+    let bonsaiFrame: PIXI.Sprite
 
     const selector = new Selector('Zazen image part 5')
     selector.activate = async (): Promise<void> => {
         const promise = Promiser<void>()
-        root.addChild(zazenFrame, bonsaiFrame)
+        zazenFrame = imageFrame('src/assets/zendo/zazen.jpg', zazenDimensions, 5)
+        bonsaiFrame = imageFrame('src/assets/zendo/bonsai.jpg', bonsaiDimensions, 5, [colorFilter])
+
+        root.addChild(zazenFrame)
+        root.addChild(bonsaiFrame)
 
         const show = (delta: number): void => {
             bonsaiFrame.alpha = zazenFrame.alpha += 0.01 * delta
@@ -132,6 +131,7 @@ const selector = (component: FlowComponent): Selector => {
             }
         }
 
+        bonsaiFrame.alpha = zazenFrame.alpha = 0
         setTimeout(() => boardApp.ticker.add(show), 1000)
         return promise.promise
     }

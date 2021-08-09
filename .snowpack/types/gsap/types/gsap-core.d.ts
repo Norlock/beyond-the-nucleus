@@ -15,15 +15,16 @@ declare namespace gsap {
     | typeof GSDevTools
     | typeof MotionPathHelper
     | typeof SplitText
-    | typeof Flip;
+    | typeof Flip
+    | typeof ScrollTrigger;
 
   // querySelector returns type Element | null
   type DOMTarget = Element | string | null | ArrayLike<Element | string | null>;
   type TweenTarget = string | object | null; 
 
-  type Callback = (...args: any[]) => void;
+  type Callback = (...args: any[]) => void | null;
   type CallbackType = "onComplete" | "onInterrupt" | "onRepeat" | "onReverseComplete" | "onStart" | "onUpdate";
-  type TickerCallback = (time: number, deltaTime: number, frame: number, elapsed: number) => void;
+  type TickerCallback = (time: number, deltaTime: number, frame: number, elapsed: number) => void | null;
 
   type Point2D = { x: number, y: number };
   type Position = number | string;
@@ -174,6 +175,7 @@ declare namespace gsap {
    * @param {GSAPConfig} [config]
    * @returns {GSAPConfig} Configuration object
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.config()
    */
   function config(config?: GSAPConfig): GSAPConfig;
 
@@ -187,6 +189,7 @@ declare namespace gsap {
    * @param {TweenVars} [defaults]
    * @returns {TweenVars} Defaults object
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.defaults()
    */
   function defaults(defaults?: TweenVars): TweenVars;
 
@@ -202,6 +205,7 @@ declare namespace gsap {
    * @param {any[]} [params]
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.delayedCall()
    */
   function delayedCall(delay: number, callback: Function, params?: any[]): core.Tween;
 
@@ -209,13 +213,14 @@ declare namespace gsap {
    * Transfers all tweens, timelines, and (optionally) delayed calls from the root timeline into a new timeline.
    *
    * ```js
-   * const exportedTL = gsap.exportRoot();
+   * let exportedTL = gsap.exportRoot();
    * ```
    *
    * @param {TimelineVars} [vars]
    * @param {boolean} [includeDelayedCalls]
    * @returns {Timeline} Timeline instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.exportRoot()
    */
   function exportRoot(vars?: TimelineVars, includeDelayedCalls?: boolean): core.Timeline;
 
@@ -230,21 +235,22 @@ declare namespace gsap {
    * @param {TweenVars} vars
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.from()
    */
   function from(targets: TweenTarget, vars: TweenVars): core.Tween;
-
   /**
    * **Deprecated method signature.** Use the `duration` property instead.
    * 
    * ```js
    * gsap.from(".class", 1, {x: 100});
    * ```
-   * @deprecated since version 2
+   * @deprecated since 3.0.0
    * @param {TweenTarget} targets
    * @param {number} duration - The duration parameter is deprecated. Use the `duration` property instead.
    * @param {TweenVars} vars
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.from()
    */
   function from(targets: TweenTarget, duration: number, vars:TweenVars): core.Tween;
 
@@ -260,21 +266,22 @@ declare namespace gsap {
    * @param {TweenVars} toVars
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.fromTo()
    */
   function fromTo(targets: TweenTarget, fromVars: TweenVars, toVars: TweenVars): core.Tween;
-
   /**
    * **Deprecated method signature.** Use the `duration` property instead.
    * 
    * ```js
    * gsap.fromTo(".class", 1, {x: 0}, {x: 100});
    * ```
-   * @deprecated since version 2
+   * @deprecated since version 3.0.0
    * @param {TweenTarget} targets
    * @param {number} duration - The duration parameter is deprecated. Use the `duration` property instead.
    * @param {TweenVars} fromVars
    * @param {TweenVars} toVars
    * @returns {Tween} Tween instance
+   * @link https://greensock.com/docs/v3/GSAP/gsap.fromTo()
    */
   function fromTo(targets: TweenTarget, duration: number, fromVars: TweenVars, toVars: TweenVars): core.Tween;
 
@@ -291,6 +298,7 @@ declare namespace gsap {
    * @param {string | number} id
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.getById()
    */
   function getById<T extends core.Animation>(id: string | number): T;
 
@@ -306,6 +314,7 @@ declare namespace gsap {
    * @param {string} [unit]
    * @returns {string | number} Value
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.getProperty()
    */
   function getProperty(target: TweenTarget, property: string, unit?: string): string | number;
   function getProperty(target: TweenTarget): (property: string, unit?: string) => string | number;
@@ -321,6 +330,7 @@ declare namespace gsap {
    * @param {boolean} [onlyActive]
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.getTweensOf()
    */
   function getTweensOf(targets: TweenTarget, onlyActive?: boolean): core.Tween[];
 
@@ -347,6 +357,7 @@ declare namespace gsap {
    * @param {TweenTarget} targets
    * @returns {boolean} Status
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.isTweening()
    */
   function isTweening(targets: TweenTarget): boolean;
 
@@ -363,6 +374,7 @@ declare namespace gsap {
    * @param {boolean} [onlyActive]
    * @returns {void} Void
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.killTweensOf()
    */
   function killTweensOf(targets: TweenTarget, properties?: object | string, onlyActive?: boolean): void;
 
@@ -376,6 +388,7 @@ declare namespace gsap {
    * @param {string | EaseFunction} ease
    * @returns {EaseFunction} Ease function
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.parseEase()
    */
   function parseEase(ease: string | EaseFunction): EaseFunction;
   function parseEase(): EaseMap;
@@ -384,7 +397,7 @@ declare namespace gsap {
    * Returns a function that acts as a simpler alternative of gsap.set() that is more performant but less versatile.
    *
    * ```js
-   * const setX = gsap.quickSetter("#id", "x", "px");
+   * let setX = gsap.quickSetter("#id", "x", "px");
    * 
    * // later
    * setX(100);
@@ -395,6 +408,7 @@ declare namespace gsap {
    * @param {string} [unit]
    * @returns {Function} Setter function
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.quickSetter()
    */
   function quickSetter(targets: TweenTarget, property: string, unit?: string): Function;
 
@@ -410,6 +424,7 @@ declare namespace gsap {
    * @param {string} name
    * @param {EaseFunction} ease
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.registerEase()
    */
   function registerEase(name: string, ease: EaseFunction): void;
 
@@ -436,6 +451,7 @@ declare namespace gsap {
    *
    * @param {object} effect
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.registerEffect()
    */
   function registerEffect(effect: object): void;
   
@@ -448,6 +464,7 @@ declare namespace gsap {
    *
    * @param {RegisterablePlugins[]} args
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.registerPlugin()
    */
   function registerPlugin(...args: RegisterablePlugins[]): void;
   
@@ -462,6 +479,7 @@ declare namespace gsap {
    * @param {TweenVars} vars
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.set()
    */
   function set(targets: TweenTarget, vars: TweenVars): core.Tween;
 
@@ -471,6 +489,7 @@ declare namespace gsap {
    * @param {TimelineVars} [vars]
    * @returns {Timeline} Timeline instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.timeline()
    */
   function timeline(vars?: TimelineVars): core.Timeline;
 
@@ -485,21 +504,22 @@ declare namespace gsap {
    * @param {TweenVars} vars
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.to()
    */
   function to(targets: TweenTarget, vars: TweenVars): core.Tween;
-
   /**
    * **Deprecated method signature.** Use the `duration` property instead.
    * 
    * ```js
    * gsap.to(".class", 1, {x: 100});
    * ```
-   * @deprecated since version 2
+   * @deprecated since version 3.0.0
    * @param {TweenTarget} targets
    * @param {number} duration - The duration parameter is deprecated. Use the `duration` property instead.
    * @param {TweenVars} vars
    * @returns {Tween} Tween instance
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.to()
    */
   function to(targets: TweenTarget, duration: number, vars: TweenVars): core.Tween;
 
@@ -517,16 +537,34 @@ declare namespace gsap {
    * @param {number} number
    * @returns {void} Void
    * @memberof gsap
+   * @link https://greensock.com/docs/v3/GSAP/gsap.updateRoot()
    */
-  function updateRoot(time: number): void;
-
-  
+  function updateRoot(time: number): void;  
 }
 
 // TODO: Move to files where declared
+/**
+ * @deprecated since 3.0.0
+ * @link https://greensock.com/3-migration/
+ */
 declare class TweenLite extends gsap.core.Tween {}
+
+/**
+ * @deprecated since 3.0.0
+ * @link https://greensock.com/3-migration/
+ */
 declare class TweenMax extends gsap.core.Tween {}
+
+/**
+ * @deprecated since 3.0.0
+ * @link https://greensock.com/3-migration/
+ */
 declare class TimelineLite extends gsap.core.Timeline {}
+
+/**
+ * @deprecated since 3.0.0
+ * @link https://greensock.com/3-migration/
+ */
 declare class TimelineMax extends gsap.core.Timeline {}
 
 declare module "gsap/gsap-core" {
@@ -534,9 +572,28 @@ declare module "gsap/gsap-core" {
   const _gsap: typeof gsap;  
 
   // TODO: Move to files where declared
+  /**
+   * @deprecated since 3.0.0
+   * @link https://greensock.com/3-migration/
+   */
   export class TweenLite extends gsap.core.Tween {}
+
+  /**
+   * @deprecated since 3.0.0
+   * @link https://greensock.com/3-migration/
+   */
   export class TweenMax extends gsap.core.Tween {}
+
+  /**
+   * @deprecated since 3.0.0
+   * @link https://greensock.com/3-migration/
+   */
   export class TimelineLite extends gsap.core.Timeline {}
+
+  /**
+   * @deprecated since 3.0.0
+   * @link https://greensock.com/3-migration/
+   */
   export class TimelineMax extends gsap.core.Timeline {}
 
   export {

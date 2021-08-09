@@ -1,6 +1,7 @@
 import { Chapter } from 'src/chapters/base/Chapter'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Selector } from './Selector'
+import * as PIXI from 'pixi.js'
 
 export class ChapterSelector {
     readonly tag: string

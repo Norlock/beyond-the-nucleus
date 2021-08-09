@@ -12,6 +12,7 @@ import { OceanPart4 } from './components/ocean/OceanPart4'
 import { OceanPart5 } from './components/ocean/OceanPart5'
 import { OceanPart6 } from './components/ocean/OceanPart6'
 import { SpacePart1 } from './components/space/SpacePart1'
+import { SpacePart2 } from './components/space/SpacePart2'
 import { ZendoPart1 } from './components/zendo/ZendoPart1'
 import { ZendoPart2 } from './components/zendo/ZendoPart2'
 import { ZendoPart3 } from './components/zendo/ZendoPart3'
@@ -237,5 +238,13 @@ const fillComponents = (list: ElmComponent[]) => {
         setComponent(SpacePart1(elmComponent))
     } else {
         errorMsg(SPACE1)
+    }
+
+    const SPACE2 = 'space2'
+    elmComponent = list.find((x) => x.id === SPACE2)
+    if (elmComponent) {
+        setComponent(SpacePart2(elmComponent))
+    } else {
+        errorMsg(SPACE2)
     }
 }

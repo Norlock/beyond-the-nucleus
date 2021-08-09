@@ -31,7 +31,7 @@ export const preload = (): Promise<void> => {
     boardApp.loader.onError.add((err: any) => console.error(err))
 
     const promiser = Promiser<void>()
-    boardApp.loader.load((loader, res) => {
+    boardApp.loader.load((_loader, res) => {
         pixiResources = {
             oceanBubble: res.oceanBubble.texture,
             oceanStart: res.oceanStart.texture,
