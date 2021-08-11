@@ -36,6 +36,14 @@ ul {
     font-size: 20px;
 }
 
+#general-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 #chapter-title {
     position: fixed;
     z-index: 10;

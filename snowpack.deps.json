@@ -1,10 +1,12 @@
 {
   "dependencies": {
     "gsap": "^3.7.1",
-    "pixi-filters": "^4.1.4"
+    "pixi-filters": "^4.1.4",
+    "three": "^0.131.3"
   },
   "lock": {
     "gsap#^3.7.1": "gsap@v3.7.1-oqmeGbnx72naX9MRGwFV",
-    "pixi-filters#^4.1.4": "pixi-filters@v4.1.4-jD7A4WKX346HfmLYjU0f"
+    "pixi-filters#^4.1.4": "pixi-filters@v4.1.4-jD7A4WKX346HfmLYjU0f",
+    "three#^0.131.3": "three@v0.131.3-QQa34rwf1xM5cawaQLl8"
   }
 }

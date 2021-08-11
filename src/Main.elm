@@ -207,6 +207,7 @@ body component ui =
     div [ class ("container " ++ gameStr), classList [ ( Components.chapterStr container.chapterId, True ) ] ]
         [ div [ id "pixi-canvas", classList [ ( "blur", ui.showGame || ui.showHelp ) ] ] []
         , div [ id "game-canvas", classList [ ( "show", ui.showGame ) ] ] []
+        , div [ id "general-canvas" ] []
         , div
             [ id "help-overlay"
             , classList [ ( "show", ui.showHelp ) ]
