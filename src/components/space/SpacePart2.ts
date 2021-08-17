@@ -61,18 +61,18 @@ export const SpacePart2 = (data: ElmComponent): FlowComponent => {
 
 const selector = (container: PIXI.Container) => {
     const threeJs = initThreeJS()
+    const { earth, mars } = threeJs.planets
+
     const sprite = new PIXI.Sprite(threeJs.texture)
-    sprite.x = componentX - 350
+    sprite.x = componentX - 550
     sprite.y = componentY + 50
 
     const selector = new Selector('Show earth')
+
     selector.activate = async () => {
         container.addChild(sprite)
 
         mouseHandler()
-
-        const earth = earthAnimate(threeJs.scene)
-        const mars = marsAnimate(threeJs.scene)
 
         const animate = () => {
             earth.animate()
@@ -131,8 +131,9 @@ const initThreeJS = () => {
     camera.position.y = 0
 
     scene.add(camera)
+    const planets = { earth: earthAnimate(scene), mars: marsAnimate(scene) }
 
-    return { texture: PIXI.Texture.from(renderer.domElement), scene, camera, renderer }
+    return { texture: PIXI.Texture.from(renderer.domElement), scene, camera, renderer, planets }
 }
 
 const earthAnimate = (scene: THREE.Scene) => {
