@@ -5,19 +5,25 @@ import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { Selector } from 'src/modules/selector/Selector'
-import { boardApp } from 'src/pixi/PixiApp'
 import { FlowComponent } from '../base/FlowComponent'
 import { spaceStyles } from './SpaceStyles'
 import * as THREE from 'three'
 import vertexShader from './shaders/vertex.glsl'
 import fragmentShader from './shaders/fragment.glsl'
-import atmosphereVertexShader from './shaders/atmosphereVertex.glsl'
-import atmosphereFragmentShader from './shaders/atmosphereFragment.glsl'
 
-import globeImg from 'src/assets/space/earth-3d.jpg'
+import earthImg from 'src/assets/space/earth-3d.jpg'
+import marsImg from 'src/assets/space/mars-3d.jpg'
 
 const componentX = 3800
 const componentY = 1200
+
+const mouse = {
+    startX: 0,
+    startY: 0,
+    x: 0,
+    y: 0,
+    track: false
+}
 
 export const SpacePart2 = (data: ElmComponent): FlowComponent => {
     const cardOptions: CardOptions = {
@@ -44,20 +50,73 @@ export const SpacePart2 = (data: ElmComponent): FlowComponent => {
     const param = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
-        .setOffset(boardApp.screen.width - 700, 400)
+        .setOffset(200, 50)
         .build()
 
     const factory = FlowComponentFactory(data.id, chapter.chapterId, param)
-    factory.appendSelector(selector())
+    factory.appendSelector(selector(chapter.find(data.containerName)))
 
     return factory.component
 }
 
-const selector = () => {
+const selector = (container: PIXI.Container) => {
+    const threeJs = initThreeJS()
+    const sprite = new PIXI.Sprite(threeJs.texture)
+    sprite.x = componentX - 350
+    sprite.y = componentY + 50
+
+    const selector = new Selector('Show earth')
+    selector.activate = async () => {
+        container.addChild(sprite)
+
+        mouseHandler()
+
+        const earth = earthAnimate(threeJs.scene)
+        const mars = marsAnimate(threeJs.scene)
+
+        const animate = () => {
+            earth.animate()
+            mars.animate()
+
+            threeJs.renderer.render(threeJs.scene, threeJs.camera)
+            threeJs.texture.update()
+
+            requestAnimationFrame(animate)
+        }
+        animate()
+    }
+
+    selector.deactivate = async () => {
+        container.removeChild(sprite)
+    }
+
+    return selector
+}
+
+const mouseHandler = () => {
+    addEventListener('mousedown', (event) => {
+        mouse.startX = event.clientX / innerWidth
+        mouse.startY = event.clientY / innerWidth
+        mouse.track = true
+    })
+
+    addEventListener('mouseup', (_event) => {
+        mouse.track = false
+    })
+
+    addEventListener('mousemove', (event) => {
+        if (mouse.track) {
+            const newX = event.clientX / innerWidth
+            const newY = event.clientY / innerWidth
+            mouse.x += newX - mouse.startX
+            mouse.y += newY - mouse.startY
+        }
+    })
+}
+
+const initThreeJS = () => {
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
-
-    const canvas = document.getElementById('general-canvas')
 
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -66,8 +125,17 @@ const selector = () => {
 
     renderer.setSize(innerWidth, innerHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
-    renderer.setClearColor(0x000000, 0) // the default
 
+    camera.position.z = 15
+    camera.position.x = 0
+    camera.position.y = 0
+
+    scene.add(camera)
+
+    return { texture: PIXI.Texture.from(renderer.domElement), scene, camera, renderer }
+}
+
+const earthAnimate = (scene: THREE.Scene) => {
     // create a sphere
     const sphere = new THREE.Mesh(
         new THREE.SphereGeometry(5, 50, 50),
@@ -76,81 +144,63 @@ const selector = () => {
             fragmentShader,
             uniforms: {
                 globeTexture: {
-                    value: new THREE.TextureLoader().load(globeImg)
+                    value: new THREE.TextureLoader().load(earthImg)
                 }
             }
         })
     )
 
     // create a sphere
-    const atmosphere = new THREE.Mesh(
-        new THREE.SphereGeometry(5, 50, 50),
-        new THREE.ShaderMaterial({
-            vertexShader: atmosphereVertexShader,
-            fragmentShader: atmosphereFragmentShader,
-            blending: THREE.AdditiveBlending,
-            side: THREE.BackSide
-        })
-    )
-
-    atmosphere.scale.set(1.1, 1.1, 1.1)
-
-    scene.add(atmosphere)
-
     const group = new THREE.Group()
+    group.position.x = -4
+    group.position.y = -1
+
     group.add(sphere)
     scene.add(group)
 
-    camera.position.z = 15
-    camera.position.x = 8
-    camera.position.y = 2
-
-    const mouse = {
-        startX: 0,
-        startY: 0,
-        x: 0,
-        y: 0,
-        track: false
+    const animate = () => {
+        sphere.rotation.y += 0.001
+        gsap.to(group.rotation, {
+            x: mouse.y / 10,
+            y: mouse.x / 10
+            //duration: 2
+        })
     }
 
-    const selector = new Selector('Show earth')
-    selector.activate = async () => {
-        canvas.appendChild(renderer.domElement)
-        addEventListener('mousedown', (event) => {
-            mouse.startX = event.clientX / innerWidth
-            mouse.startY = event.clientY / innerWidth
-            mouse.track = true
-        })
+    return { animate }
+}
 
-        addEventListener('mouseup', (event) => {
-            mouse.track = false
-        })
-
-        addEventListener('mousemove', (event) => {
-            if (mouse.track) {
-                const newX = event.clientX / innerWidth
-                const newY = event.clientY / innerWidth
-                mouse.x += newX - mouse.startX
-                mouse.y += newY - mouse.startY
+const marsAnimate = (scene: THREE.Scene) => {
+    // create a sphere
+    const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(3, 50, 50),
+        new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                globeTexture: {
+                    value: new THREE.TextureLoader().load(marsImg)
+                }
             }
         })
+    )
 
-        const animate = () => {
-            requestAnimationFrame(animate)
-            renderer.render(scene, camera)
-            sphere.rotation.y += 0.001
-            gsap.to(group.rotation, {
-                x: mouse.y / 10,
-                y: mouse.x / 10
-                //duration: 2
-            })
-        }
-        animate()
+    // create a sphere
+    const group = new THREE.Group()
+    group.position.x = 6
+    group.position.y = -1
+
+    group.add(sphere)
+    scene.add(group)
+
+    const animate = () => {
+        sphere.rotation.y += 0.00095
+        gsap.to(group.rotation, {
+            x: mouse.y / 10,
+            y: mouse.x / 10
+            //duration: 2
+        })
     }
 
-    selector.deactivate = async () => {
-        canvas.removeChild(renderer.domElement)
-    }
-
-    return selector
+    return { animate }
 }
