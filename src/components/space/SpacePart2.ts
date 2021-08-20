@@ -64,7 +64,7 @@ const selector = (container: PIXI.Container) => {
     const { earth, mars } = threeJs.planets
 
     const sprite = new PIXI.Sprite(threeJs.texture)
-    sprite.x = componentX - 550
+    sprite.x = componentX - 350
     sprite.y = componentY + 50
 
     const selector = new Selector('Show earth')
@@ -188,7 +188,7 @@ const marsAnimate = (scene: THREE.Scene) => {
 
     // create a sphere
     const group = new THREE.Group()
-    group.position.x = 6
+    group.position.x = 10
     group.position.y = -1
 
     group.add(sphere)

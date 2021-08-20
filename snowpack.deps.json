@@ -2,11 +2,13 @@
   "dependencies": {
     "gsap": "^3.7.1",
     "pixi-filters": "^4.1.4",
+    "pixi.js": "^6.1.2",
     "three": "^0.131.3"
   },
   "lock": {
     "gsap#^3.7.1": "gsap@v3.7.1-oqmeGbnx72naX9MRGwFV",
     "pixi-filters#^4.1.4": "pixi-filters@v4.1.4-jD7A4WKX346HfmLYjU0f",
+    "pixi.js#^6.1.2": "pixi.js@v6.1.2-koMXTWdYmEY6UcL0vPpM",
     "three#^0.131.3": "three@v0.131.3-QQa34rwf1xM5cawaQLl8"
   }
 }

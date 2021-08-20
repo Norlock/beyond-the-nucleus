@@ -9,6 +9,7 @@ import { ChapterFactory } from 'src/factories/ChapterFactory'
 import { ChapterType } from './base/ChapterType'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { Promiser } from 'src/utils/Promiser'
+import { seaLife } from './ocean/SeaLife'
 
 gsap.registerPlugin(PixiPlugin)
 PixiPlugin.registerPIXI(PIXI)
@@ -55,6 +56,8 @@ const getBackground1 = (): ContainerData => {
     background.addChild(displacementWater)
     background.filters = [displacementFilter]
     container.addChild(background)
+
+    seaLife(container)
 
     const animateWater = (): void => {
         displacementWater.x = displacementWater.x + 1

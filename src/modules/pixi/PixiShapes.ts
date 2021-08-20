@@ -71,8 +71,6 @@ export const imageFrame = (
     frame.x = 5
     frame.y = 5
 
-    console.log('dimensions', dimensions)
-
     image.addChild(frame)
     image.mask = frame
     return image
