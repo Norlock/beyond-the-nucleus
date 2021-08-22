@@ -13,9 +13,12 @@ import fragmentShader from './shaders/fragment.glsl'
 
 import earthImg from 'src/assets/space/earth-3d.jpg'
 import marsImg from 'src/assets/space/mars-3d.jpg'
+import jupiterImg from 'src/assets/space/jupiter-3d.jpg'
 
 const componentX = 3800
 const componentY = 1200
+const xOffset = 200
+const yOffset = 50
 
 const mouse = {
     startX: 0,
@@ -50,7 +53,7 @@ export const SpacePart2 = (data: ElmComponent): FlowComponent => {
     const param = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
-        .setOffset(200, 50)
+        .setOffset(xOffset, yOffset)
         .build()
 
     const factory = FlowComponentFactory(data.id, chapter.chapterId, param)
@@ -61,11 +64,12 @@ export const SpacePart2 = (data: ElmComponent): FlowComponent => {
 
 const selector = (container: PIXI.Container) => {
     const threeJs = initThreeJS()
-    const { earth, mars } = threeJs.planets
+    const { earth, mars, jupiter } = threeJs.planets
 
     const sprite = new PIXI.Sprite(threeJs.texture)
     sprite.x = componentX - 350
     sprite.y = componentY + 50
+    sprite.width = window.innerWidth
 
     const selector = new Selector('Show earth')
 
@@ -77,6 +81,7 @@ const selector = (container: PIXI.Container) => {
         const animate = () => {
             earth.animate()
             mars.animate()
+            jupiter.animate()
 
             threeJs.renderer.render(threeJs.scene, threeJs.camera)
             threeJs.texture.update()
@@ -116,11 +121,11 @@ const mouseHandler = () => {
 
 const initThreeJS = () => {
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 50)
 
     const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true
+        antialias: true
+        //alpha: true
     })
 
     renderer.setSize(innerWidth, innerHeight)
@@ -131,15 +136,17 @@ const initThreeJS = () => {
     camera.position.y = 0
 
     scene.add(camera)
-    const planets = { earth: earthAnimate(scene), mars: marsAnimate(scene) }
+    const planets = { earth: earthAnimate(scene), mars: marsAnimate(scene), jupiter: jupiterAnimate(scene) }
 
     return { texture: PIXI.Texture.from(renderer.domElement), scene, camera, renderer, planets }
 }
 
+const earthRadius = 5
+
 const earthAnimate = (scene: THREE.Scene) => {
     // create a sphere
     const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(5, 50, 50),
+        new THREE.SphereGeometry(earthRadius, 50, 50),
         new THREE.ShaderMaterial({
             vertexShader,
             fragmentShader,
@@ -189,6 +196,41 @@ const marsAnimate = (scene: THREE.Scene) => {
     // create a sphere
     const group = new THREE.Group()
     group.position.x = 10
+    group.position.y = -1
+
+    group.add(sphere)
+    scene.add(group)
+
+    const animate = () => {
+        sphere.rotation.y += 0.00095
+        gsap.to(group.rotation, {
+            x: mouse.y / 10,
+            y: mouse.x / 10
+            //duration: 2
+        })
+    }
+
+    return { animate }
+}
+
+const jupiterAnimate = (scene: THREE.Scene) => {
+    // create a sphere
+    const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(earthRadius * 11, 50, 50),
+        new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                globeTexture: {
+                    value: new THREE.TextureLoader().load(jupiterImg)
+                }
+            }
+        })
+    )
+
+    // create a sphere
+    const group = new THREE.Group()
+    group.position.x = 23 * earthRadius
     group.position.y = -1
 
     group.add(sphere)

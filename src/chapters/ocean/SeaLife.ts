@@ -48,8 +48,7 @@ export const seaLife = (container: PIXI.Container) => {
         const idle = mixer.clipAction(gltf.animations[0])
         idle.play()
 
-        //container.addChild(sprite)
-        document.getElementById('general-canvas').appendChild(renderer.domElement)
+        container.addChild(sprite)
 
         const animate = () => {
             renderer.render(scene, camera)
