@@ -1,15 +1,15 @@
 import * as PIXI from 'pixi.js'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Promiser } from 'src/utils/Promiser'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { LINE_COLOR } from './ZendoStyles'
 
-export const ZendoPart4 = (data: ElmComponent): FlowComponent => {
+export const ZendoPart4 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         alpha: 1,
         x: 2200,
@@ -48,7 +48,7 @@ export const ZendoPart4 = (data: ElmComponent): FlowComponent => {
         video.texture.baseTexture.destroy()
     }
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     factory.appendSelector(selector)
     factory.mergePixiLine(components.get(data.previous), LINE_COLOR)
     return factory.component

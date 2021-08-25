@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js'
-import { FlowComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/FlowComponent'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Selector, StandardSelectorTag } from '../selector/Selector'
 import { PixiSelector } from './Pixi'
 import { Dimensions } from './PixiShapes'
 
-export const ComponentLineSelector = (previous: FlowComponent, dimensions: Dimensions, color: number): PixiSelector => {
+export const ComponentLineSelector = (previous: PixiComponent, dimensions: Dimensions, color: number): PixiSelector => {
     let count = 0
     const curve = new PIXI.Graphics()
 

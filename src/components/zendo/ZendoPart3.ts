@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { LINE_COLOR, headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles'
 
-export const ZendoPart3 = (data: ElmComponent): FlowComponent => {
+export const ZendoPart3 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x200900,
         alpha: 1,
@@ -45,7 +45,7 @@ export const ZendoPart3 = (data: ElmComponent): FlowComponent => {
         .elevate(12)
         .build()
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     factory.mergePixiLine(components.get(data.previous), LINE_COLOR)
     return factory.component
 }

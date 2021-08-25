@@ -1,20 +1,20 @@
-import { Chapter, ContainerData } from 'src/chapters/base/Chapter'
+import { ContainerData } from 'src/chapters/base/Chapter'
 import { ChapterType } from 'src/chapters/base/ChapterType'
+import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { AudioComponent } from 'src/modules/audio/AudioComponent'
 import { MergeAudioUtility } from 'src/modules/audio/MergeAudioUtility'
-import { ChapterSelector } from 'src/modules/selector/ChapterSelector'
+import { PixiChapterSelector } from 'src/modules/selector/PixiChapterSelector'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 
-export const ChapterFactory = (chapterType: ChapterType, x: number, y: number) => {
-    const self = new Chapter(chapterType)
+export const PixiChapterFactory = (chapterType: ChapterType, x: number, y: number) => {
+    const self = new PixiChapter(chapterType)
     self.root.x = x
     self.root.y = y
-    self.selector = new ChapterSelector(self)
+    self.selector = new PixiChapterSelector(self.root)
 
     MergeAudioUtility(self)
 
-    // TODO init function maybe
     boardApp.stage.addChild(self.root)
 
     const addAudio = (audio: AudioComponent, tag: string) => {

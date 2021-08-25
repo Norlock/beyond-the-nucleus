@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { oceanStyles } from './OceanStyles'
 
-export const OceanPart5 = (data: ElmComponent): FlowComponent => {
+export const OceanPart5 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         x: 1700,
@@ -58,7 +58,7 @@ export const OceanPart5 = (data: ElmComponent): FlowComponent => {
         .build()
 
     const previous = components.get(data.previous)
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
     return factory.component
 }

@@ -3,7 +3,7 @@ import { IndigenousChapter } from './chapters/IndigenousChapter'
 import { OceanChapter } from './chapters/OceanChapter'
 import { SpaceChapter } from './chapters/SpaceChapter'
 import { ZendoChapter } from './chapters/ZendoChapter'
-import { FlowComponent } from './components/base/FlowComponent'
+import { PixiComponent } from './components/base/FlowComponent'
 import { GameComponent } from './components/base/GameComponent'
 import { OceanPart1 } from './components/ocean/OceanPart1'
 import { OceanPart2 } from './components/ocean/OceanPart2'
@@ -23,7 +23,7 @@ import { Elm } from './Main.elm'
 import { boardApp, boardScroll } from './pixi/PixiApp'
 import { Promiser } from './utils/Promiser'
 
-export const components: Map<string, FlowComponent> = new Map()
+export const components: Map<string, PixiComponent> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
 
 export interface ElmComponent {
@@ -135,7 +135,7 @@ const fillComponents = (list: ElmComponent[]) => {
     const pixiCanvas = document.getElementById('pixi-canvas')
     pixiCanvas.appendChild(boardApp.view)
 
-    const setComponent = (jsComponent: FlowComponent) => {
+    const setComponent = (jsComponent: PixiComponent) => {
         components.set(jsComponent.id, jsComponent)
         jsComponent.init()
     }

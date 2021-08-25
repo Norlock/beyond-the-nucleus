@@ -2,13 +2,13 @@ import * as PIXI from 'pixi.js'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { kungfuLoader } from 'src/games/kungfu/KungfuLoader'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles'
 import { MergeKungfuResourceHandler } from 'src/games/kungfu/KungfuResources'
 import { chapters, ElmComponent } from 'src/elm-bridge'
 import { GameComponentFactory } from 'src/factories/GameComponentFactory'
 
-export const ZendoPart6 = (data: ElmComponent): FlowComponent => {
+export const ZendoPart6 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x200900,
         alpha: 1,

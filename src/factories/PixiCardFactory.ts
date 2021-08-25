@@ -1,5 +1,6 @@
 import { Container, DisplayObject, Point, Texture } from 'pixi.js'
 import { Chapter } from 'src/chapters/base/Chapter'
+import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { ComponentCardSelector } from 'src/modules/pixi/ComponentCard'
 import { CardOptions, Offset, PixiParams } from 'src/modules/pixi/Pixi'
 import { cardColor, cardImage, shadowCard } from 'src/modules/pixi/PixiShapes'
@@ -7,7 +8,7 @@ import { cardColor, cardImage, shadowCard } from 'src/modules/pixi/PixiShapes'
 export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containerName: string) => {
     let innerCard: Container, shadow: Container, offset: Offset
 
-    const containerPosition = chapter.find(containerName).position
+    const containerPosition = (chapter as PixiChapter).find(containerName).position
     const card = positionCard(new Container(), options, containerPosition)
     card.zIndex = 10
     card.visible = false

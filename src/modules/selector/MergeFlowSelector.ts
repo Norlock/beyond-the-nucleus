@@ -1,4 +1,4 @@
-import { FlowComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/FlowComponent'
 import { GetAudio } from '../audio/GetAudio'
 import { Selector, StandardSelectorTag } from './Selector'
 
@@ -11,7 +11,7 @@ const media = ctx.createMediaElementSource(audio)
 media.connect(filter)
 filter.connect(ctx.destination)
 
-export const MergeFlowSelector = (self: FlowComponent): void => {
+export const MergeFlowSelector = (self: PixiComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW)
 
     selector.activate = async () => {

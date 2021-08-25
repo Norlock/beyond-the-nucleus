@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js'
 import { chapters, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 
-export const OceanPart6 = (data: ElmComponent): FlowComponent => {
+export const OceanPart6 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x44aaff,
         alpha: 1,
@@ -56,6 +56,6 @@ export const OceanPart6 = (data: ElmComponent): FlowComponent => {
         .setOffset(100, 100)
         .build()
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     return factory.component
 }

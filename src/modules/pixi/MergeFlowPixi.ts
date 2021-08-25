@@ -1,9 +1,9 @@
-import { FlowComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/FlowComponent'
 import { StandardSelectorTag } from '../selector/Selector'
 import { ComponentLineSelector } from './ComponentLine'
 import { PixiSelector } from './Pixi'
 
-export const MergePixiFlowCard = (self: FlowComponent, containerName: string, card: PixiSelector): void => {
+export const MergePixiFlowCard = (self: PixiComponent, containerName: string, card: PixiSelector): void => {
     self.containerName = containerName
     self.card = card.component
 
@@ -11,7 +11,7 @@ export const MergePixiFlowCard = (self: FlowComponent, containerName: string, ca
     self.pixiComponents.push(card.component)
 }
 
-export const MergePixiFlowLine = (self: FlowComponent, previous: FlowComponent, color: number): void => {
+export const MergePixiFlowLine = (self: PixiComponent, previous: PixiComponent, color: number): void => {
     if (self.card) {
         const line = ComponentLineSelector(previous, self.card, color)
         self.line = line.component

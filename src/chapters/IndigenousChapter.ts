@@ -1,16 +1,14 @@
-import { ChapterFactory } from 'src/factories/ChapterFactory'
 import { Chapter } from './base/Chapter'
-import { ChapterType } from './base/ChapterType'
 
 export enum Indigenous {
     MAP = 'map'
 }
 
 export const IndigenousChapter = (): Chapter => {
-    const factory = ChapterFactory(ChapterType.INDIGENOUS, 0, 0)
+    //const factory = ChapterFactory(ChapterType.INDIGENOUS, 0, 0)
 
     //factory.chapter.selector.append(chapterSelector(factory.chapter))
-    return factory.chapter
+    return null
 }
 
 //const background1 = (): ContainerData => {

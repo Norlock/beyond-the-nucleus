@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
 import { chapters, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { spaceStyles } from './SpaceStyles'
 
-export const SpacePart1 = (data: ElmComponent): FlowComponent => {
+export const SpacePart1 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x778899,
         alpha: 1,
@@ -34,7 +34,7 @@ export const SpacePart1 = (data: ElmComponent): FlowComponent => {
         .setOffset(300, 300)
         .build()
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, param)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, param)
 
     return factory.component
 }

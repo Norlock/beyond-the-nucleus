@@ -1,18 +1,12 @@
-import { AudioModule, AudioUtility } from 'src/modules/audio/AudioComponent'
-import { ChapterSelector } from 'src/modules/selector/ChapterSelector'
 import { ChapterType } from './ChapterType'
 import * as PIXI from 'pixi.js'
-import { Selector } from 'src/modules/selector/Selector'
+import { Chapter } from './Chapter'
 
-export class Chapter implements AudioModule {
-    readonly chapterId: ChapterType
-
+export class PixiChapter extends Chapter {
     root: PIXI.Container
-    selector: ChapterSelector
-    audio: AudioUtility
 
     constructor(chapterId: ChapterType) {
-        this.chapterId = chapterId
+        super(chapterId)
         this.root = new PIXI.Container()
         this.root.sortableChildren = true
         this.root.visible = false
@@ -21,10 +15,4 @@ export class Chapter implements AudioModule {
     find(name: string): PIXI.Container {
         return this.root.children.find((x) => x.name === name) as PIXI.Container
     }
-}
-
-export interface ContainerData {
-    container: PIXI.Container
-    name: string
-    selector?: Selector
 }

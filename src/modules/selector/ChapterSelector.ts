@@ -1,76 +1,15 @@
-import { Chapter } from 'src/chapters/base/Chapter'
-import { boardApp } from 'src/pixi/PixiApp'
 import { Selector } from './Selector'
-import * as PIXI from 'pixi.js'
 
-export class ChapterSelector {
+export interface ChapterSelector {
     readonly tag: string
-    readonly selectorMap: Map<string, Selector> = new Map()
+    readonly selectorMap: Map<string, Selector>
 
-    current = ''
+    current: string
     next?: Selector
-    isSelected = false
-    chapter: Chapter
-
-    constructor(chapter: Chapter) {
-        this.tag = 'Chapter selector base'
-        this.chapter = chapter
-    }
-
-    activate(): void {
-        if (!this.isSelected) {
-            this.chapter.root.visible = true
-            this.chapter.root.updateTransform()
-            this.next?.recursivelyActivate()
-        }
-
-        this.isSelected = true
-    }
-
-    selectContainer(name: string) {
-        if (this.selectorMap.has(name)) {
-            if (this.current !== name || !this.isSelected) {
-                this.selectorMap.get(this.current)?.deactivate()
-                const selector = this.selectorMap.get(name)
-                selector.activate()
-                this.current = name
-            }
-        }
-    }
-
-    deactivate() {
-        if (this.isSelected) {
-            this.next?.recursivelyDeactivate()
-            this.isSelected = false
-            this.selectorMap.get(this.current)?.deactivate()
-            return new Promise<void>((resolve) => hideAnimation(this.chapter.root, resolve))
-        }
-    }
-
-    addSelector(name: string, selector: Selector): void {
-        this.selectorMap.set(name, selector)
-    }
-
-    append(selector: Selector): void {
-        if (!this.next) {
-            this.next = selector
-        } else {
-            this.next.append(selector)
-        }
-    }
-}
-
-const hideAnimation = (root: PIXI.Container, resolve: Function) => {
-    const hideChapter = (): void => {
-        if (root.alpha > 0) {
-            root.alpha -= 0.05
-        } else {
-            boardApp.ticker.remove(hideChapter)
-            root.visible = false
-            root.alpha = 1
-            resolve()
-        }
-    }
-
-    boardApp.ticker.add(hideChapter)
+    isSelected: boolean
+    activate(): void
+    selectContainer(name: string): void
+    deactivate(): void
+    addSelector(name: string, selector: Selector): void
+    append(selector: Selector): void
 }

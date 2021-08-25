@@ -5,11 +5,11 @@ import { Selector } from 'src/modules/selector/Selector'
 import { boardApp, pixiResources } from 'src/pixi/PixiApp'
 import { PixiPlugin } from 'gsap/all'
 import { gsap } from 'gsap'
-import { ChapterFactory } from 'src/factories/ChapterFactory'
 import { ChapterType } from './base/ChapterType'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { Promiser } from 'src/utils/Promiser'
 import { seaLife } from './ocean/SeaLife'
+import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
 
 gsap.registerPlugin(PixiPlugin)
 PixiPlugin.registerPIXI(PIXI)
@@ -28,7 +28,7 @@ export const OceanChapter = (): Chapter => {
     const audio = GetAudio('src/assets/ocean/underwater-ambience.wav', true, 0.1)
 
     const background2 = getBackground2()
-    const factory = ChapterFactory(ChapterType.OCEAN, 0, 0)
+    const factory = PixiChapterFactory(ChapterType.OCEAN, 0, 0)
         .addContainer(getBackground1())
         .addContainer(background2)
         .addContainer(getBackground3(background2.container))

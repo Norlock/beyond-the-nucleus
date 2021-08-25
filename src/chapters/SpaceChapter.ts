@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { ChapterFactory } from 'src/factories/ChapterFactory'
+import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { GetAudio } from 'src/modules/audio/GetAudio'
 import { Selector } from 'src/modules/selector/Selector'
@@ -42,7 +42,7 @@ class StarContainer extends PIXI.ParticleContainer {
 export const SpaceChapter = (): Chapter => {
     const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.1)
 
-    const factory = ChapterFactory(ChapterType.SPACE, 2000, -6000)
+    const factory = PixiChapterFactory(ChapterType.SPACE, 2000, -6000)
     factory.addContainer(background(factory.chapter.root))
     factory.addAudio(audio, AudioTag.AMBIENCE)
     factory.appendSelector(chapterSelector(factory.chapter))

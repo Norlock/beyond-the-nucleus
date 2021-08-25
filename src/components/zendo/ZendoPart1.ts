@@ -1,12 +1,13 @@
 import * as PIXI from 'pixi.js'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory'
 import { boardApp } from 'src/pixi/PixiApp'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { chapters, ElmComponent } from 'src/elm-bridge'
+import { PixiChapter } from 'src/chapters/base/PixiChapter'
 
-export const ZendoPart1 = (data: ElmComponent): FlowComponent => {
-    const chapter = chapters.get(data.chapterId)
+export const ZendoPart1 = (data: ElmComponent): PixiComponent => {
+    const chapter = chapters.get(data.chapterId) as PixiChapter
     const background = chapter.find(data.containerName)
     const left = background.getChildAt(0) as PIXI.Sprite
 
@@ -76,6 +77,6 @@ export const ZendoPart1 = (data: ElmComponent): FlowComponent => {
         .setOffset(boardApp.screen.width / 2 - radius, boardApp.screen.height / 2 - radius)
         .build()
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     return factory.component
 }

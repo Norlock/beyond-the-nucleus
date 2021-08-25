@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js'
 import gsap from 'gsap'
 import { chapters, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { Selector } from 'src/modules/selector/Selector'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { spaceStyles } from './SpaceStyles'
 import * as THREE from 'three'
 import vertexShader from './shaders/vertex.glsl'
@@ -14,6 +14,7 @@ import fragmentShader from './shaders/fragment.glsl'
 import earthImg from 'src/assets/space/earth-3d.jpg'
 import marsImg from 'src/assets/space/mars-3d.jpg'
 import jupiterImg from 'src/assets/space/jupiter-3d.jpg'
+import { PixiChapter } from 'src/chapters/base/PixiChapter'
 
 const componentX = 3800
 const componentY = 1200
@@ -28,7 +29,7 @@ const mouse = {
     track: false
 }
 
-export const SpacePart2 = (data: ElmComponent): FlowComponent => {
+export const SpacePart2 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x778899,
         alpha: 1,
@@ -48,7 +49,7 @@ export const SpacePart2 = (data: ElmComponent): FlowComponent => {
     paragraph.x = 30
     paragraph.y = 100
 
-    const chapter = chapters.get(data.chapterId)
+    const chapter = chapters.get(data.chapterId) as PixiChapter
 
     const param = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
@@ -56,7 +57,7 @@ export const SpacePart2 = (data: ElmComponent): FlowComponent => {
         .setOffset(xOffset, yOffset)
         .build()
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, param)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, param)
     factory.appendSelector(selector(chapter.find(data.containerName)))
 
     return factory.component

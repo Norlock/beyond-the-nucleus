@@ -1,16 +1,17 @@
 import * as PIXI from 'pixi.js'
+import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { FlowComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { Dimensions, imageFrame } from 'src/modules/pixi/PixiShapes'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Promiser } from 'src/utils/Promiser'
-import { FlowComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/FlowComponent'
 import { LINE_COLOR, headerStyle, zendoCardImage } from './ZendoStyles'
 
-export const ZendoPart5 = (data: ElmComponent): FlowComponent => {
+export const ZendoPart5 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x200900,
         alpha: 1,
@@ -57,7 +58,7 @@ export const ZendoPart5 = (data: ElmComponent): FlowComponent => {
         .elevate(12)
         .build()
 
-    const factory = FlowComponentFactory(data.id, chapter.chapterId, cardData)
+    const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     const component = factory.component
 
     component.selector.append(selector(component))
@@ -89,8 +90,8 @@ const logo = (): PIXI.Container => {
     return container
 }
 
-const selector = (component: FlowComponent): Selector => {
-    const { root } = chapters.get(component.chapterId)
+const selector = (component: PixiComponent): Selector => {
+    const { root } = chapters.get(component.chapterId) as PixiChapter
     const { card } = component
 
     const zazenDimensions: Dimensions = {

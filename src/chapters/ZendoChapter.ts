@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { ChapterFactory } from 'src/factories/ChapterFactory'
+import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { GetAudio } from 'src/modules/audio/GetAudio'
 import { Selector } from 'src/modules/selector/Selector'
@@ -19,7 +19,9 @@ export const ZendoChapter = (): Chapter => {
     //const intro = GetAudio('src/assets/zendo/bell.wav', false, 0.2);
     const intro = GetAudio('src/assets/zendo/bell.wav', false, 0)
     //const factory = ChapterFactory(ChapterType.ZENDO, 7000, 7000, "Zendo")
-    const factory = ChapterFactory(ChapterType.ZENDO, 0, 0).addContainer(background1()).addAudio(intro, AudioTag.INTRO)
+    const factory = PixiChapterFactory(ChapterType.ZENDO, 0, 0)
+        .addContainer(background1())
+        .addAudio(intro, AudioTag.INTRO)
 
     factory.appendSelector(selector(factory.chapter))
 
