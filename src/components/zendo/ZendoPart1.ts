@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js'
-import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/PixiComponentFactory'
 import { CustomPixiCardFactory } from 'src/factories/CustomPixiCardFactory'
 import { boardApp } from 'src/pixi/PixiApp'
-import { PixiComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/PixiComponent'
 import { chapters, ElmComponent } from 'src/elm-bridge'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 

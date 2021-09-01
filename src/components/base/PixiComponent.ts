@@ -5,6 +5,8 @@ import { chapters } from 'src/elm-bridge'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 
 export class PixiComponent extends Component implements FlowPixi {
+    readonly pixiComponents: PIXI.Container[] = []
+
     containerName: string
     card: PIXI.Container
     line?: PIXI.Container

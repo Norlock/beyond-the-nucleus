@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/PixiComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Promiser } from 'src/utils/Promiser'
-import { PixiComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/PixiComponent'
 import { LINE_COLOR } from './ZendoStyles'
 
 export const ZendoPart4 = (data: ElmComponent): PixiComponent => {

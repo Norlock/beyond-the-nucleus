@@ -1,14 +1,16 @@
-import { Chapter } from './base/Chapter'
+import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
+import { ChapterType } from './base/ChapterType'
+import { PixiChapter } from './base/PixiChapter'
 
 export enum Indigenous {
     MAP = 'map'
 }
 
-export const IndigenousChapter = (): Chapter => {
-    //const factory = ChapterFactory(ChapterType.INDIGENOUS, 0, 0)
+export const IndigenousChapter = (): PixiChapter => {
+    const factory = PixiChapterFactory(ChapterType.INDIGENOUS, 0, 0)
 
     //factory.chapter.selector.append(chapterSelector(factory.chapter))
-    return null
+    return factory.chapter
 }
 
 //const background1 = (): ContainerData => {

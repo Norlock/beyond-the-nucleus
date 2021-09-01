@@ -1,10 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/PixiComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { pixiResources } from 'src/pixi/PixiApp'
-import { PixiComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/PixiComponent'
 import { oceanStyles } from './OceanStyles'
 
 export const OceanPart3 = (data: ElmComponent): PixiComponent => {

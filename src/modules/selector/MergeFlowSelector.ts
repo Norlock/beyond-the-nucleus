@@ -1,4 +1,4 @@
-import { PixiComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/PixiComponent'
 import { GetAudio } from '../audio/GetAudio'
 import { Selector, StandardSelectorTag } from './Selector'
 

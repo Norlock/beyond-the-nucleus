@@ -1,9 +1,10 @@
 import { Chapter } from './chapters/base/Chapter'
 import { IndigenousChapter } from './chapters/IndigenousChapter'
 import { OceanChapter } from './chapters/OceanChapter'
+import { SpaaceChapter } from './chapters/SpaaceChapter'
 import { SpaceChapter } from './chapters/SpaceChapter'
 import { ZendoChapter } from './chapters/ZendoChapter'
-import { PixiComponent } from './components/base/FlowComponent'
+import { Component } from './components/base/Component'
 import { GameComponent } from './components/base/GameComponent'
 import { OceanPart1 } from './components/ocean/OceanPart1'
 import { OceanPart2 } from './components/ocean/OceanPart2'
@@ -11,6 +12,7 @@ import { OceanPart3 } from './components/ocean/OceanPart3'
 import { OceanPart4 } from './components/ocean/OceanPart4'
 import { OceanPart5 } from './components/ocean/OceanPart5'
 import { OceanPart6 } from './components/ocean/OceanPart6'
+import { SpaacePart1 } from './components/space/SpaacePart1'
 import { SpacePart1 } from './components/space/SpacePart1'
 import { SpacePart2 } from './components/space/SpacePart2'
 import { ZendoPart1 } from './components/zendo/ZendoPart1'
@@ -23,7 +25,7 @@ import { Elm } from './Main.elm'
 import { boardApp, boardScroll } from './pixi/PixiApp'
 import { Promiser } from './utils/Promiser'
 
-export const components: Map<string, PixiComponent> = new Map()
+export const components: Map<string, Component> = new Map()
 export const chapters: Map<string, Chapter> = new Map()
 
 export interface ElmComponent {
@@ -56,8 +58,6 @@ const STORAGE_KEY = 'current_component'
 let app: any
 
 export function initElm() {
-    initChapters()
-
     app = Elm.Main.init({
         node: document.getElementById('app'),
         flags: window.localStorage.getItem(STORAGE_KEY)
@@ -89,22 +89,25 @@ export function initElm() {
     })
 
     app.ports.toJSChapter.subscribe((data: ChapterCommand) => {
-        const chapter = chapters.get(data.chapterId)
-        if (!chapter) {
-            console.error("chapter doesn't exist on JS", data)
-            return
-        }
+        loaded.promise.then(() => {
+            const chapter = chapters.get(data.chapterId)
+            if (!chapter) {
+                console.error("chapter doesn't exist on JS", data)
+                return
+            }
 
-        if (data.command === ACTIVATE) {
-            chapter.selector.activate()
-        } else if (data.command === DEACTIVATE) {
-            chapter.selector.deactivate()
-        } else if (data.command === SELECT) {
-            chapter.selector.selectContainer(data.containerName)
-        }
+            if (data.command === ACTIVATE) {
+                chapter.selector.activate()
+            } else if (data.command === DEACTIVATE) {
+                chapter.selector.deactivate()
+            } else if (data.command === SELECT) {
+                chapter.selector.selectContainer(data.containerName)
+            }
+        })
     })
 
     app.ports.toJSLoadComponents.subscribe((list: ElmComponent[]) => {
+        initChapters()
         fillComponents(list)
         loaded.resolve()
     })
@@ -122,7 +125,8 @@ const initChapters = () => {
     const ocean = OceanChapter()
     const zendo = ZendoChapter()
     const indigenous = IndigenousChapter()
-    const space = SpaceChapter()
+    //const space = SpaceChapter()
+    const space = SpaaceChapter()
 
     chapters.set(ocean.chapterId, ocean)
     chapters.set(zendo.chapterId, zendo)
@@ -135,7 +139,7 @@ const fillComponents = (list: ElmComponent[]) => {
     const pixiCanvas = document.getElementById('pixi-canvas')
     pixiCanvas.appendChild(boardApp.view)
 
-    const setComponent = (jsComponent: PixiComponent) => {
+    const setComponent = (jsComponent: Component) => {
         components.set(jsComponent.id, jsComponent)
         jsComponent.init()
     }
@@ -235,16 +239,16 @@ const fillComponents = (list: ElmComponent[]) => {
     const SPACE1 = 'space1'
     elmComponent = list.find((x) => x.id === SPACE1)
     if (elmComponent) {
-        setComponent(SpacePart1(elmComponent))
+        setComponent(SpaacePart1(elmComponent))
     } else {
         errorMsg(SPACE1)
     }
 
-    const SPACE2 = 'space2'
-    elmComponent = list.find((x) => x.id === SPACE2)
-    if (elmComponent) {
-        setComponent(SpacePart2(elmComponent))
-    } else {
-        errorMsg(SPACE2)
-    }
+    //const SPACE2 = 'space2'
+    //elmComponent = list.find((x) => x.id === SPACE2)
+    //if (elmComponent) {
+    //setComponent(SpacePart2(elmComponent))
+    //} else {
+    //errorMsg(SPACE2)
+    //}
 }

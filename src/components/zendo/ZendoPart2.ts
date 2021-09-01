@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/PixiComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
-import { PixiComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/PixiComponent'
 import { LINE_COLOR, headerStyle, paragraphStyle, zendoCardImage } from './ZendoStyles'
 
 export const ZendoPart2 = (data: ElmComponent): PixiComponent => {

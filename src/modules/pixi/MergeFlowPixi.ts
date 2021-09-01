@@ -1,4 +1,4 @@
-import { PixiComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/PixiComponent'
 import { StandardSelectorTag } from '../selector/Selector'
 import { ComponentLineSelector } from './ComponentLine'
 import { PixiSelector } from './Pixi'

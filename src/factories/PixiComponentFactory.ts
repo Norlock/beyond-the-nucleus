@@ -1,5 +1,5 @@
 import { ChapterType } from 'src/chapters/base/ChapterType'
-import { PixiComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/PixiComponent'
 import { MergePixiFlowCard, MergePixiFlowLine } from 'src/modules/pixi/MergeFlowPixi'
 import { PixiParams } from 'src/modules/pixi/Pixi'
 import { MergeFlowSelector } from 'src/modules/selector/MergeFlowSelector'

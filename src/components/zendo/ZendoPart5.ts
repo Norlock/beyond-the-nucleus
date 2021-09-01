@@ -1,14 +1,14 @@
 import * as PIXI from 'pixi.js'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { chapters, components, ElmComponent } from 'src/elm-bridge'
-import { PixiComponentFactory } from 'src/factories/FlowComponentFactory'
+import { PixiComponentFactory } from 'src/factories/PixiComponentFactory'
 import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { Dimensions, imageFrame } from 'src/modules/pixi/PixiShapes'
 import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Promiser } from 'src/utils/Promiser'
-import { PixiComponent } from '../base/FlowComponent'
+import { PixiComponent } from '../base/PixiComponent'
 import { LINE_COLOR, headerStyle, zendoCardImage } from './ZendoStyles'
 
 export const ZendoPart5 = (data: ElmComponent): PixiComponent => {
