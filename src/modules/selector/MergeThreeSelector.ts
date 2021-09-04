@@ -15,6 +15,7 @@ filter.connect(ctx.destination)
 
 export const MergeThreeSelector = (self: ThreeComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW)
+    const chapter = chapters.get(self.chapterId) as ThreeChapter
 
     const winResize = () => onWindowResize(self)
 
@@ -22,6 +23,7 @@ export const MergeThreeSelector = (self: ThreeComponent): void => {
         audio.load()
         audio.play()
 
+        chapter.scene.add(self.card)
         window.addEventListener('resize', winResize)
 
         scrollToCard(self)
@@ -30,11 +32,13 @@ export const MergeThreeSelector = (self: ThreeComponent): void => {
 
     selector.idle = async () => {
         await selector.next.recursivelyIdle()
+        self.card.visible = false
     }
 
     selector.deactivate = async () => {
         await selector.next?.recursivelyDeactivate()
         window.removeEventListener('resize', winResize)
+        chapter.scene.remove(self.card)
     }
 
     self.selector = selector

@@ -4,7 +4,7 @@
     "sourceMap": true,
     "module": "esnext",
     "target": "esnext",
-    "lib": [ "es2020", "dom"],
+    "lib": [ "esnext", "dom"],
     "moduleResolution": "node",
     "noImplicitAny": true,
     "allowSyntheticDefaultImports" : true, 

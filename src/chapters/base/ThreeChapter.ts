@@ -1,5 +1,6 @@
 import { ChapterType } from './ChapterType'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Chapter } from './Chapter'
 
 export interface Coordinates {
@@ -20,19 +21,23 @@ export class ThreeChapter extends Chapter {
         this.scene.visible = false
 
         const { x, y, z } = cameraCoordinates
-        this.camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 50)
+        this.camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 50)
         this.camera.position.set(x, y, z)
 
         this.renderer = new THREE.WebGLRenderer({
             antialias: true
         })
 
-        this.renderer.setClearColor(0x078899)
+        // TODO uitzetten
+        const controls = new OrbitControls(this.camera, this.renderer.domElement)
+        controls.update()
+
         this.renderer.setSize(innerWidth, innerHeight)
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.scene.add(this.camera)
-
-        const canvas = document.getElementById('three-canvas')
-        canvas.appendChild(this.renderer.domElement)
     }
+}
+
+const hijackKeyboard = () => {
+    console.log('ok')
 }

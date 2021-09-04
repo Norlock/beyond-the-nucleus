@@ -5,7 +5,7 @@ import { ThreeChapter } from 'src/chapters/base/ThreeChapter'
 
 export class ThreeComponent extends Component {
     containerName: string
-    card: THREE.Group
+    card: THREE.Group | THREE.Mesh
 
     init() {
         const chapter = chapters.get(this.chapterId) as ThreeChapter

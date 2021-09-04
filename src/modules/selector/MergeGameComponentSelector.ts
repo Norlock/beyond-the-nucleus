@@ -1,10 +1,10 @@
 import { GameComponent } from 'src/components/base/GameComponent'
-import { MergeFlowSelector } from './MergeFlowSelector'
+import { MergePixiSelector } from './MergePixiSelector'
 import { Selector } from './Selector'
 
 export const MergeGameComponentSelector = (self: GameComponent) => {
     // First merge default flow selector
-    MergeFlowSelector(self)
+    MergePixiSelector(self)
 
     const selector = new Selector('game')
 

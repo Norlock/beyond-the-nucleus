@@ -3,11 +3,11 @@ import { Coordinates, ThreeChapter } from 'src/chapters/base/ThreeChapter'
 import { AudioComponent } from 'src/modules/audio/AudioComponent'
 import { MergeAudioUtility } from 'src/modules/audio/MergeAudioUtility'
 import { Selector } from 'src/modules/selector/Selector'
-import { ThreeChapterSelector } from 'src/modules/selector/ThreeChapterSelector'
+import { MergeThreeChapterSelector } from 'src/modules/selector/ThreeChapterSelector'
 
 export const ThreeChapterFactory = (chapterType: ChapterType, coordinates: Coordinates) => {
     const self = new ThreeChapter(chapterType, coordinates)
-    self.selector = new ThreeChapterSelector(self.scene)
+    self.selector = MergeThreeChapterSelector(self)
 
     MergeAudioUtility(self)
 

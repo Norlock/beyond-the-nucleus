@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { PixiComponent } from 'src/components/base/FlowComponent'
+import { PixiComponent } from 'src/components/base/PixiComponent'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Selector, StandardSelectorTag } from '../selector/Selector'
 import { PixiSelector } from './Pixi'

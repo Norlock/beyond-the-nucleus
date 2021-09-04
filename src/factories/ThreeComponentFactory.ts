@@ -12,7 +12,7 @@ export const ThreeComponentFactory = (id: string, chapterId: ChapterType) => {
         component.selector.append(selector)
     }
 
-    const setCard = (card: THREE.Group) => {
+    const setCard = (card: THREE.Group | THREE.Mesh) => {
         component.card = card
     }
 

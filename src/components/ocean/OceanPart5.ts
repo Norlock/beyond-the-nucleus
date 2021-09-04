@@ -57,7 +57,7 @@ export const OceanPart5 = (data: ElmComponent): PixiComponent => {
         .setOffset(600, 200)
         .build()
 
-    const previous = components.get(data.previous)
+    const previous = components.get(data.previous) as PixiComponent
     const factory = PixiComponentFactory(data.id, chapter.chapterId, cardData)
     factory.mergePixiLine(previous, oceanStyles.LINE_COLOR)
     return factory.component

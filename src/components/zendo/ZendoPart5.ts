@@ -63,7 +63,8 @@ export const ZendoPart5 = (data: ElmComponent): PixiComponent => {
 
     component.selector.append(selector(component))
 
-    factory.mergePixiLine(components.get(data.previous), LINE_COLOR)
+    const previous = components.get(data.previous) as PixiComponent
+    factory.mergePixiLine(previous, LINE_COLOR)
     return component
 }
 

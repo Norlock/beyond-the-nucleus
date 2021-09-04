@@ -13,11 +13,8 @@ enum AudioTag {
 export const SpaaceChapter = () => {
     const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.1)
 
-    const factory = ThreeChapterFactory(ChapterType.SPACE, { x: 0, y: 0, z: 15 })
+    const factory = ThreeChapterFactory(ChapterType.SPACE, { x: 0, y: 0, z: 50 })
     factory.addAudio(audio, AudioTag.AMBIENCE)
-    //factory.addContainer(background(factory.chapter.scene))
-    //factory.addAudio(audio, AudioTag.AMBIENCE)
-    //factory.appendSelector(chapterSelector(factory.chapter))
 
     const chapter = factory.chapter
     factory.appendSelectors(visualSelector(chapter), audioSelector(chapter))
@@ -25,16 +22,28 @@ export const SpaaceChapter = () => {
 }
 
 const visualSelector = (chapter: ThreeChapter) => {
-    const geometry = new THREE.SphereGeometry(5, 32, 16)
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff })
-    const sphere = new THREE.Mesh(geometry, material)
+    //const geometry = new THREE.SphereGeometry(5, 32, 16)
+    //const sphere = new THREE.Mesh(geometry, material)
 
     const group = new THREE.Group()
     //group.position.x = 0
     //group.position.y = 0
-    group.add(sphere)
+
+    const randomPosition = () => {
+        return Math.random() * 600 - 300
+    }
 
     const { renderer, scene, camera } = chapter
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff })
+
+    for (let i = 0; i < 6000; i++) {
+        let geometry = new THREE.SphereGeometry(0.1)
+        const sphere = new THREE.Mesh(geometry, material)
+        sphere.position.x = randomPosition()
+        sphere.position.y = randomPosition()
+        //sphere.position.z = randomPosition()
+        group.add(sphere)
+    }
 
     const light = new THREE.AmbientLight(0xffffff, 1)
     scene.add(light)
@@ -45,6 +54,8 @@ const visualSelector = (chapter: ThreeChapter) => {
 
         const animate = () => {
             renderer.render(scene, camera)
+            //camera.position.z -= 0.01
+            //camera.rotateZ(0.001)
             requestAnimationFrame(animate)
         }
 

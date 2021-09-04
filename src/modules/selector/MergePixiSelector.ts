@@ -11,7 +11,7 @@ const media = ctx.createMediaElementSource(audio)
 media.connect(filter)
 filter.connect(ctx.destination)
 
-export const MergeFlowSelector = (self: PixiComponent): void => {
+export const MergePixiSelector = (self: PixiComponent): void => {
     const selector = new Selector(StandardSelectorTag.FLOW)
 
     selector.activate = async () => {

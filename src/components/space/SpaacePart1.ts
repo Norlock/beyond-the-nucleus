@@ -3,6 +3,8 @@ import { chapters, ElmComponent } from 'src/elm-bridge'
 import { ThreeComponentFactory } from 'src/factories/ThreeComponentFactory'
 import * as THREE from 'three'
 import { ThreeComponent } from '../base/ThreeComponent'
+import { ThreeChapter } from 'src/chapters/base/ThreeChapter'
+import { ThreeCardFactory } from 'src/factories/ThreeCardFactory'
 
 export const SpaacePart1 = (data: ElmComponent): ThreeComponent => {
     //const cardOptions: CardOptions = {
@@ -16,8 +18,28 @@ export const SpaacePart1 = (data: ElmComponent): ThreeComponent => {
     //}
 
     const factory = ThreeComponentFactory(data.id, ChapterType.SPACE)
-    const card = new THREE.Group() // TODO
-    card.position.set(0, 0, 0)
+
+    const card = ThreeCardFactory(500, 500)
+        .drawBackground('red', { color: '#777', width: 10 })
+        .drawText('Ok is goed', { font: '80px sans-serif', x: 50, y: 80, color: 'white' })
+
+    //const geometry = new THREE.BoxGeometry()
+
+    //const canvas = document.createElement('canvas')
+    //canvas.width = 500
+    //canvas.height = 500
+
+    //const ctx = canvas.getContext('2d')
+    //const texture = new THREE.CanvasTexture(canvas)
+    //const material = new THREE.MeshBasicMaterial({ map: texture })
+
+    //ctx.fillStyle = 'red'
+    //ctx.fillRect(0, 0, 500, 400)
+    //ctx.fillStyle = 'black'
+    //ctx.font = '80px sans-serif'
+    //ctx.fillText('Ok is goed', 50, 90)
+    //const cube = new THREE.Mesh(geometry, material)
+    card.position.setZ(48)
 
     factory.setCard(card)
     //const text = new THREE.TextGeometry("First in space", { font: THREE.Font.  size: 16 })
