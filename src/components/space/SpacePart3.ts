@@ -10,33 +10,33 @@ import * as THREE from 'three'
 import vertexShader from './shaders/vertex.glsl'
 import fragmentShader from './shaders/fragment.glsl'
 
-import earthImg from 'src/assets/space/earth-3d.jpg'
+import marsImg from 'src/assets/space/mars-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
 
-const componentX = 3800
+const componentX = 4900
 const componentY = 1200
-const xOffset = 200
-const yOffset = 50
+const xOffset = 300
+const yOffset = 200
 
-// Earth
-export const SpacePart2 = (data: ElmComponent): PixiComponent => {
+// Mars
+export const SpacePart3 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x778899,
         alpha: 1,
         x: componentX,
         y: componentY,
-        width: 400,
-        height: 280,
+        width: 480,
+        height: 350,
         pivotCenter: false
     }
 
-    const header = new PIXI.Text('Earth', spaceStyles.headerStyle())
+    const header = new PIXI.Text('Mars', spaceStyles.headerStyle())
     header.x = 30
     header.y = 25
 
-    const paragraphText = `Is the third planet from the Sun, and orbits with a velocity of 107 200 km/h or 66 600 mph`
-    const paragraph = new PIXI.Text(paragraphText, spaceStyles.paragraphStyle(cardOptions.width - 40))
+    const paragraphText = `Mars is a terrestrial planet with a thin atmosphere, with surface features reminiscent of the impact craters of the Moon and the valleys, deserts and polar ice caps of Earth`
+    const paragraph = new PIXI.Text(paragraphText, spaceStyles.paragraphStyle(cardOptions.width - 60))
     paragraph.x = 30
     paragraph.y = 100
 
@@ -56,14 +56,14 @@ export const SpacePart2 = (data: ElmComponent): PixiComponent => {
 
 const selector = (container: PIXI.Container) => {
     const threeJs = initThreeJS()
-    const earth = earthAnimate(threeJs.scene)
+    const mars = marsAnimate(threeJs.scene)
 
     const sprite = new PIXI.Sprite(threeJs.texture)
     sprite.x = componentX
-    sprite.y = componentY + 50
+    sprite.y = componentY - 250
     sprite.width = window.innerWidth
 
-    const selector = new Selector('Show Earth')
+    const selector = new Selector('Show Mars')
 
     selector.activate = async () => {
         container.addChild(sprite)
@@ -71,7 +71,7 @@ const selector = (container: PIXI.Container) => {
         mouseHandler()
 
         const animate = () => {
-            earth.animate()
+            mars.animate()
 
             threeJs.renderer.render(threeJs.scene, threeJs.camera)
             threeJs.texture.update()
@@ -88,18 +88,16 @@ const selector = (container: PIXI.Container) => {
     return selector
 }
 
-export const earthRadius = 5
-
-const earthAnimate = (scene: THREE.Scene) => {
+const marsAnimate = (scene: THREE.Scene) => {
     // create a sphere
     const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(earthRadius, 50, 50),
+        new THREE.SphereGeometry(3, 50, 50),
         new THREE.ShaderMaterial({
             vertexShader,
             fragmentShader,
             uniforms: {
                 globeTexture: {
-                    value: new THREE.TextureLoader().load(earthImg)
+                    value: new THREE.TextureLoader().load(marsImg)
                 }
             }
         })
@@ -107,14 +105,12 @@ const earthAnimate = (scene: THREE.Scene) => {
 
     // create a sphere
     const group = new THREE.Group()
-    group.position.x = -4
-    group.position.y = -1
 
     group.add(sphere)
     scene.add(group)
 
     const animate = () => {
-        sphere.rotation.y += 0.001
+        sphere.rotation.y += 0.00095
         rotateSphere(group)
     }
 

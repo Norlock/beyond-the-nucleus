@@ -15,6 +15,8 @@ import { OceanPart6 } from './components/ocean/OceanPart6'
 import { SpaacePart1 } from './components/space/SpaacePart1'
 import { SpacePart1 } from './components/space/SpacePart1'
 import { SpacePart2 } from './components/space/SpacePart2'
+import { SpacePart3 } from './components/space/SpacePart3'
+import { SpacePart4 } from './components/space/SpacePart4'
 import { ZendoPart1 } from './components/zendo/ZendoPart1'
 import { ZendoPart2 } from './components/zendo/ZendoPart2'
 import { ZendoPart3 } from './components/zendo/ZendoPart3'
@@ -126,7 +128,7 @@ const initChapters = () => {
     const zendo = ZendoChapter()
     const indigenous = IndigenousChapter()
     //const space = SpaceChapter()
-    const space = SpaaceChapter()
+    const space = SpaceChapter()
 
     chapters.set(ocean.chapterId, ocean)
     chapters.set(zendo.chapterId, zendo)
@@ -239,16 +241,32 @@ const fillComponents = (list: ElmComponent[]) => {
     const SPACE1 = 'space1'
     elmComponent = list.find((x) => x.id === SPACE1)
     if (elmComponent) {
-        setComponent(SpaacePart1(elmComponent))
+        setComponent(SpacePart1(elmComponent))
     } else {
         errorMsg(SPACE1)
     }
 
-    //const SPACE2 = 'space2'
-    //elmComponent = list.find((x) => x.id === SPACE2)
-    //if (elmComponent) {
-    //setComponent(SpacePart2(elmComponent))
-    //} else {
-    //errorMsg(SPACE2)
-    //}
+    const SPACE2 = 'space2'
+    elmComponent = list.find((x) => x.id === SPACE2)
+    if (elmComponent) {
+        setComponent(SpacePart2(elmComponent))
+    } else {
+        errorMsg(SPACE2)
+    }
+
+    const SPACE3 = 'space3'
+    elmComponent = list.find((x) => x.id === SPACE3)
+    if (elmComponent) {
+        setComponent(SpacePart3(elmComponent))
+    } else {
+        errorMsg(SPACE3)
+    }
+
+    const SPACE4 = 'space4'
+    elmComponent = list.find((x) => x.id === SPACE4)
+    if (elmComponent) {
+        setComponent(SpacePart4(elmComponent))
+    } else {
+        errorMsg(SPACE4)
+    }
 }

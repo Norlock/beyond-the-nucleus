@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { ThreeComponent } from '../base/ThreeComponent'
 import { ThreeChapter } from 'src/chapters/base/ThreeChapter'
 import { ThreeCardFactory } from 'src/factories/ThreeCardFactory'
+import splash from 'src/assets/splash.jpg'
 
 export const SpaacePart1 = (data: ElmComponent): ThreeComponent => {
     //const cardOptions: CardOptions = {
@@ -20,8 +21,8 @@ export const SpaacePart1 = (data: ElmComponent): ThreeComponent => {
     const factory = ThreeComponentFactory(data.id, ChapterType.SPACE)
 
     const card = ThreeCardFactory(500, 500)
-        .drawBackground('red', { color: '#777', width: 10 })
-        .drawText('Ok is goed', { font: '80px sans-serif', x: 50, y: 80, color: 'white' })
+        .drawBackground({ color1: 'orange', color2: 'red', type: 'gradient' }, { color: '#933', width: 10 })
+        .drawText('Ok is goed', { font: '80px sans-serif', x: 50, y: 100, color: 'navajowhite' })
 
     //const geometry = new THREE.BoxGeometry()
 

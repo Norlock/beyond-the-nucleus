@@ -10,32 +10,33 @@ import * as THREE from 'three'
 import vertexShader from './shaders/vertex.glsl'
 import fragmentShader from './shaders/fragment.glsl'
 
-import earthImg from 'src/assets/space/earth-3d.jpg'
+import jupiterImg from 'src/assets/space/jupiter-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
+import { earthRadius } from './SpacePart2'
 
-const componentX = 3800
-const componentY = 1200
+const componentX = 5100
+const componentY = 1800
 const xOffset = 200
-const yOffset = 50
+const yOffset = 200
 
-// Earth
-export const SpacePart2 = (data: ElmComponent): PixiComponent => {
+// Jupiter
+export const SpacePart4 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
         borderColor: 0x778899,
         alpha: 1,
         x: componentX,
         y: componentY,
-        width: 400,
-        height: 280,
+        width: 500,
+        height: 350,
         pivotCenter: false
     }
 
-    const header = new PIXI.Text('Earth', spaceStyles.headerStyle())
+    const header = new PIXI.Text('Jupiter', spaceStyles.headerStyle())
     header.x = 30
     header.y = 25
 
-    const paragraphText = `Is the third planet from the Sun, and orbits with a velocity of 107 200 km/h or 66 600 mph`
+    const paragraphText = `Is a gas giant with a mass more than two and a half times that of all the other planets in the Solar System combined, but slightly less than one-thousandth the mass of the Sun`
     const paragraph = new PIXI.Text(paragraphText, spaceStyles.paragraphStyle(cardOptions.width - 40))
     paragraph.x = 30
     paragraph.y = 100
@@ -56,14 +57,14 @@ export const SpacePart2 = (data: ElmComponent): PixiComponent => {
 
 const selector = (container: PIXI.Container) => {
     const threeJs = initThreeJS()
-    const earth = earthAnimate(threeJs.scene)
+    const jupiter = jupiterAnimate(threeJs.scene)
 
     const sprite = new PIXI.Sprite(threeJs.texture)
     sprite.x = componentX
-    sprite.y = componentY + 50
+    sprite.y = componentY - 250
     sprite.width = window.innerWidth
 
-    const selector = new Selector('Show Earth')
+    const selector = new Selector('Show Jupiter')
 
     selector.activate = async () => {
         container.addChild(sprite)
@@ -71,7 +72,7 @@ const selector = (container: PIXI.Container) => {
         mouseHandler()
 
         const animate = () => {
-            earth.animate()
+            jupiter.animate()
 
             threeJs.renderer.render(threeJs.scene, threeJs.camera)
             threeJs.texture.update()
@@ -88,18 +89,16 @@ const selector = (container: PIXI.Container) => {
     return selector
 }
 
-export const earthRadius = 5
-
-const earthAnimate = (scene: THREE.Scene) => {
+const jupiterAnimate = (scene: THREE.Scene) => {
     // create a sphere
     const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(earthRadius, 50, 50),
+        new THREE.SphereGeometry(5, 50, 50),
         new THREE.ShaderMaterial({
             vertexShader,
             fragmentShader,
             uniforms: {
                 globeTexture: {
-                    value: new THREE.TextureLoader().load(earthImg)
+                    value: new THREE.TextureLoader().load(jupiterImg)
                 }
             }
         })
@@ -107,14 +106,12 @@ const earthAnimate = (scene: THREE.Scene) => {
 
     // create a sphere
     const group = new THREE.Group()
-    group.position.x = -4
-    group.position.y = -1
 
     group.add(sphere)
     scene.add(group)
 
     const animate = () => {
-        sphere.rotation.y += 0.001
+        sphere.rotation.y += 0.00095
         rotateSphere(group)
     }
 
