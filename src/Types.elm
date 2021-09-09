@@ -85,6 +85,7 @@ type ComponentId
     | Space2
     | Space3
     | Space4
+    | Space5
 
 
 type Chapter

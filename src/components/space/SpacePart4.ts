@@ -13,7 +13,6 @@ import fragmentShader from './shaders/fragment.glsl'
 import jupiterImg from 'src/assets/space/jupiter-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
-import { earthRadius } from './SpacePart2'
 
 const componentX = 5100
 const componentY = 1800
@@ -111,7 +110,7 @@ const jupiterAnimate = (scene: THREE.Scene) => {
     scene.add(group)
 
     const animate = () => {
-        sphere.rotation.y += 0.00095
+        sphere.rotation.y += 0.0028
         rotateSphere(group)
     }
 

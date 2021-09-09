@@ -44,6 +44,7 @@ components =
         |> addComponent ( Space2, Space1 ) ( Space, Start ) Nothing
         |> addComponent ( Space3, Space2 ) ( Space, Start ) Nothing
         |> addComponent ( Space4, Space3 ) ( Space, Start ) Nothing
+        |> addComponent ( Space5, Space4 ) ( Space, Start ) Nothing
         |> connectNext
 
 
@@ -216,6 +217,9 @@ idStr id =
 
         Space4 ->
             "space4"
+
+        Space5 ->
+            "space5"
 
 
 containerStr : ContainerName -> String

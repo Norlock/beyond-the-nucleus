@@ -14,7 +14,7 @@ import marsImg from 'src/assets/space/mars-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
 
-const componentX = 4900
+const componentX = 5200
 const componentY = 1200
 const xOffset = 300
 const yOffset = 200

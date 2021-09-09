@@ -17,6 +17,7 @@ import { SpacePart1 } from './components/space/SpacePart1'
 import { SpacePart2 } from './components/space/SpacePart2'
 import { SpacePart3 } from './components/space/SpacePart3'
 import { SpacePart4 } from './components/space/SpacePart4'
+import { SpacePart5 } from './components/space/SpacePart5'
 import { ZendoPart1 } from './components/zendo/ZendoPart1'
 import { ZendoPart2 } from './components/zendo/ZendoPart2'
 import { ZendoPart3 } from './components/zendo/ZendoPart3'
@@ -266,6 +267,14 @@ const fillComponents = (list: ElmComponent[]) => {
     elmComponent = list.find((x) => x.id === SPACE4)
     if (elmComponent) {
         setComponent(SpacePart4(elmComponent))
+    } else {
+        errorMsg(SPACE4)
+    }
+
+    const SPACE5 = 'space5'
+    elmComponent = list.find((x) => x.id === SPACE5)
+    if (elmComponent) {
+        setComponent(SpacePart5(elmComponent))
     } else {
         errorMsg(SPACE4)
     }

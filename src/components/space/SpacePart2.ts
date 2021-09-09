@@ -15,9 +15,9 @@ import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
 
 const componentX = 3800
-const componentY = 1200
+const componentY = 1300
 const xOffset = 200
-const yOffset = 50
+const yOffset = 150
 
 // Earth
 export const SpacePart2 = (data: ElmComponent): PixiComponent => {
@@ -60,7 +60,7 @@ const selector = (container: PIXI.Container) => {
 
     const sprite = new PIXI.Sprite(threeJs.texture)
     sprite.x = componentX
-    sprite.y = componentY + 50
+    sprite.y = componentY - 100
     sprite.width = window.innerWidth
 
     const selector = new Selector('Show Earth')
