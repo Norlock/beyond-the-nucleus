@@ -19,12 +19,12 @@ const yOffset = 100
 // Jupiter
 export const SpacePart5 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
-        borderColor: 0x778899,
+        borderColor: spaceStyles.BORDER_COLOR,
         alpha: 1,
         x: componentX,
         y: componentY,
         width: 500,
-        height: 350,
+        height: 450,
         pivotCenter: false
     }
 
@@ -32,7 +32,8 @@ export const SpacePart5 = (data: ElmComponent): PixiComponent => {
     header.x = 30
     header.y = 25
 
-    const paragraphText = `Is a gas giant with a mass more than two and a half times that of all the other planets in the Solar System combined, but slightly less than one-thousandth the mass of the Sun`
+    const paragraphText =
+        'Nebulae are often star-forming regions, such as in the "Pillars of Creation" in the Eagle Nebula. In these regions, the formations of gas, dust, and other materials "clump" together to form denser regions, which attract further matter, and eventually will become dense enough to form stars.'
     const paragraph = new PIXI.Text(paragraphText, spaceStyles.paragraphStyle(cardOptions.width - 40))
     paragraph.x = 30
     paragraph.y = 100
@@ -55,32 +56,42 @@ const selector = (container: PIXI.Container) => {
     const { texture, composer, cloudParticles } = initThreeJS()
 
     const sprite = new PIXI.Sprite(texture)
-    sprite.x = componentX - xOffset
-    sprite.y = componentY - yOffset
+    sprite.x = componentX + 350
+    sprite.y = componentY - 50
     sprite.width = window.innerWidth
 
-    //sprite.blendMode = PIXI.BLEND_MODES.ADD
-    //sprite.tint = 0x76f76c
     sprite.alpha = 0.95
+    sprite.scale.set(0.8)
 
     const selector = new Selector('Show Nebula')
+    const clock = new THREE.Clock()
+
+    let isSelected = false
 
     selector.activate = async () => {
+        isSelected = true
         container.addChild(sprite)
 
         const animate = () => {
             cloudParticles.forEach((p) => {
                 p.rotation.z -= 0.001
             })
-            composer.render(0.1)
+            composer.render(clock.getDelta())
             texture.update()
 
-            requestAnimationFrame(animate)
+            if (isSelected) {
+                requestAnimationFrame(animate)
+            }
         }
         animate()
     }
 
+    selector.idle = async () => {
+        isSelected = false
+    }
+
     selector.deactivate = async () => {
+        isSelected = false
         container.removeChild(sprite)
     }
 
@@ -106,8 +117,8 @@ const initThreeJS = () => {
     camera.rotation.y = -0.12
     camera.rotation.z = 0.27
 
-    const ambient = new THREE.AmbientLight(0x555555)
-    const directionalLight = new THREE.DirectionalLight(0xff8c19, 0.9)
+    const ambient = new THREE.AmbientLight(0x444484)
+    const directionalLight = new THREE.DirectionalLight(0xff8c19)
     directionalLight.position.set(0, 0, 1)
 
     const orangeLight = new THREE.PointLight(0xcc6600, 50, 450, 1.7)
@@ -117,17 +128,15 @@ const initThreeJS = () => {
     redLight.position.set(100, 300, 100)
 
     const blueLight = new THREE.PointLight(0x3677ac, 50, 450, 1.7)
-    blueLight.position.set(300, 300, 200)
+    blueLight.position.set(300, 300, 300)
 
     scene.add(camera, ambient, directionalLight, orangeLight, redLight, blueLight)
-    scene.fog = new THREE.FogExp2(0x03544e, 0.0008)
-
-    renderer.setClearColor(scene.fog.color, 0.15)
+    scene.fog = new THREE.FogExp2(0x223522, 0.001)
 
     const cloudParticles: THREE.Mesh[] = []
 
     let loader = new THREE.TextureLoader()
-    loader.load('src/assets/space/smoke.png', (texture) => {
+    loader.load('src/assets/space/smoke-1.png', (texture) => {
         const cloudGeo = new THREE.PlaneBufferGeometry(500, 500)
         const cloudMaterial = new THREE.MeshLambertMaterial({
             map: texture,
@@ -136,12 +145,13 @@ const initThreeJS = () => {
 
         for (let p = 0; p < 50; p++) {
             let cloud = new THREE.Mesh(cloudGeo, cloudMaterial)
-            cloud.position.set(Math.random() * 800 - 100, 500, Math.random() * 500 - 500)
+            cloud.position.set(Math.random() * 800 - 400, 500, Math.random() * 500 - 600)
+            cloud.scale.set(0.85, 0.85, 0.85)
 
             cloud.rotation.x = 1.16
             cloud.rotation.y = -0.12
             cloud.rotation.z = Math.random() * 2 * Math.PI
-            cloud.material.opacity = 0.75
+            cloud.material.opacity = 0.8
 
             cloudParticles.push(cloud)
             scene.add(cloud)
@@ -149,7 +159,7 @@ const initThreeJS = () => {
     })
 
     const composer = postprocessing(renderer, scene, camera)
-    return { texture: PIXI.Texture.from(renderer.domElement), scene, camera, composer, cloudParticles }
+    return { texture: PIXI.Texture.from(renderer.domElement), composer, cloudParticles }
 }
 
 const postprocessing = (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera) => {

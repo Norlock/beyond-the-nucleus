@@ -22,7 +22,7 @@ const yOffset = 200
 // Mars
 export const SpacePart3 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
-        borderColor: 0x778899,
+        borderColor: spaceStyles.BORDER_COLOR,
         alpha: 1,
         x: componentX,
         y: componentY,
@@ -65,7 +65,9 @@ const selector = (container: PIXI.Container) => {
 
     const selector = new Selector('Show Mars')
 
+    let isSelected = false
     selector.activate = async () => {
+        isSelected = true
         container.addChild(sprite)
 
         mouseHandler()
@@ -76,12 +78,19 @@ const selector = (container: PIXI.Container) => {
             threeJs.renderer.render(threeJs.scene, threeJs.camera)
             threeJs.texture.update()
 
-            requestAnimationFrame(animate)
+            if (isSelected) {
+                requestAnimationFrame(animate)
+            }
         }
         animate()
     }
 
+    selector.idle = async () => {
+        isSelected = false
+    }
+
     selector.deactivate = async () => {
+        isSelected = false
         container.removeChild(sprite)
     }
 

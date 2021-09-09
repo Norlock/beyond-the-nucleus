@@ -18,6 +18,7 @@ enum AudioTag {
 const CELL_SIZE = 400
 const GRID_LENGTH = 20
 const STARS_COUNT = 150
+export let velocityDelta = 1
 
 class StarContainer extends PIXI.ParticleContainer {
     readonly xDisplacement: number
@@ -37,8 +38,6 @@ class StarContainer extends PIXI.ParticleContainer {
     }
 }
 
-// todo paralax effect with multiple layers so it creates depth effect
-
 export const SpaceChapter = (): Chapter => {
     const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.1)
 
@@ -53,11 +52,6 @@ export const SpaceChapter = (): Chapter => {
 const background = (root: PIXI.Container): ContainerData => {
     const container = new PIXI.Container()
 
-    //const background = new PIXI.Sprite(PIXI.Texture.WHITE)
-    //background.width = CELL_SIZE * GRID_LENGTH
-    //background.height = CELL_SIZE * GRID_LENGTH
-    //background.tint = 0x040404
-
     createGalaxies(container)
     const starContainers = createStars(container)
     createAstronaut(container)
@@ -69,7 +63,7 @@ const background = (root: PIXI.Container): ContainerData => {
     }
 }
 
-function createStars(background: PIXI.Container) {
+const createStars = (background: PIXI.Container) => {
     // Get the texture for rope.
     const starTexture = PIXI.Texture.from('src/assets/space/star.png')
 
@@ -162,8 +156,8 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
         count += 0.0002 * delta
 
         for (let container of starContainers) {
-            container.x += container.xDisplacement
-            container.y += container.yDisplacement
+            container.x += container.xDisplacement * velocityDelta
+            container.y += container.yDisplacement * velocityDelta
 
             let stars = container.children
             for (let i = 0; i < stars.length; i++) {

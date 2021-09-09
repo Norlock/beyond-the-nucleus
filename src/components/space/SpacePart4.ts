@@ -15,14 +15,14 @@ import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
 
 const componentX = 5100
-const componentY = 1800
+const componentY = 2200
 const xOffset = 200
 const yOffset = 200
 
 // Jupiter
 export const SpacePart4 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
-        borderColor: 0x778899,
+        borderColor: spaceStyles.BORDER_COLOR,
         alpha: 1,
         x: componentX,
         y: componentY,
@@ -64,8 +64,10 @@ const selector = (container: PIXI.Container) => {
     sprite.width = window.innerWidth
 
     const selector = new Selector('Show Jupiter')
+    let isSelected = false
 
     selector.activate = async () => {
+        isSelected = true
         container.addChild(sprite)
 
         mouseHandler()
@@ -76,12 +78,19 @@ const selector = (container: PIXI.Container) => {
             threeJs.renderer.render(threeJs.scene, threeJs.camera)
             threeJs.texture.update()
 
-            requestAnimationFrame(animate)
+            if (isSelected) {
+                requestAnimationFrame(animate)
+            }
         }
         animate()
     }
 
+    selector.idle = async () => {
+        isSelected = false
+    }
+
     selector.deactivate = async () => {
+        isSelected = false
         container.removeChild(sprite)
     }
 

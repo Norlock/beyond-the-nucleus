@@ -8,7 +8,7 @@ import { spaceStyles } from './SpaceStyles'
 
 export const SpacePart1 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {
-        borderColor: 0x778899,
+        borderColor: spaceStyles.BORDER_COLOR,
         alpha: 1,
         x: 800,
         y: 800,
