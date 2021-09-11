@@ -57,7 +57,7 @@ const selector = (container: PIXI.Container) => {
 
     const sprite = new PIXI.Sprite(texture)
     sprite.x = componentX + 350
-    sprite.y = componentY - 50
+    sprite.y = componentY - yOffset
     sprite.width = window.innerWidth
 
     sprite.alpha = 0.95
@@ -74,7 +74,7 @@ const selector = (container: PIXI.Container) => {
 
         const animate = () => {
             cloudParticles.forEach((p) => {
-                p.rotation.z -= 0.001
+                p.rotation.z -= 0.0005
             })
             composer.render(clock.getDelta())
             texture.update()

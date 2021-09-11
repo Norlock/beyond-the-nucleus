@@ -17,7 +17,7 @@ enum AudioTag {
 
 const CELL_SIZE = 400
 const GRID_LENGTH = 20
-const STARS_COUNT = 150
+const STARS_COUNT = 120
 export let velocityDelta = 1
 
 class StarContainer extends PIXI.ParticleContainer {
@@ -55,11 +55,12 @@ const background = (root: PIXI.Container): ContainerData => {
     createGalaxies(container)
     const starContainers = createStars(container)
     createAstronaut(container)
+    const fallingStarSelector = createFallingStars(container)
 
     return {
         container,
         name: SpaceName.START,
-        selector: selector(starContainers, root)
+        selector: selector(starContainers, root, fallingStarSelector)
     }
 }
 
@@ -136,7 +137,7 @@ const createStars = (background: PIXI.Container) => {
     return createGrid(0, [])
 }
 
-const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
+const selector = (starContainers: StarContainer[], root: PIXI.Container, ...selectors: Selector[]) => {
     // Max container size add extra cell_size for margin out of scope
     const MAX_SIZE = GRID_LENGTH * CELL_SIZE
 
@@ -199,10 +200,12 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     const selector = new Selector('Move stars')
     selector.activate = async () => {
         boardApp.ticker.add(moveStars)
+        selectors.forEach((s) => s.activate())
     }
 
     selector.deactivate = async () => {
         boardApp.ticker.remove(moveStars)
+        selectors.forEach((s) => s.deactivate())
     }
 
     return selector
@@ -225,6 +228,69 @@ const createGalaxies = (container: PIXI.Container) => {
 
     galaxy.filters = [filter]
     container.addChild(galaxy)
+}
+
+const createFallingStars = (container: PIXI.Container) => {
+    container.sortableChildren = true
+
+    const trailTexture = PIXI.Texture.from('src/assets/space/star.png')
+
+    const xVelocity = Math.random() * 8 + 8
+    const yVelocity = Math.random() * 8 + 8
+
+    const createTrail = (trail: PIXI.Graphics, previous: PIXI.Point, length: number) => {
+        const next = new PIXI.Point((previous.x += xVelocity), (previous.y += yVelocity))
+
+        trail.lineStyle(1, 0xccccef).lineTo(next.x, next.y)
+
+        if (0 < --length) {
+            setTimeout(() => {
+                createTrail(trail, next, length)
+            }, 15)
+        } else {
+            const fadeTrail = () => {
+                if (trail.alpha > 0) {
+                    trail.alpha -= 0.05
+                    setTimeout(fadeTrail, 15)
+                } else {
+                    container.removeChild(trail)
+                }
+            }
+
+            fadeTrail()
+        }
+    }
+
+    const selector = new Selector('Falling stars')
+    let isSelected = false
+    selector.activate = async () => {
+        isSelected = true
+
+        //const beginPoint = new PIXI.Point(500 + Math.random() * 5000, 500 + Math.random() * 1000)
+        const beginPoint = new PIXI.Point(0, 0)
+        const trail = new PIXI.Graphics()
+        trail.position.set(500 + Math.random() * 6000, 500 + Math.random() * 2000)
+        trail.tint = 0xccccdf
+        trail.zIndex = -1
+        container.addChild(trail)
+
+        setTimeout(() => {
+            createTrail(trail, beginPoint, 30)
+
+            if (isSelected) {
+                selector.activate()
+            }
+        }, 2000)
+    }
+
+    const stop = async () => {
+        isSelected = false
+    }
+
+    selector.idle = stop
+    selector.deactivate = stop
+
+    return selector
 }
 
 const createAstronaut = (container: PIXI.Container) => {
