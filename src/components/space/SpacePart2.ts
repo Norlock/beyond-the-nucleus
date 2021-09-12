@@ -13,6 +13,7 @@ import fragmentShader from './shaders/fragment.glsl'
 import earthImg from 'src/assets/space/earth-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
+import { GlowFilter } from 'pixi-filters'
 
 const componentX = 3800
 const componentY = 1300
@@ -59,10 +60,12 @@ const selector = (container: PIXI.Container) => {
     const threeJs = initThreeJS()
     const earth = earthAnimate(threeJs.scene)
 
+    const glowFilter = new GlowFilter({ color: 0x0000dd, innerStrength: 0, outerStrength: 1, distance: 10 })
     const sprite = new PIXI.Sprite(threeJs.texture)
     sprite.x = componentX
     sprite.y = componentY - 100
     sprite.width = window.innerWidth
+    sprite.filters = [glowFilter]
 
     const selector = new Selector('Show Earth')
     let isSelected = false

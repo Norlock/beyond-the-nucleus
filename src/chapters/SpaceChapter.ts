@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import * as Filters from 'pixi-filters'
 import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { GetAudio } from 'src/modules/audio/GetAudio'
@@ -8,6 +7,7 @@ import { boardApp } from 'src/pixi/PixiApp'
 import { Chapter, ContainerData } from './base/Chapter'
 import { ChapterType } from './base/ChapterType'
 import { BloomFilter } from 'pixi-filters'
+import { fallingStar } from './space/FallingStar'
 
 enum SpaceName {
     START = 'start'
@@ -48,6 +48,8 @@ export const SpaceChapter = (): Chapter => {
     factory.addContainer(background(container))
     factory.addAudio(audio, AudioTag.AMBIENCE)
     factory.appendSelector(chapterSelector(factory.chapter), createFallingStars(container))
+
+    fallingStar(container)
 
     return factory.chapter
 }

@@ -10,6 +10,7 @@ import { SelectState } from 'src/modules/audio/AudioComponent'
 import { Promiser } from 'src/utils/Promiser'
 import { seaLife } from './ocean/SeaLife'
 import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
+import { GodrayFilter } from 'pixi-filters'
 
 gsap.registerPlugin(PixiPlugin)
 PixiPlugin.registerPIXI(PIXI)
@@ -50,18 +51,31 @@ const getBackground1 = (): ContainerData => {
     const scale = (boardApp.screen.width / 1920) * 12
     displacementWater.scale.set(scale)
 
+    const godrayFilter = new GodrayFilter({
+        gain: 0.35,
+        time: 0,
+        angle: 10,
+        alpha: 0.4,
+        //center: new PIXI.Point(100, 200),
+        parallel: true,
+        lacunarity: 3.2
+    })
+
     background.width = imageWidth
     background.height = imageHeight
 
     background.addChild(displacementWater)
-    background.filters = [displacementFilter]
+    background.filters = [displacementFilter, godrayFilter]
     container.addChild(background)
 
     seaLife(container)
 
+    let delta = 0
     const animateWater = (): void => {
+        delta += 0.1
         displacementWater.x = displacementWater.x + 1
         displacementWater.y = displacementWater.y + 1
+        godrayFilter.time = delta / 20
     }
 
     const selector = new Selector('Displacement background 1')
