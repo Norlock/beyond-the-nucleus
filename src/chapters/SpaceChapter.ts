@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import * as Filters from 'pixi-filters'
 import { PixiChapterFactory } from 'src/factories/PixiChapterFactory'
 import { SelectState } from 'src/modules/audio/AudioComponent'
 import { GetAudio } from 'src/modules/audio/GetAudio'
@@ -6,6 +7,7 @@ import { Selector } from 'src/modules/selector/Selector'
 import { boardApp } from 'src/pixi/PixiApp'
 import { Chapter, ContainerData } from './base/Chapter'
 import { ChapterType } from './base/ChapterType'
+import { BloomFilter } from 'pixi-filters'
 
 enum SpaceName {
     START = 'start'
@@ -42,9 +44,10 @@ export const SpaceChapter = (): Chapter => {
     const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.1)
 
     const factory = PixiChapterFactory(ChapterType.SPACE, 2000, -6000)
-    factory.addContainer(background(factory.chapter.root))
+    const container = factory.chapter.root
+    factory.addContainer(background(container))
     factory.addAudio(audio, AudioTag.AMBIENCE)
-    factory.appendSelector(chapterSelector(factory.chapter))
+    factory.appendSelector(chapterSelector(factory.chapter), createFallingStars(container))
 
     return factory.chapter
 }
@@ -55,12 +58,11 @@ const background = (root: PIXI.Container): ContainerData => {
     createGalaxies(container)
     const starContainers = createStars(container)
     createAstronaut(container)
-    const fallingStarSelector = createFallingStars(container)
 
     return {
         container,
         name: SpaceName.START,
-        selector: selector(starContainers, root, fallingStarSelector)
+        selector: selector(starContainers, root)
     }
 }
 
@@ -137,7 +139,7 @@ const createStars = (background: PIXI.Container) => {
     return createGrid(0, [])
 }
 
-const selector = (starContainers: StarContainer[], root: PIXI.Container, ...selectors: Selector[]) => {
+const selector = (starContainers: StarContainer[], root: PIXI.Container) => {
     // Max container size add extra cell_size for margin out of scope
     const MAX_SIZE = GRID_LENGTH * CELL_SIZE
 
@@ -200,12 +202,10 @@ const selector = (starContainers: StarContainer[], root: PIXI.Container, ...sele
     const selector = new Selector('Move stars')
     selector.activate = async () => {
         boardApp.ticker.add(moveStars)
-        selectors.forEach((s) => s.activate())
     }
 
     selector.deactivate = async () => {
         boardApp.ticker.remove(moveStars)
-        selectors.forEach((s) => s.deactivate())
     }
 
     return selector
@@ -233,15 +233,13 @@ const createGalaxies = (container: PIXI.Container) => {
 const createFallingStars = (container: PIXI.Container) => {
     container.sortableChildren = true
 
-    const trailTexture = PIXI.Texture.from('src/assets/space/star.png')
-
     const xVelocity = Math.random() * 8 + 8
     const yVelocity = Math.random() * 8 + 8
 
     const createTrail = (trail: PIXI.Graphics, previous: PIXI.Point, length: number) => {
         const next = new PIXI.Point((previous.x += xVelocity), (previous.y += yVelocity))
 
-        trail.lineStyle(1, 0xccccef).lineTo(next.x, next.y)
+        trail.lineTo(next.x, next.y).updateTransform()
 
         if (0 < --length) {
             setTimeout(() => {
@@ -266,13 +264,17 @@ const createFallingStars = (container: PIXI.Container) => {
     selector.activate = async () => {
         isSelected = true
 
-        //const beginPoint = new PIXI.Point(500 + Math.random() * 5000, 500 + Math.random() * 1000)
-        const beginPoint = new PIXI.Point(0, 0)
         const trail = new PIXI.Graphics()
         trail.position.set(500 + Math.random() * 6000, 500 + Math.random() * 2000)
-        trail.tint = 0xccccdf
+        //trail.tint = 0xccccdf
         trail.zIndex = -1
+        trail.lineStyle(1, 0xccccef)
+
+        const bloom = new BloomFilter(5, 5)
+        trail.filters = [bloom]
         container.addChild(trail)
+
+        const beginPoint = new PIXI.Point(0, 0)
 
         setTimeout(() => {
             createTrail(trail, beginPoint, 30)

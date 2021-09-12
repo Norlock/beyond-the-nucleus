@@ -40,8 +40,9 @@ export const PixiChapterFactory = (chapterType: ChapterType, x: number, y: numbe
         return factory
     }
 
-    const appendSelector = (selector: Selector) => {
-        self.selector.append(selector)
+    const appendSelector = (...selectors: Selector[]) => {
+        selectors.forEach((s) => self.selector.append(s))
+
         return factory
     }
 

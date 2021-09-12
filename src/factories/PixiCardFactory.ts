@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js'
 import { Container, DisplayObject, Point, Texture } from 'pixi.js'
 import { Chapter } from 'src/chapters/base/Chapter'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
@@ -41,6 +42,11 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
         return factory
     }
 
+    const setFilters = (filters: PIXI.Filter[]) => {
+        innerCard.filters = filters
+        return factory
+    }
+
     const build = (): PixiParams => {
         if (shadow) {
             card.addChild(shadow)
@@ -60,6 +66,7 @@ export const PixiCardFactory = (options: CardOptions, chapter: Chapter, containe
         addChild,
         elevate,
         setOffset,
+        setFilters,
         build
     }
 

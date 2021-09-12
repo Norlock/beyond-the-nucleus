@@ -46,6 +46,7 @@ export const SpacePart3 = (data: ElmComponent): PixiComponent => {
         .setColorCard(0x000000)
         .addChild(header, paragraph)
         .setOffset(xOffset, yOffset)
+        .setFilters(spaceStyles.filters)
         .build()
 
     const factory = PixiComponentFactory(data.id, chapter.chapterId, param)

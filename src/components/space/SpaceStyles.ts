@@ -1,3 +1,4 @@
+import { BloomFilter } from 'pixi-filters'
 import * as PIXI from 'pixi.js'
 
 const paragraphStyle = (wordWrapWidth: number): PIXI.TextStyle => {
@@ -26,9 +27,11 @@ const headerStyle = (): PIXI.TextStyle => {
 const BORDER_COLOR = 0xaeb8c2
 const LINE_COLOR = 0x000000
 
+const filters = [new BloomFilter(1, 5, PIXI.settings.FILTER_RESOLUTION, 9)]
 export const spaceStyles = {
     paragraphStyle,
     headerStyle,
     LINE_COLOR,
-    BORDER_COLOR
+    BORDER_COLOR,
+    filters
 }

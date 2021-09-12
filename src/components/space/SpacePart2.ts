@@ -45,6 +45,7 @@ export const SpacePart2 = (data: ElmComponent): PixiComponent => {
     const param = PixiCardFactory(cardOptions, chapter, data.containerName)
         .setColorCard(0x000000)
         .addChild(header, paragraph)
+        .setFilters(spaceStyles.filters)
         .setOffset(xOffset, yOffset)
         .build()
 

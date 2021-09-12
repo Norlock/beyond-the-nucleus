@@ -34,6 +34,8 @@
     "vite-plugin-string": "^1.0.1"
   },
   "dependencies": {
+    "@pixi/particle-emitter": "^5.0.2",
+    "pixi-filters": "^4.1.4",
     "pixi.js": "^6.1.2"
   }
 }
