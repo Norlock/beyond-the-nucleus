@@ -5,7 +5,6 @@ import { PixiCardFactory } from 'src/factories/PixiCardFactory'
 import { CardOptions } from 'src/modules/pixi/Pixi'
 import { PixiComponent } from '../base/PixiComponent'
 import { spaceStyles } from './SpaceStyles'
-import { BevelFilter, BloomFilter, DropShadowFilter, EmbossFilter, GlowFilter, ShockwaveFilter } from 'pixi-filters'
 
 export const SpacePart1 = (data: ElmComponent): PixiComponent => {
     const cardOptions: CardOptions = {

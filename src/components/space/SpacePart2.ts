@@ -14,6 +14,7 @@ import earthImg from 'src/assets/space/earth-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
 import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
 import { GlowFilter } from 'pixi-filters'
+import { boardApp } from 'src/pixi/PixiApp'
 
 const componentX = 3800
 const componentY = 1300
@@ -60,41 +61,36 @@ const selector = (container: PIXI.Container) => {
     const threeJs = initThreeJS()
     const earth = earthAnimate(threeJs.scene)
 
-    const glowFilter = new GlowFilter({ color: 0x0000dd, innerStrength: 0, outerStrength: 1, distance: 10 })
+    const glowFilter = new GlowFilter({ color: 0x0000dd, innerStrength: 0, outerStrength: 1 })
     const sprite = new PIXI.Sprite(threeJs.texture)
     sprite.x = componentX
     sprite.y = componentY - 100
     sprite.width = window.innerWidth
-    sprite.filters = [glowFilter]
+    //sprite.filters = [glowFilter]
 
     const selector = new Selector('Show Earth')
-    let isSelected = false
+
+    const animate = () => {
+        earth.animate()
+
+        threeJs.renderer.render(threeJs.scene, threeJs.camera)
+        threeJs.texture.update()
+    }
 
     selector.activate = async () => {
-        isSelected = true
         container.addChild(sprite)
 
         mouseHandler()
 
-        const animate = () => {
-            earth.animate()
-
-            threeJs.renderer.render(threeJs.scene, threeJs.camera)
-            threeJs.texture.update()
-
-            if (isSelected) {
-                requestAnimationFrame(animate)
-            }
-        }
-        animate()
+        boardApp.ticker.add(animate)
     }
 
     selector.idle = async () => {
-        isSelected = false
+        boardApp.ticker.remove(animate)
     }
 
     selector.deactivate = async () => {
-        isSelected = false
+        boardApp.ticker.remove(animate)
         container.removeChild(sprite)
     }
 
