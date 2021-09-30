@@ -12,7 +12,7 @@ import fragmentShader from './shaders/fragment.glsl'
 
 import earthImg from 'src/assets/space/earth-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
-import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
+import { initThreeJS, addMouseHandler, removeMouseHandler, rotateSphere } from './SpaceThree'
 import { GlowFilter } from 'pixi-filters'
 import { boardApp } from 'src/pixi/PixiApp'
 
@@ -58,11 +58,11 @@ export const SpacePart2 = (data: ElmComponent): PixiComponent => {
 }
 
 const selector = (container: PIXI.Container) => {
-    const threeJs = initThreeJS()
-    const earth = earthAnimate(threeJs.scene)
+    const { scene, texture, renderer, camera } = initThreeJS()
+    const earth = earthAnimate(scene)
 
     const glowFilter = new GlowFilter({ color: 0x0000dd, innerStrength: 0, outerStrength: 1 })
-    const sprite = new PIXI.Sprite(threeJs.texture)
+    const sprite = new PIXI.Sprite(texture)
     sprite.x = componentX
     sprite.y = componentY - 100
     sprite.width = window.innerWidth
@@ -73,25 +73,27 @@ const selector = (container: PIXI.Container) => {
     const animate = () => {
         earth.animate()
 
-        threeJs.renderer.render(threeJs.scene, threeJs.camera)
-        threeJs.texture.update()
+        renderer.render(scene, camera)
+        texture.update()
     }
 
     selector.activate = async () => {
         container.addChild(sprite)
 
-        mouseHandler()
+        addMouseHandler()
 
         boardApp.ticker.add(animate)
     }
 
     selector.idle = async () => {
         boardApp.ticker.remove(animate)
+        removeMouseHandler()
     }
 
     selector.deactivate = async () => {
         boardApp.ticker.remove(animate)
         container.removeChild(sprite)
+        removeMouseHandler()
     }
 
     return selector

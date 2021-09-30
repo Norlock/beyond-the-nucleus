@@ -39,23 +39,33 @@ export const rotateSphere = (group: THREE.Group) => {
     })
 }
 
-export const mouseHandler = () => {
-    addEventListener('mousedown', (event) => {
-        mouse.startX = event.clientX / innerWidth
-        mouse.startY = event.clientY / innerWidth
-        mouse.track = true
-    })
+const mouseDown = (event: MouseEvent) => {
+    mouse.startX = event.clientX / innerWidth
+    mouse.startY = event.clientY / innerWidth
+    mouse.track = true
+}
 
-    addEventListener('mouseup', (_event) => {
-        mouse.track = false
-    })
+const mouseUp = (_event: MouseEvent) => {
+    mouse.track = false
+}
 
-    addEventListener('mousemove', (event) => {
-        if (mouse.track) {
-            const newX = event.clientX / innerWidth
-            const newY = event.clientY / innerWidth
-            mouse.x += newX - mouse.startX
-            mouse.y += newY - mouse.startY
-        }
-    })
+const mouseMove = (event: MouseEvent) => {
+    if (mouse.track) {
+        const newX = event.clientX / innerWidth
+        const newY = event.clientY / innerWidth
+        mouse.x += newX - mouse.startX
+        mouse.y += newY - mouse.startY
+    }
+}
+
+export const addMouseHandler = () => {
+    addEventListener('mousedown', mouseDown)
+    addEventListener('mouseup', mouseUp)
+    addEventListener('mousemove', mouseMove)
+}
+
+export const removeMouseHandler = () => {
+    removeEventListener('mousedown', mouseDown)
+    removeEventListener('mouseup', mouseUp)
+    removeEventListener('mousemove', mouseMove)
 }

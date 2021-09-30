@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import { boardApp } from 'src/pixi/PixiApp'
 import { CardOptions } from './Pixi'
 
 export const cardColor = (cardAttr: CardOptions, color: number): PIXI.Container => {
@@ -62,16 +63,21 @@ export const imageFrame = (
 
     const image = PIXI.Sprite.from(imageUrl)
     image.filters = filters
-    image.x = dimensions.x
-    image.y = dimensions.y
-    image.width = frameWidth
-    image.height = frameHeight
+    image.width = dimensions.width
+    image.height = dimensions.height
 
-    const frame = new PIXI.Graphics().beginFill(0xffffff).drawRoundedRect(0, 0, frameWidth, frameHeight, 20).endFill()
-    frame.x = 5
-    frame.y = 5
+    console.log('frame', frameWidth, frameHeight)
+    const frameGraphic = new PIXI.Graphics()
+        .beginFill(0xffffff)
+        .drawRoundedRect(0, 0, frameWidth, frameHeight, 20)
+        .endFill()
 
-    image.addChild(frame)
+    const texture = boardApp.renderer.generateTexture(frameGraphic)
+    const frame = new PIXI.Sprite(texture)
+    frame.x = dimensions.x
+    frame.y = dimensions.y
+
     image.mask = frame
-    return image
+    frame.addChild(image)
+    return frame
 }

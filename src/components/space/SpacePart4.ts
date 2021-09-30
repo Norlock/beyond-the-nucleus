@@ -12,7 +12,7 @@ import fragmentShader from './shaders/fragment.glsl'
 
 import jupiterImg from 'src/assets/space/jupiter-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
-import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
+import { initThreeJS, addMouseHandler, removeMouseHandler, rotateSphere } from './SpaceThree'
 
 const componentX = 5100
 const componentY = 2200
@@ -71,7 +71,7 @@ const selector = (container: PIXI.Container) => {
         isSelected = true
         container.addChild(sprite)
 
-        mouseHandler()
+        addMouseHandler()
 
         const animate = () => {
             jupiter.animate()
@@ -88,11 +88,13 @@ const selector = (container: PIXI.Container) => {
 
     selector.idle = async () => {
         isSelected = false
+        removeMouseHandler()
     }
 
     selector.deactivate = async () => {
         isSelected = false
         container.removeChild(sprite)
+        removeMouseHandler()
     }
 
     return selector

@@ -12,7 +12,7 @@ import fragmentShader from './shaders/fragment.glsl'
 
 import marsImg from 'src/assets/space/mars-3d.jpg'
 import { PixiChapter } from 'src/chapters/base/PixiChapter'
-import { initThreeJS, mouseHandler, rotateSphere } from './SpaceThree'
+import { initThreeJS, addMouseHandler, removeMouseHandler, rotateSphere } from './SpaceThree'
 
 const componentX = 5200
 const componentY = 1200
@@ -56,10 +56,10 @@ export const SpacePart3 = (data: ElmComponent): PixiComponent => {
 }
 
 const selector = (container: PIXI.Container) => {
-    const threeJs = initThreeJS()
-    const mars = marsAnimate(threeJs.scene)
+    const { scene, texture, renderer, camera } = initThreeJS()
+    const mars = marsAnimate(scene)
 
-    const sprite = new PIXI.Sprite(threeJs.texture)
+    const sprite = new PIXI.Sprite(texture)
     sprite.x = componentX
     sprite.y = componentY - 250
     sprite.width = window.innerWidth
@@ -71,13 +71,13 @@ const selector = (container: PIXI.Container) => {
         isSelected = true
         container.addChild(sprite)
 
-        mouseHandler()
+        addMouseHandler()
 
         const animate = () => {
             mars.animate()
 
-            threeJs.renderer.render(threeJs.scene, threeJs.camera)
-            threeJs.texture.update()
+            renderer.render(scene, camera)
+            texture.update()
 
             if (isSelected) {
                 requestAnimationFrame(animate)
@@ -88,11 +88,13 @@ const selector = (container: PIXI.Container) => {
 
     selector.idle = async () => {
         isSelected = false
+        removeMouseHandler()
     }
 
     selector.deactivate = async () => {
         isSelected = false
         container.removeChild(sprite)
+        removeMouseHandler()
     }
 
     return selector
