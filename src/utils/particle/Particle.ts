@@ -33,6 +33,7 @@ export class Particle {
     self.renderer = attributes.factory.create(self)
 
     setRenderFunction(self)
+    setHideFunction(self)
 
     return self
   }
@@ -41,5 +42,12 @@ export class Particle {
 const setRenderFunction = (self: Particle) => {
   self.render = () => {
     self.renderer.render()
+  }
+}
+
+const setHideFunction = (self: Particle) => {
+  self.hide = () => {
+    // TODO
+    //self.renderer.hi
   }
 }

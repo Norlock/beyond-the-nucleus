@@ -40,12 +40,22 @@ export class Grid {
     return self
   }
 
-  render() {
+  start() {
+    this.animate = true
+    this.render()
+  }
+
+  stop() {
+    this.animate = false
+  }
+
+  private render() {
     if (this.animate) {
       requestAnimationFrame(this.render)
       this.voxels.forEach(voxel => {
         voxel.render()
       })
+      this.options.container.render()
     }
   }
 }
