@@ -228,17 +228,17 @@
   "resolved" "https://registry.npmjs.org/@pixi/compressed-textures/-/compressed-textures-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/constants@^6.0.0", "@pixi/constants@^6.0.4", "@pixi/constants@6.1.2":
+"@pixi/constants@^6.0.0", "@pixi/constants@6.1.2":
   "integrity" "sha512-rPHWzGDI/PKD0/p8mrsoednpDhbvfidcen2Vozz7KNO5SS/ljqyiZLEbHwYK/xhc2Z7QvXVuDuPaWl9FBCRiQg=="
   "resolved" "https://registry.npmjs.org/@pixi/constants/-/constants-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/core@^6.0.0", "@pixi/core@^6.0.4", "@pixi/core@6.1.2":
+"@pixi/core@^6.0.0", "@pixi/core@6.1.2":
   "integrity" "sha512-S+f0qmVkrePor2XKA6A70Axo8ui+HiZgkl1J7AWVtl6MI49+3tXra9Ww3xmp/6jEdIUQyyN5sC8cg8dF/lgmBw=="
   "resolved" "https://registry.npmjs.org/@pixi/core/-/core-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/display@^6.0.4", "@pixi/display@6.1.2":
+"@pixi/display@6.1.2":
   "integrity" "sha512-JbX9GF6kOg8n8mcOFvcVZBpDRZtB/u7I+L0taOMHHtQ16bdBQ9+CxYgvOi9FLyWQNKl4utnnviQx4t8Km01POQ=="
   "resolved" "https://registry.npmjs.org/@pixi/display/-/display-6.1.2.tgz"
   "version" "6.1.2"
@@ -457,7 +457,7 @@
   "resolved" "https://registry.npmjs.org/@pixi/loaders/-/loaders-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/math@^6.0.0", "@pixi/math@^6.0.4", "@pixi/math@6.1.2":
+"@pixi/math@^6.0.0", "@pixi/math@6.1.2":
   "integrity" "sha512-tARAZaR01bifqQFW5P714k+Kb8KntKoxVSxbxkY58RSibpoCBFZ8ZnrlT4HY3ovIx66KhH7JJeVhCsXG2d/ggg=="
   "resolved" "https://registry.npmjs.org/@pixi/math/-/math-6.1.2.tgz"
   "version" "6.1.2"
@@ -492,11 +492,6 @@
   "resolved" "https://registry.npmjs.org/@pixi/particle-container/-/particle-container-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/particle-emitter@^5.0.2":
-  "integrity" "sha512-PNG2AveL2meWLY53Fy83C2s0ybF1/xyOvx+L68wgdVw3r4ZkObuKeWSfsI7dO4EUUuayKd+5vU/vfjU+2jVbng=="
-  "resolved" "https://registry.npmjs.org/@pixi/particle-emitter/-/particle-emitter-5.0.2.tgz"
-  "version" "5.0.2"
-
 "@pixi/polyfill@6.1.2":
   "integrity" "sha512-sULLKpSNyax5sYkPMIm+e36zZC1+gfexn5DGrLswR+vHy1Eu8Ler/P0dak+nzKTqwL1hwkuVlCZms+esG9myNQ=="
   "resolved" "https://registry.npmjs.org/@pixi/polyfill/-/polyfill-6.1.2.tgz"
@@ -515,7 +510,7 @@
   "resolved" "https://registry.npmjs.org/@pixi/runner/-/runner-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/settings@^6.0.0", "@pixi/settings@^6.0.4", "@pixi/settings@6.1.2":
+"@pixi/settings@^6.0.0", "@pixi/settings@6.1.2":
   "integrity" "sha512-ZulDFSejh475/YOaTsYpOZNWKhfdN93FnojsaLYX4OXcuscF3Ncq4AE8wNwGFraMd0+ZZY9VXHdepU+rjIhF4g=="
   "resolved" "https://registry.npmjs.org/@pixi/settings/-/settings-6.1.2.tgz"
   "version" "6.1.2"
@@ -532,7 +527,7 @@
   "resolved" "https://registry.npmjs.org/@pixi/sprite-tiling/-/sprite-tiling-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/sprite@^6.0.4", "@pixi/sprite@6.1.2":
+"@pixi/sprite@6.1.2":
   "integrity" "sha512-AzK2UW+VcZ+6sKW++9qokhSMFG35zSAOpRoWk5QgRhbVkdh2L0BB7nK5Z8PZgqmTGCzSq2NvVlzosryPWmLMNw=="
   "resolved" "https://registry.npmjs.org/@pixi/sprite/-/sprite-6.1.2.tgz"
   "version" "6.1.2"
@@ -552,7 +547,7 @@
   "resolved" "https://registry.npmjs.org/@pixi/text/-/text-6.1.2.tgz"
   "version" "6.1.2"
 
-"@pixi/ticker@^6.0.4", "@pixi/ticker@6.1.2":
+"@pixi/ticker@6.1.2":
   "integrity" "sha512-E0S7wzcPPd+hOTghwZeozuXgMvKGa8Zg4+DhlkqBchHt2HDdDzxgy2ZbcyLczBBkuidEx+JRt+BUWBGv4hqZUA=="
   "resolved" "https://registry.npmjs.org/@pixi/ticker/-/ticker-6.1.2.tgz"
   "version" "6.1.2"
