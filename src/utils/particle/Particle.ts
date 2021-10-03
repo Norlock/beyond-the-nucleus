@@ -19,6 +19,7 @@ export class Particle {
   attributes: ParticleAttributes
   x: number
   y: number
+  z?: number
   renderer: ParticleRenderer
 
   private constructor() {}

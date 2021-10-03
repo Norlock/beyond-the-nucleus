@@ -36,23 +36,26 @@ const addParticles = (self: Voxel) => {
   const {particlePercentage, x, y, width, height, particleAttributes} = self.attributes
   const {spacing, radius} = particleAttributes
 
-  const particlesX = Math.trunc(width / (spacing + radius))
-  const particlesY = Math.trunc(height / (spacing + radius))
+  // TODO maybe radius * 2 
+  const particleSpace = spacing + radius
 
-  const particleAmount = Math.trunc(particlesX * particlesY / 100 * particlePercentage)
+  const xMax = Math.trunc(width / (spacing + radius))
+  const yMax = Math.trunc(height / (spacing + radius))
 
-  const addParticle = (xOffset: number, yOffset: number, particlesLeft: number) => {
-    const particle = Particle.create(particleAttributes, x + xOffset, y + yOffset)
+  const particleAmount = Math.trunc(xMax * yMax / 100 * particlePercentage)
+
+  const addParticle = (particleX: number, particleY: number, particlesLeft: number) => {
+    const particle = Particle.create(particleAttributes, particleX, particleY)
     self.particles.push(particle)
 
     if (0 < --particlesLeft) {
-      if (x < particlesX) {
-        addParticle(xOffset + spacing, yOffset, particlesLeft)
-      } else if (y < particlesY) {
-        addParticle(xOffset, yOffset + spacing, particlesLeft)
+      if (particleX + particleSpace < x + width) {
+        addParticle(particleX + spacing, particleY, particlesLeft)
+      } else if (particleY + particleSpace < y + height) {
+        addParticle(x, particleY + spacing, particlesLeft)
       }
     }
   }
 
-  addParticle(0, 0, particleAmount)
+  addParticle(x, y, particleAmount)
 }

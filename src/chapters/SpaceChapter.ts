@@ -89,13 +89,16 @@ const createParticles = (background: PIXI.Container) => {
 
   const particleAttributes: ParticleAttributes = {
     factory: PixiParticleRendererFactory(),
-    color: 0x778899,
+    color: 0x00ff00,
     radius: 2,
     spacing: 5
   }
 
   const grid = Grid.create(options, particleAttributes)
+
+  //setTimeout(() => {
   //grid.start()
+  //}, 3000)
 }
 
 const createStars = (background: PIXI.Container) => {

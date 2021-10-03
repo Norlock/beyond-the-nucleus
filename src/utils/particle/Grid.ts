@@ -37,6 +37,8 @@ export class Grid {
     self.particleAttributes = particleAttributes
 
     addVoxels(self, 0, 0)
+
+    console.log('voxels', self.voxels)
     return self
   }
 
@@ -80,9 +82,9 @@ const addVoxels = (self: Grid, x: number, y: number) => {
     self.options.container.add(particle)
   })
 
-  if (x + 1 < voxelXLength) {
-    addVoxels(self, x + 1, y)
-  } else if (y + 1 < voxelYLength) {
-    addVoxels(self, 0, y + 1)
+  if (x + voxelWidth < voxelXLength * voxelWidth) {
+    addVoxels(self, x + voxelWidth, y)
+  } else if (y + voxelHeight < voxelYLength * voxelHeight) {
+    addVoxels(self, 0, y + voxelHeight)
   }
 }

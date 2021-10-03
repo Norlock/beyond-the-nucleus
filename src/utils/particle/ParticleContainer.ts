@@ -25,7 +25,7 @@ export class PixiParticleContainer implements ParticleContainer {
   }
 
   render() {
-    boardApp.renderer.render(this.container)
+    this.container.updateTransform()
   }
 }
 

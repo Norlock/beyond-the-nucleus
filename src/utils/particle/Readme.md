@@ -11,6 +11,10 @@ Voxel has a container interface that allows to particles to be placed (on a cont
 ## Particle
 A particle must receive a factory that can create a render function for it's particle.
 
+TODO particle must be half the spacing from the border of each voxel begin so that no particles collide
 
-
-
+|-------|
+| x x x |
+|       |
+| x x x |
+|-------|
