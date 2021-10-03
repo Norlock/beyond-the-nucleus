@@ -19,10 +19,9 @@ export class Particle {
   attributes: ParticleAttributes
   x: number
   y: number
-  alive: boolean
   renderer: ParticleRenderer
   render: () => void
-  stop: () => void
+  hide: () => void // TODO in future
 
   private constructor() {}
 
@@ -34,7 +33,6 @@ export class Particle {
     self.renderer = attributes.factory.create(self)
 
     setRenderFunction(self)
-    setStopFunction(self)
 
     return self
   }
@@ -42,13 +40,6 @@ export class Particle {
 
 const setRenderFunction = (self: Particle) => {
   self.render = () => {
-    if (self.alive) {
-      requestAnimationFrame(self.render)
-      self.renderer.render()
-    }
+    self.renderer.render()
   }
-}
-
-const setStopFunction = (self: Particle) => {
-  self.stop = () => {self.alive = false}
 }

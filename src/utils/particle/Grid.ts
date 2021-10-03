@@ -1,11 +1,11 @@
 import {ParticleAttributes} from './Particle'
 import {ParticleContainer} from './ParticleContainer'
-import {ParticleRendererFactory} from './ParticleRenderer'
 import {Voxel} from './Voxel'
 
 export interface GridOptions {
   x: number
   y: number
+  z?: number // TODO in future
   voxelXLength: number
   voxelYLength: number
   voxelWidth: number
@@ -18,6 +18,7 @@ export class Grid {
   options: GridOptions
   particleAttributes: ParticleAttributes
   voxels: Voxel[] = []
+  animate: boolean
 
   private constructor() {}
 
@@ -40,7 +41,12 @@ export class Grid {
   }
 
   render() {
-    // TODO render voxels -> voxels render particles
+    if (this.animate) {
+      requestAnimationFrame(this.render)
+      this.voxels.forEach(voxel => {
+        voxel.render()
+      })
+    }
   }
 }
 

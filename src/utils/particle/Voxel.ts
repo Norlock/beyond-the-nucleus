@@ -1,9 +1,9 @@
 import {Particle, ParticleAttributes} from "./Particle"
-import {ParticleContainer} from "./ParticleContainer"
 
 export interface VoxelAttributes {
   x: number
   y: number
+  z?: number // TODO in future
   width: number
   height: number
   particlePercentage: number
@@ -23,6 +23,12 @@ export class Voxel {
     addParticles(self)
     return self
 
+  }
+
+  render() {
+    this.particles.forEach(particle => {
+      particle.render()
+    })
   }
 }
 
@@ -50,6 +56,3 @@ const addParticles = (self: Voxel) => {
 
   addParticle(0, 0, particleAmount)
 }
-
-
-// width / (spacing + particleRadius) + height / (spacing + particleRadius)
