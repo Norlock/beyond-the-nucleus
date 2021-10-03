@@ -10,7 +10,11 @@ export interface ParticleContainer {
 }
 
 export class PixiParticleContainer implements ParticleContainer {
-  container = new PIXI.Container()
+  container: PIXI.Container
+
+  constructor(container: PIXI.Container) {
+    this.container = container
+  }
 
   add(particle: Particle): void {
     this.container.addChild(particle.renderer.mesh)

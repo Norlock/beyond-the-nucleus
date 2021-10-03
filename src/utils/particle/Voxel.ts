@@ -27,7 +27,7 @@ export class Voxel {
 
   render() {
     this.particles.forEach(particle => {
-      particle.render()
+      particle.renderer.render(particle)
     })
   }
 }

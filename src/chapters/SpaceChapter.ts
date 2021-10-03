@@ -4,6 +4,10 @@ import {SelectState} from 'src/modules/audio/AudioComponent'
 import {GetAudio} from 'src/modules/audio/GetAudio'
 import {Selector} from 'src/modules/selector/Selector'
 import {boardApp} from 'src/pixi/PixiApp'
+import {Grid, GridOptions} from 'src/utils/particle/Grid'
+import {ParticleAttributes} from 'src/utils/particle/Particle'
+import {PixiParticleContainer} from 'src/utils/particle/ParticleContainer'
+import {PixiParticleRendererFactory} from 'src/utils/particle/PixiParticleRenderer'
 import {Chapter, ContainerData} from './base/Chapter'
 import {ChapterType} from './base/ChapterType'
 import {createFallingStars} from './space/FallingStar'
@@ -58,6 +62,7 @@ const background = (root: PIXI.Container): ContainerData => {
   const starContainers = createStars(container)
   createAstronaut(container)
   //createTelescope(container) TODO blender beter leren
+  createParticles(container)
 
 
   return {
@@ -67,8 +72,30 @@ const background = (root: PIXI.Container): ContainerData => {
   }
 }
 
-const particles = (background: PIXI.Container) => {
+const createParticles = (background: PIXI.Container) => {
+  const particleContainer = new PIXI.Container()
+  background.addChild(particleContainer)
 
+  const options: GridOptions = {
+    container: new PixiParticleContainer(particleContainer),
+    x: 4300,
+    y: 1400,
+    voxelWidth: 100,
+    voxelHeight: 100,
+    voxelXLength: 4,
+    voxelYLength: 4,
+    particlePercentage: 100
+  }
+
+  const particleAttributes: ParticleAttributes = {
+    factory: PixiParticleRendererFactory(),
+    color: 0x778899,
+    radius: 2,
+    spacing: 5
+  }
+
+  const grid = Grid.create(options, particleAttributes)
+  grid.start()
 }
 
 const createStars = (background: PIXI.Container) => {

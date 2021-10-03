@@ -18,7 +18,7 @@ export class Grid {
   options: GridOptions
   particleAttributes: ParticleAttributes
   voxels: Voxel[] = []
-  animate: boolean
+  animate = false
 
   private constructor() {}
 
@@ -51,7 +51,7 @@ export class Grid {
 
   private render() {
     if (this.animate) {
-      requestAnimationFrame(this.render)
+      requestAnimationFrame(this.render.bind(this))
       this.voxels.forEach(voxel => {
         voxel.render()
       })

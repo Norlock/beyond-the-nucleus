@@ -2,7 +2,7 @@ import {Particle} from "./Particle";
 
 export interface ParticleRenderer {
   mesh: any
-  render(): void
+  render(particle: Particle): void
 }
 
 export interface ParticleRendererFactory {

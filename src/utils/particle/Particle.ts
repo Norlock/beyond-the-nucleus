@@ -20,8 +20,6 @@ export class Particle {
   x: number
   y: number
   renderer: ParticleRenderer
-  render: () => void
-  hide: () => void // TODO in future
 
   private constructor() {}
 
@@ -32,22 +30,10 @@ export class Particle {
     self.y = y
     self.renderer = attributes.factory.create(self)
 
-    setRenderFunction(self)
-    setHideFunction(self)
+    //setHideFunction(self) fix hide function
 
     return self
   }
 }
 
-const setRenderFunction = (self: Particle) => {
-  self.render = () => {
-    self.renderer.render()
-  }
-}
 
-const setHideFunction = (self: Particle) => {
-  self.hide = () => {
-    // TODO
-    //self.renderer.hi
-  }
-}
