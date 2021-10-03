@@ -95,7 +95,7 @@ const createParticles = (background: PIXI.Container) => {
   }
 
   const grid = Grid.create(options, particleAttributes)
-  grid.start()
+  //grid.start()
 }
 
 const createStars = (background: PIXI.Container) => {
@@ -114,8 +114,9 @@ const createStars = (background: PIXI.Container) => {
       starSprite.y = Math.random() * OFFSET + currentY
 
       starSprite.alpha = Math.random()
-      starSprite.scale.x = starSprite.scale.x / (20 + Math.random() * 20)
-      starSprite.scale.y = starSprite.scale.y / (20 + Math.random() * 20)
+      const scalePart = (20 + Math.random() * 20)
+      starSprite.scale.x = starSprite.scale.x / scalePart
+      starSprite.scale.y = starSprite.scale.y / scalePart
 
       const tintColor = Math.random() * 10
       if (tintColor < 1) {
