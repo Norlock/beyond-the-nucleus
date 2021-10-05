@@ -15,6 +15,7 @@ export const PixiParticleRendererFactory = (): ParticleRendererFactory => {
     const mesh = PIXI.Sprite.from('src/assets/space/star.png') //new PIXI.Graphics() 
     mesh.width = radius
     mesh.height = radius
+    mesh.tint = color
     self.mesh = mesh
     //.beginFill(color)
     //.drawCircle(particle.x, particle.y, radius)

@@ -32,31 +32,59 @@ export class Voxel {
   }
 }
 
+const colors = [
+  0xff0000,
+  0x00ff00,
+  0x0000ff,
+  0xffff00,
+  0x00ffff,
+  0xffffff
+]
+
 const addParticles = (self: Voxel) => {
   const {particlePercentage, x, y, width, height, particleAttributes} = self.attributes
   const {spacing, diameter} = particleAttributes
 
-  // TODO maybe radius * 2 
+  // TODO weghalen dev var
+  particleAttributes.color = colors[Math.round(Math.random() * (colors.length - 1))]
+
   const particleSpace = spacing + diameter
+  const offset = spacing / 2
+  const startX = Math.ceil(x + offset)
+  const startY = Math.ceil(y + offset)
+  const endX = x + width - (offset - diameter)
+  const endY = y + height - (offset - diameter)
 
-  const xMax = Math.trunc(width / (spacing + diameter))
-  const yMax = Math.trunc(height / (spacing + diameter))
+  const getXCount = (partX: number, count: number): number => {
+    if (partX + particleSpace < endX) {
+      return getXCount(partX + particleSpace, ++count)
+    } else {
+      return count
+    }
+  }
 
-  const particleAmount = Math.trunc(xMax * yMax / 100 * particlePercentage)
+  const getYCount = (partY: number, count: number): number => {
+    if (partY + particleSpace < endY) {
+      return getYCount(partY + particleSpace, ++count)
+    } else {
+      return count
+    }
+  }
+
+  const particleAmount = Math.trunc(getXCount(startX, 1) * getYCount(startY, 1) / 100 * particlePercentage)
 
   const addParticle = (particleX: number, particleY: number, particlesLeft: number) => {
     const particle = Particle.create(particleAttributes, particleX, particleY)
     self.particles.push(particle)
 
     if (0 < --particlesLeft) {
-      if (particleX + particleSpace < x + width) {
+      if (particleX + particleSpace < endX) {
         addParticle(particleX + particleSpace, particleY, particlesLeft)
-      } else if (particleY + particleSpace < y + height) {
-        console.log('test', particleY, particlesLeft)
-        addParticle(x, particleY + particleSpace, particlesLeft)
+      } else if (particleY + particleSpace < endY) {
+        addParticle(startX, particleY + particleSpace, particlesLeft)
       }
     }
   }
 
-  addParticle(x, y, particleAmount)
+  addParticle(startX, startY, particleAmount)
 }

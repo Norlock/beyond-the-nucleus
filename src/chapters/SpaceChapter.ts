@@ -87,7 +87,7 @@ const createParticles = (background: PIXI.Container) => {
     voxelHeight: 100,
     voxelXLength: 4,
     voxelYLength: 4,
-    particlePercentage: 100
+    particlePercentage: 88
   }
 
   const particleAttributes: ParticleAttributes = {
