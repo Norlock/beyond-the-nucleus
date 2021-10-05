@@ -92,8 +92,12 @@ const createParticles = (background: PIXI.Container) => {
 
   const particleAttributes: ParticleAttributes = {
     factory: PixiParticleRendererFactory(),
-    color: 0x00ff00,
-    diameter: 2,
+    color: {
+      red: 0,
+      green: 255,
+      blue: 100
+    },
+    diameter: 4,
     //spacing: 5
     spacing: 8
   }

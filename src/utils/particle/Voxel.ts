@@ -46,7 +46,7 @@ const addParticles = (self: Voxel) => {
   const {spacing, diameter} = particleAttributes
 
   // TODO weghalen dev var
-  particleAttributes.color = colors[Math.round(Math.random() * (colors.length - 1))]
+  //particleAttributes.color = colors[Math.round(Math.random() * (colors.length - 1))]
 
   const particleSpace = spacing + diameter
   const offset = spacing / 2

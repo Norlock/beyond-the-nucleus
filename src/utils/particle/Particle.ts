@@ -9,7 +9,11 @@ export interface ParticleAttributes {
   diameter: number
   spacing: number
   //heat: number
-  color: number
+  color: {
+    r: number,
+    g: number,
+    b: number
+  }
   //diffusionOffset: number
   //rigidness: number
   factory: ParticleRendererFactory
