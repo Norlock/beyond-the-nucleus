@@ -6,7 +6,7 @@ import {ParticleRenderer, ParticleRendererFactory} from "./ParticleRenderer"
 // * water
 // uncommented attributes will slowely be included
 export interface ParticleAttributes {
-  radius: number
+  diameter: number
   spacing: number
   //heat: number
   color: number

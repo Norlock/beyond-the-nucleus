@@ -1,19 +1,27 @@
 import * as PIXI from 'pixi.js'
 import * as THREE from 'three'
-import {boardApp} from 'src/pixi/PixiApp'
 import {Particle} from './Particle'
+import {Coordinates} from './Coordinates'
 
 export interface ParticleContainer {
   add(particle: Particle): void
   remove(particle: Particle): void
   render(): void
+  coordinates: Coordinates
 }
 
 export class PixiParticleContainer implements ParticleContainer {
-  container: PIXI.Container
+  readonly container: PIXI.Container
+  readonly coordinates: Coordinates
 
-  constructor(container: PIXI.Container) {
+  constructor(container: PIXI.Container, coordinates: Coordinates) {
     this.container = container
+    this.coordinates = coordinates
+
+    this.container.x = coordinates.x
+    this.container.y = coordinates.y
+    this.container.zIndex = coordinates.z
+
   }
 
   add(particle: Particle): void {
@@ -33,9 +41,12 @@ export class ThreeParticleContainer implements ParticleContainer {
   scene: THREE.Scene
   camera: THREE.Camera
   renderer: THREE.Renderer
+  coordinates: Coordinates
 
-  constructor(scene: THREE.Scene) {
+  constructor(scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.Renderer) {
     this.scene = scene
+    this.camera = camera
+    this.renderer = renderer
   }
 
   add(particle: Particle): void {

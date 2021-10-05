@@ -34,13 +34,13 @@ export class Voxel {
 
 const addParticles = (self: Voxel) => {
   const {particlePercentage, x, y, width, height, particleAttributes} = self.attributes
-  const {spacing, radius} = particleAttributes
+  const {spacing, diameter} = particleAttributes
 
   // TODO maybe radius * 2 
-  const particleSpace = spacing + radius
+  const particleSpace = spacing + diameter
 
-  const xMax = Math.trunc(width / (spacing + radius))
-  const yMax = Math.trunc(height / (spacing + radius))
+  const xMax = Math.trunc(width / (spacing + diameter))
+  const yMax = Math.trunc(height / (spacing + diameter))
 
   const particleAmount = Math.trunc(xMax * yMax / 100 * particlePercentage)
 
@@ -50,9 +50,10 @@ const addParticles = (self: Voxel) => {
 
     if (0 < --particlesLeft) {
       if (particleX + particleSpace < x + width) {
-        addParticle(particleX + spacing, particleY, particlesLeft)
+        addParticle(particleX + particleSpace, particleY, particlesLeft)
       } else if (particleY + particleSpace < y + height) {
-        addParticle(x, particleY + spacing, particlesLeft)
+        console.log('test', particleY, particlesLeft)
+        addParticle(x, particleY + particleSpace, particlesLeft)
       }
     }
   }

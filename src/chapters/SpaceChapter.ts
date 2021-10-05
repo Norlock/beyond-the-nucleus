@@ -4,6 +4,7 @@ import {SelectState} from 'src/modules/audio/AudioComponent'
 import {GetAudio} from 'src/modules/audio/GetAudio'
 import {Selector} from 'src/modules/selector/Selector'
 import {boardApp} from 'src/pixi/PixiApp'
+import {Coordinates} from 'src/utils/particle/Coordinates'
 import {Grid, GridOptions} from 'src/utils/particle/Grid'
 import {ParticleAttributes} from 'src/utils/particle/Particle'
 import {PixiParticleContainer} from 'src/utils/particle/ParticleContainer'
@@ -50,7 +51,8 @@ export const SpaceChapter = (): Chapter => {
   const container = factory.chapter.root
   factory.addContainer(background(container))
   factory.addAudio(audio, AudioTag.AMBIENCE)
-  factory.appendSelector(chapterSelector(factory.chapter), createFallingStars(container))
+  //factory.appendSelector(chapterSelector(factory.chapter), createFallingStars(container))
+  factory.appendSelector(chapterSelector(factory.chapter))
 
   return factory.chapter
 }
@@ -59,7 +61,7 @@ const background = (root: PIXI.Container): ContainerData => {
   const container = new PIXI.Container()
 
   createGalaxies(container)
-  const starContainers = createStars(container)
+  //const starContainers = createStars(container)
   createAstronaut(container)
   //createTelescope(container) TODO blender beter leren
   createParticles(container)
@@ -68,18 +70,19 @@ const background = (root: PIXI.Container): ContainerData => {
   return {
     container,
     name: SpaceName.START,
-    selector: selector(starContainers, root)
+    //selector: selector(starContainers, root)
   }
 }
 
 const createParticles = (background: PIXI.Container) => {
   const particleContainer = new PIXI.Container()
+  particleContainer.zIndex = 30
   background.addChild(particleContainer)
 
+  const container = new PixiParticleContainer(particleContainer, new Coordinates(5300, 1400))
+
   const options: GridOptions = {
-    container: new PixiParticleContainer(particleContainer),
-    x: 4300,
-    y: 1400,
+    container,
     voxelWidth: 100,
     voxelHeight: 100,
     voxelXLength: 4,
@@ -90,15 +93,16 @@ const createParticles = (background: PIXI.Container) => {
   const particleAttributes: ParticleAttributes = {
     factory: PixiParticleRendererFactory(),
     color: 0x00ff00,
-    radius: 2,
-    spacing: 5
+    diameter: 2,
+    //spacing: 5
+    spacing: 8
   }
 
   const grid = Grid.create(options, particleAttributes)
 
-  //setTimeout(() => {
-  //grid.start()
-  //}, 3000)
+  setTimeout(() => {
+    grid.start()
+  }, 3000)
 }
 
 const createStars = (background: PIXI.Container) => {

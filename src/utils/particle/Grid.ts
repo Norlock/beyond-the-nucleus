@@ -3,9 +3,6 @@ import {ParticleContainer} from './ParticleContainer'
 import {Voxel} from './Voxel'
 
 export interface GridOptions {
-  x: number
-  y: number
-  z?: number // TODO in future
   voxelXLength: number
   voxelYLength: number
   voxelWidth: number
