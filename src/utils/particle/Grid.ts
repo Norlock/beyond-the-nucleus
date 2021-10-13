@@ -19,6 +19,8 @@ export class Grid {
   particleAttributes: ParticleAttributes
   voxelArrays: Voxel[][] = []
   animate = false
+  start: () => void
+  stop: () => void
 
   private constructor() {}
 
@@ -40,37 +42,37 @@ export class Grid {
 
     self.options = options
     self.particleAttributes = particleAttributes
+    self.start = () => start(self)
+    self.stop = () => stop(self)
 
     addVoxels(self, 0, 0)
 
     return self
   }
+}
 
-  start() {
-    this.animate = true
-    this.render()
-  }
 
-  stop() {
-    this.animate = false
-  }
+const start = (self: Grid) => {
+  self.animate = true
 
-  private render() {
-    if (this.animate) {
-      requestAnimationFrame(this.render.bind(this))
+  const render = () => {
+    if (self.animate) {
+      requestAnimationFrame(render)
 
-      this.voxelArrays.forEach(array => {
+      self.voxelArrays.forEach(array => {
         array.forEach(voxel => {
-          voxel.render()
+          voxel.transform()
         })
       })
 
-      this.options.container.render()
+      self.options.container.render()
     }
   }
 }
 
-
+const stop = (self: Grid) => {
+  self.animate = false
+}
 
 const addVoxels = (self: Grid, x: number, y: number) => {
   const {voxelXCount, voxelYCount, particlePercentage, probabilityXCount, probabilityYCount} = self.options
@@ -83,7 +85,7 @@ const addVoxels = (self: Grid, x: number, y: number) => {
     particlePercentage,
     coordinates: new Coordinates(x, y),
     // TODO find good way to add fillstyle (eather by requesting shape or passing it on).
-    fillStyle: FillStyle.TOP_VERTICAL_RIGHT
+    fillStyle: FillStyle.BOTTOM_VERTICAL_LEFT
   })
 
   const particleSpace = particleAttributes.spacing + particleAttributes.diameter
