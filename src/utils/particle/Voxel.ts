@@ -89,10 +89,10 @@ const addParticles = (self: Voxel) => {
       fillTopHorizontalRight(self, particleAmount)
       break
     case FillStyle.TOP_VERTICAL_LEFT:
-      // do something
+      fillTopVerticalLeft(self, particleAmount)
       break
     case FillStyle.TOP_VERTICAL_RIGHT:
-      // do something
+      fillTopVerticalRight(self, particleAmount)
       break
     case FillStyle.BOTTOM_HORIZONTAL_LEFT:
       // do something
@@ -143,6 +143,42 @@ const fillTopHorizontalRight = (self: Voxel, particleAmount: number) => {
         addParticle(x - 1, y)
       } else if (y + 1 < probabilityYCount) {
         addParticle(probabilityXCount - 1, y + 1)
+      }
+    }
+  }
+
+  addParticle(probabilityXCount - 1, 0)
+}
+
+const fillTopVerticalLeft = (self: Voxel, particleAmount: number) => {
+  const {probabilityXCount, probabilityYCount} = self.attributes
+
+  const addParticle = (x: number, y: number) => {
+    self.probabilities[x][y].createParticle()
+
+    if (0 < --particleAmount) {
+      if (y + 1 < probabilityYCount) {
+        addParticle(x, y + 1)
+      } else if (x + 1 < probabilityXCount) {
+        addParticle(x + 1, 0)
+      }
+    }
+  }
+
+  addParticle(0, 0)
+}
+
+const fillTopVerticalRight = (self: Voxel, particleAmount: number) => {
+  const {probabilityXCount, probabilityYCount} = self.attributes
+
+  const addParticle = (x: number, y: number) => {
+    self.probabilities[x][y].createParticle()
+
+    if (0 < --particleAmount) {
+      if (y + 1 < probabilityYCount) {
+        addParticle(x, y + 1)
+      } else if (0 < x) {
+        addParticle(x - 1, 0)
       }
     }
   }
