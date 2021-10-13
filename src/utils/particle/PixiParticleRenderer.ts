@@ -18,7 +18,6 @@ const createMesh = (particle: Particle) => {
   const blueFraction = blue / 255
 
   const shader = PIXI.Shader.from(`
-
     precision mediump float;
     attribute vec2 aVertexPosition;
 
@@ -48,7 +47,7 @@ const createMesh = (particle: Particle) => {
 export const PixiParticleRendererFactory = (): ParticleRendererFactory => {
   const create = (particle: Particle): ParticleRenderer => {
     const self = new PixiParticleRenderer()
-    const mesh = createMesh(particle) ///PIXI.Sprite.from('src/assets/space/star.png') //new PIXI.Graphics() 
+    const mesh = createMesh(particle)
     self.mesh = mesh
 
     self.render = (): void => {

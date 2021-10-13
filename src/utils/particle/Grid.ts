@@ -1,41 +1,47 @@
+import {Coordinates} from './Coordinates'
 import {ParticleAttributes} from './Particle'
 import {ParticleContainer} from './ParticleContainer'
 import {Voxel} from './Voxel'
 
 export interface GridOptions {
-  voxelXLength: number
-  voxelYLength: number
-  voxelWidth: number
-  voxelHeight: number
+  voxelXCount: number
+  voxelYCount: number
+  probabilityXCount: number
+  probabilityYCount: number
   particlePercentage: number
   container: ParticleContainer
+  coordinates: Coordinates
 }
 
 export class Grid {
   options: GridOptions
   particleAttributes: ParticleAttributes
-  voxels: Voxel[] = []
+  voxelArrays: Voxel[][] = []
   animate = false
 
   private constructor() {}
 
   static create(options: GridOptions, particleAttributes: ParticleAttributes) {
 
-    if (options.voxelXLength < 1) {
+    if (options.voxelYCount < 1) {
       throw Error("Grid x length must be minimum 1")
     }
 
-    if (options.voxelYLength < 1) {
+    if (options.voxelYCount < 1) {
       throw Error("Grid y length must be minimum 1")
     }
 
     const self = new Grid()
+
+    for (let i = 0; i < options.voxelXCount; i++) {
+      self.voxelArrays.push([])
+    }
+
     self.options = options
     self.particleAttributes = particleAttributes
 
     addVoxels(self, 0, 0)
 
-    console.log('voxels', self.voxels)
     return self
   }
 
@@ -51,9 +57,13 @@ export class Grid {
   private render() {
     if (this.animate) {
       requestAnimationFrame(this.render.bind(this))
-      this.voxels.forEach(voxel => {
-        voxel.render()
+
+      this.voxelArrays.forEach(array => {
+        array.forEach(voxel => {
+          voxel.render()
+        })
       })
+
       this.options.container.render()
     }
   }
@@ -62,26 +72,36 @@ export class Grid {
 
 
 const addVoxels = (self: Grid, x: number, y: number) => {
-  const {voxelXLength, voxelYLength, particlePercentage, voxelWidth, voxelHeight} = self.options
+  const {voxelXCount, voxelYCount, particlePercentage, probabilityXCount, probabilityYCount, coordinates} = self.options
+  const {particleAttributes} = self
 
   const voxel = Voxel.create({
-    width: voxelWidth,
-    height: voxelHeight,
-    particleAttributes: self.particleAttributes,
+    probabilityXCount,
+    probabilityYCount,
+    particleAttributes,
     particlePercentage,
-    x,
-    y
+    coordinates: new Coordinates(x, y),
+    gridCoordinates: coordinates
   })
 
-  self.voxels.push(voxel)
+  const particleSpace = particleAttributes.spacing + particleAttributes.diameter
+  const voxelWidth = probabilityXCount * particleSpace
+  const voxelHeight = probabilityYCount * particleSpace
 
-  voxel.particles.forEach(particle => {
-    self.options.container.add(particle)
+  self.voxelArrays[Math.round(x / voxelWidth)].push(voxel)
+
+  // TODO particles fixen
+  voxel.probabilities.forEach(row => {
+    row.forEach(probability => {
+      if (probability.particle) {
+        self.options.container.add(probability.particle)
+      }
+    })
   })
 
-  if (x + voxelWidth < voxelXLength * voxelWidth) {
+  if (x + voxelWidth < voxelXCount * voxelWidth) {
     addVoxels(self, x + voxelWidth, y)
-  } else if (y + voxelHeight < voxelYLength * voxelHeight) {
+  } else if (y + voxelHeight < voxelYCount * voxelHeight) {
     addVoxels(self, 0, y + voxelHeight)
   }
 }

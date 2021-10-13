@@ -10,12 +10,13 @@ export interface ParticleAttributes {
   spacing: number
   //heat: number
   color: {
-    r: number,
-    g: number,
-    b: number
+    red: number,
+    green: number,
+    blue: number
   }
   //diffusionOffset: number
   //rigidness: number
+  weight: number // 0 for none negative for rising
   factory: ParticleRendererFactory
 }
 
@@ -23,6 +24,8 @@ export class Particle {
   attributes: ParticleAttributes
   x: number
   y: number
+  vx: number = 0
+  vy: number = 0
   z?: number
   renderer: ParticleRenderer
 
@@ -34,8 +37,6 @@ export class Particle {
     self.x = x
     self.y = y
     self.renderer = attributes.factory.create(self)
-
-    //setHideFunction(self) fix hide function
 
     return self
   }

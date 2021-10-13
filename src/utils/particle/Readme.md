@@ -8,11 +8,13 @@ particle system consists out of three parts
 ## Voxel
 Voxel has a container interface that allows to particles to be placed (on a container in pixi.js or on a scene in three)
 
+2d array for vertical and horizontal
+
+
 ## Particle
 A particle must receive a factory that can create a render function for it's particle.
 
-TODO particle must be half the spacing from the border of each voxel begin so that no particles collide
-
+TODO determine the particle properties metrics (kg/g/percentage)
 |-------|
 | x x x |
 |       |

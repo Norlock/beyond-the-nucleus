@@ -48,8 +48,7 @@ export const SpaceChapter = (): Chapter => {
   const audio = GetAudio('src/assets/space/ambient.mp3', true, 0.1)
 
   const factory = PixiChapterFactory(ChapterType.SPACE, 2000, -6000)
-  const container = factory.chapter.root
-  factory.addContainer(background(container))
+  factory.addContainer(background())
   factory.addAudio(audio, AudioTag.AMBIENCE)
   //factory.appendSelector(chapterSelector(factory.chapter), createFallingStars(container))
   factory.appendSelector(chapterSelector(factory.chapter))
@@ -57,7 +56,7 @@ export const SpaceChapter = (): Chapter => {
   return factory.chapter
 }
 
-const background = (root: PIXI.Container): ContainerData => {
+const background = (): ContainerData => {
   const container = new PIXI.Container()
 
   createGalaxies(container)
@@ -75,19 +74,18 @@ const background = (root: PIXI.Container): ContainerData => {
 }
 
 const createParticles = (background: PIXI.Container) => {
-  const particleContainer = new PIXI.Container()
-  particleContainer.zIndex = 30
-  background.addChild(particleContainer)
-
-  const container = new PixiParticleContainer(particleContainer, new Coordinates(5300, 1400))
+  const coordinates = new Coordinates(5300, 1400)
+  const container = new PixiParticleContainer(coordinates)
+  background.addChild(container)
 
   const options: GridOptions = {
     container,
-    voxelWidth: 100,
-    voxelHeight: 100,
-    voxelXLength: 4,
-    voxelYLength: 4,
-    particlePercentage: 88
+    coordinates,
+    voxelXCount: 4,
+    voxelYCount: 4,
+    probabilityXCount: 10,
+    probabilityYCount: 10,
+    particlePercentage: 15
   }
 
   const particleAttributes: ParticleAttributes = {
@@ -97,9 +95,10 @@ const createParticles = (background: PIXI.Container) => {
       green: 255,
       blue: 100
     },
-    diameter: 4,
+    diameter: 2,
     //spacing: 5
-    spacing: 8
+    spacing: 8,
+    weight: 1
   }
 
   const grid = Grid.create(options, particleAttributes)
