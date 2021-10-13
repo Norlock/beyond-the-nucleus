@@ -1,4 +1,4 @@
-import {ParticleRenderer, ParticleRendererFactory} from "./ParticleRenderer"
+import {GraphicalEntity, GraphicalEntityFactory} from "./ParticleRenderer"
 
 // Shapes 
 // * trail
@@ -17,7 +17,7 @@ export interface ParticleAttributes {
   //diffusionOffset: number
   //rigidness: number
   weight: number // 0 for none negative for rising
-  factory: ParticleRendererFactory
+  factory: GraphicalEntityFactory
 }
 
 export class Particle {
@@ -27,7 +27,7 @@ export class Particle {
   vx: number = 0
   vy: number = 0
   z?: number
-  renderer: ParticleRenderer
+  graphicalEntity: GraphicalEntity
 
   private constructor() {}
 
@@ -36,7 +36,7 @@ export class Particle {
     self.attributes = attributes
     self.x = x
     self.y = y
-    self.renderer = attributes.factory.create(self)
+    self.graphicalEntity = attributes.factory.create(self)
 
     return self
   }

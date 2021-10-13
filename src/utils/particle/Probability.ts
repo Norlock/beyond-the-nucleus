@@ -1,11 +1,10 @@
 import {Particle, ParticleAttributes} from './Particle'
 import {Voxel} from './Voxel'
+import {FillStyle} from './FillStyle'
 
 // An array doesn't give any information about position of an element
 // Thats why each particle must be contained inside a probability
-
-interface ProbabilityOptions {
-  hasParticle: boolean
+export interface ProbabilityOptions {
   x: number
   y: number
   particleSpace: number
@@ -20,27 +19,30 @@ export class Probability {
   getBelow: () => Probability
   getLeft: () => Probability
   getRight: () => Probability
+  createParticle: () => void
 
   private constructor() {}
 
   static create(options: ProbabilityOptions, particleAttributes: ParticleAttributes) {
     const self = new Probability()
-    const {x, y, particleSpace, hasParticle} = options
+
     self.options = options
-
-    if (hasParticle) {
-      const offset = particleSpace / 2
-      const particleX = Math.round(x + offset)
-      const particleY = Math.round(y + offset)
-      self.particle = Particle.create(particleAttributes, particleX, particleY)
-    }
-
     self.getAbove = () => getAbove(self)
     self.getBelow = () => getBelow(self)
     self.getLeft = () => getLeft(self)
     self.getRight = () => getRight(self)
+    self.createParticle = () => createParticle(self, particleAttributes)
+
     return self
   }
+}
+
+const createParticle = (self: Probability, particleAttributes: ParticleAttributes) => {
+  const {x, y, particleSpace} = self.options
+  const offset = particleSpace / 2
+  const particleX = Math.round(x + offset)
+  const particleY = Math.round(y + offset)
+  self.particle = Particle.create(particleAttributes, particleX, particleY)
 }
 
 const getAbove = (self: Probability) => {
@@ -64,33 +66,5 @@ const getLeft = (self: Probability) => {
 const getRight = (self: Probability) => {
   if (self.options.x + 1 < self.options.voxel.attributes.probabilityXCount) {
     return self.options.voxel.probabilities[self.options.x + 1][self.options.y]
-  }
-}
-
-export const addProbabilities = (voxel: Voxel) => {
-  const {particlePercentage, probabilityXCount, probabilityYCount, particleAttributes, coordinates} = voxel.attributes
-  const {spacing, diameter} = particleAttributes
-
-  const particleSpace = spacing + diameter
-  let particleAmount = Math.trunc(probabilityXCount * probabilityYCount / 100 * particlePercentage)
-
-  for (let i = 0; i < probabilityXCount; i++) {
-    let array: Probability[] = []
-    voxel.probabilities.push(array)
-
-    let probabilityX = coordinates.x + i * particleSpace
-
-    for (let j = 0; j < probabilityYCount; j++) {
-      let probabilityY = coordinates.y + j * particleSpace
-      const options: ProbabilityOptions = {
-        voxel,
-        particleSpace,
-        hasParticle: 0 < particleAmount--,
-        x: probabilityX,
-        y: probabilityY
-      }
-
-      array.push(Probability.create(options, particleAttributes))
-    }
   }
 }

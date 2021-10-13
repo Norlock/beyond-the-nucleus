@@ -1,4 +1,5 @@
 import {Coordinates} from './Coordinates'
+import {FillStyle} from './FillStyle'
 import {ParticleAttributes} from './Particle'
 import {ParticleContainer} from './ParticleContainer'
 import {Voxel} from './Voxel'
@@ -72,7 +73,7 @@ export class Grid {
 
 
 const addVoxels = (self: Grid, x: number, y: number) => {
-  const {voxelXCount, voxelYCount, particlePercentage, probabilityXCount, probabilityYCount, coordinates} = self.options
+  const {voxelXCount, voxelYCount, particlePercentage, probabilityXCount, probabilityYCount} = self.options
   const {particleAttributes} = self
 
   const voxel = Voxel.create({
@@ -81,7 +82,8 @@ const addVoxels = (self: Grid, x: number, y: number) => {
     particleAttributes,
     particlePercentage,
     coordinates: new Coordinates(x, y),
-    gridCoordinates: coordinates
+    // TODO find good way to add fillstyle (eather by requesting shape or passing it on).
+    fillStyle: FillStyle.RANDOM
   })
 
   const particleSpace = particleAttributes.spacing + particleAttributes.diameter

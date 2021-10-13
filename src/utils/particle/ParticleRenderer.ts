@@ -1,10 +1,10 @@
 import {Particle} from "./Particle";
 
-export interface ParticleRenderer {
+export interface GraphicalEntity {
   mesh: any
-  render(): void
+  transform: () => void
 }
 
-export interface ParticleRendererFactory {
-  create(particle: Particle): ParticleRenderer
+export interface GraphicalEntityFactory {
+  create(particle: Particle): GraphicalEntity
 }

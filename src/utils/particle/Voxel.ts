@@ -1,51 +1,132 @@
 import {Coordinates} from "./Coordinates"
-import {ParticleAttributes} from "./Particle"
+import {Particle, ParticleAttributes} from "./Particle"
 import {Probability} from './Probability'
-import {addProbabilities} from "./Probability"
+import {FillStyle} from './FillStyle'
+import {ProbabilityOptions} from './Probability'
 
 export interface VoxelAttributes {
   coordinates: Coordinates
-  gridCoordinates: Coordinates,
   // No width and height because don't allow partial probabilities
   probabilityXCount: number
   probabilityYCount: number
   particlePercentage: number
   particleAttributes: ParticleAttributes
+  fillStyle: FillStyle
 }
 
 export class Voxel {
   // Used for physics
   probabilities: Probability[][] = []
   attributes: VoxelAttributes
-  getGlobalCoordinates: () => Coordinates
+  render: () => void
 
   private constructor() {}
 
   static create(attributes: VoxelAttributes) {
     const self = new Voxel()
     self.attributes = attributes
-    self.getGlobalCoordinates = () => getGlobalCoordinates(self)
+    self.render = () => render(self)
 
     addProbabilities(self)
+    addParticles(self)
+
     return self
-
-  }
-
-  render() {
-    this.probabilities.forEach(array => {
-      array.forEach(probability => {
-        if (probability.particle) {
-          probability.particle.renderer.render()
-        }
-      })
-    })
   }
 }
 
-const getGlobalCoordinates = (self: Voxel) => {
-  const {gridCoordinates, coordinates} = self.attributes
+const render = (self: Voxel) => {
+  self.probabilities.forEach(array => {
+    array.forEach(probability => {
+      probability.particle?.graphicalEntity.transform()
+    })
+  })
+}
 
-  const x = gridCoordinates.x + coordinates.x
-  const y = gridCoordinates.y + coordinates.y
-  return new Coordinates(x, y)
+//const getGlobalCoordinates = (self: Voxel) => {
+//const {gridCoordinates, coordinates} = self.attributes
+
+//const x = gridCoordinates.x + coordinates.x
+//const y = gridCoordinates.y + coordinates.y
+//return new Coordinates(x, y)
+//}
+
+const addProbabilities = (self: Voxel) => {
+  const {probabilityXCount, probabilityYCount, particleAttributes, coordinates} = self.attributes
+  const {spacing, diameter} = particleAttributes
+
+  const particleSpace = spacing + diameter
+
+  for (let i = 0; i < probabilityXCount; i++) {
+    let array: Probability[] = []
+    self.probabilities.push(array)
+
+    let probabilityX = coordinates.x + i * particleSpace
+
+    for (let j = 0; j < probabilityYCount; j++) {
+      let probabilityY = coordinates.y + j * particleSpace
+      const options: ProbabilityOptions = {
+        voxel: self,
+        particleSpace,
+        x: probabilityX,
+        y: probabilityY
+      }
+
+      array.push(Probability.create(options, particleAttributes))
+    }
+  }
+}
+
+const addParticles = (self: Voxel) => {
+  const {particlePercentage, probabilityXCount, probabilityYCount} = self.attributes
+  const particleAmount = Math.trunc(probabilityXCount * probabilityYCount / 100 * particlePercentage)
+  const {fillStyle} = self.attributes
+
+  switch (fillStyle) {
+    case FillStyle.TOP_HORIZONTAL_LEFT:
+      // do something
+      break
+    case FillStyle.TOP_HORIZONTAL_RIGHT:
+      // do something
+      break
+    case FillStyle.TOP_VERTICAL_LEFT:
+      // do something
+      break
+    case FillStyle.TOP_VERTICAL_RIGHT:
+      // do something
+      break
+    case FillStyle.BOTTOM_HORIZONTAL_LEFT:
+      // do something
+      break
+    case FillStyle.BOTTOM_HORIZONTAL_RIGHT:
+      // do something
+      break
+    case FillStyle.BOTTOM_VERTICAL_LEFT:
+      // do something
+      break
+    case FillStyle.BOTTOM_VERTICAL_RIGHT:
+      // do something
+      break
+    case FillStyle.RANDOM:
+      fillRandom(self, particleAmount)
+      break
+    default:
+      throw new Error("unknown fillstyle")
+  }
+}
+
+const fillRandom = (self: Voxel, particleAmount: number) => {
+  const {probabilityXCount, probabilityYCount} = self.attributes
+  console.log('self', self, particleAmount)
+  const x = Math.round(Math.random() * (probabilityXCount - 1))
+  const y = Math.round(Math.random() * (probabilityYCount - 1))
+
+  if (self.probabilities[x][y].particle) {
+    fillRandom(self, particleAmount)
+  } else {
+    self.probabilities[x][y].createParticle()
+
+    if (0 < --particleAmount) {
+      fillRandom(self, particleAmount)
+    }
+  }
 }

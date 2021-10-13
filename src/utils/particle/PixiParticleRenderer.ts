@@ -1,10 +1,24 @@
 import * as PIXI from "pixi.js"
 import {Particle} from "./Particle"
-import {ParticleRenderer, ParticleRendererFactory} from "./ParticleRenderer"
+import {GraphicalEntity, GraphicalEntityFactory} from "./ParticleRenderer"
 
-class PixiParticleRenderer implements ParticleRenderer {
+class PixiGraphicalEntity implements GraphicalEntity {
   mesh: PIXI.Mesh<PIXI.Shader>
-  render: () => void
+  transform: () => void
+
+  private constructor() {}
+
+  static create(particle: Particle): PixiGraphicalEntity {
+    const self = new PixiGraphicalEntity()
+    self.mesh = createMesh(particle)
+
+    self.transform = (): void => {
+      self.mesh.x = particle.x
+      self.mesh.y = particle.y
+    }
+
+    return self
+  }
 }
 
 const createMesh = (particle: Particle) => {
@@ -44,18 +58,9 @@ const createMesh = (particle: Particle) => {
 }
 
 
-export const PixiParticleRendererFactory = (): ParticleRendererFactory => {
-  const create = (particle: Particle): ParticleRenderer => {
-    const self = new PixiParticleRenderer()
-    const mesh = createMesh(particle)
-    self.mesh = mesh
-
-    self.render = (): void => {
-      mesh.x = particle.x
-      mesh.y = particle.y
-    }
-
-    return self
+export const PixiParticleRendererFactory = (): GraphicalEntityFactory => {
+  const create = (particle: Particle): GraphicalEntity => {
+    return PixiGraphicalEntity.create(particle)
   }
 
   return {create}
