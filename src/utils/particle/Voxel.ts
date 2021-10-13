@@ -83,10 +83,10 @@ const addParticles = (self: Voxel) => {
 
   switch (fillStyle) {
     case FillStyle.TOP_HORIZONTAL_LEFT:
-      // do something
+      fillTopHorizontalLeft(self, particleAmount)
       break
     case FillStyle.TOP_HORIZONTAL_RIGHT:
-      // do something
+      fillTopHorizontalRight(self, particleAmount)
       break
     case FillStyle.TOP_VERTICAL_LEFT:
       // do something
@@ -114,9 +114,44 @@ const addParticles = (self: Voxel) => {
   }
 }
 
+const fillTopHorizontalLeft = (self: Voxel, particleAmount: number) => {
+  const {probabilityXCount, probabilityYCount} = self.attributes
+
+  const addParticle = (x: number, y: number) => {
+    self.probabilities[x][y].createParticle()
+
+    if (0 < --particleAmount) {
+      if (x + 1 < probabilityXCount) {
+        addParticle(x + 1, y)
+      } else if (y + 1 < probabilityYCount) {
+        addParticle(0, y + 1)
+      }
+    }
+  }
+
+  addParticle(0, 0)
+}
+
+const fillTopHorizontalRight = (self: Voxel, particleAmount: number) => {
+  const {probabilityXCount, probabilityYCount} = self.attributes
+
+  const addParticle = (x: number, y: number) => {
+    self.probabilities[x][y].createParticle()
+
+    if (0 < --particleAmount) {
+      if (0 < x) {
+        addParticle(x - 1, y)
+      } else if (y + 1 < probabilityYCount) {
+        addParticle(probabilityXCount - 1, y + 1)
+      }
+    }
+  }
+
+  addParticle(probabilityXCount - 1, 0)
+}
+
 const fillRandom = (self: Voxel, particleAmount: number) => {
   const {probabilityXCount, probabilityYCount} = self.attributes
-  console.log('self', self, particleAmount)
   const x = Math.round(Math.random() * (probabilityXCount - 1))
   const y = Math.round(Math.random() * (probabilityYCount - 1))
 

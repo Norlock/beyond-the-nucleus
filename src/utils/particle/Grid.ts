@@ -83,7 +83,7 @@ const addVoxels = (self: Grid, x: number, y: number) => {
     particlePercentage,
     coordinates: new Coordinates(x, y),
     // TODO find good way to add fillstyle (eather by requesting shape or passing it on).
-    fillStyle: FillStyle.RANDOM
+    fillStyle: FillStyle.TOP_HORIZONTAL_RIGHT
   })
 
   const particleSpace = particleAttributes.spacing + particleAttributes.diameter
