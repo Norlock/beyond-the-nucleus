@@ -127,6 +127,9 @@ const addParticles = (self: Voxel) => {
     case FillStyle.WHITE_NOISE:
       fillWhiteNoise(self)
       break
+    case FillStyle.BLUE_NOISE:
+      fillBlueNoise(self, particleAmount)
+      break
     default:
       throw new Error("unknown fillstyle")
   }
@@ -292,18 +295,18 @@ const fillWhiteNoise = (self: Voxel) => {
 }
 
 const fillBlueNoise = (self: Voxel, particleAmount: number) => {
-  const {probabilityXCount, probabilityYCount} = self.attributes
-  const x = Math.round(Math.random() * (probabilityXCount - 1))
-  const y = Math.round(Math.random() * (probabilityYCount - 1))
+  const probabilitiesArray = [].concat.apply([], self.probabilities);
 
-  if (self.probabilities[x][y].particle) {
-    // TODO check for neighbours
-    fillBlueNoise(self, particleAmount)
-  } else {
-    self.probabilities[x][y].createParticle()
+  const addParticle = () => {
+    const index = Math.floor(Math.random() * probabilitiesArray.length)
+    const probability = probabilitiesArray[index]
+    probability.createParticle()
+    probabilitiesArray.remove(probability)
 
     if (0 < --particleAmount) {
-      fillBlueNoise(self, particleAmount)
+      addParticle()
     }
   }
+
+  addParticle()
 }
