@@ -68,6 +68,8 @@ const start = (self: Grid) => {
       self.options.container.render()
     }
   }
+
+  render()
 }
 
 const stop = (self: Grid) => {
@@ -85,7 +87,7 @@ const addVoxels = (self: Grid, x: number, y: number) => {
     particlePercentage,
     coordinates: new Coordinates(x, y),
     // TODO find good way to add fillstyle (eather by requesting shape or passing it on).
-    fillStyle: FillStyle.BOTTOM_VERTICAL_LEFT
+    fillStyle: FillStyle.WHITE_NOISE
   })
 
   const particleSpace = particleAttributes.spacing + particleAttributes.diameter
@@ -94,7 +96,6 @@ const addVoxels = (self: Grid, x: number, y: number) => {
 
   self.voxelArrays[Math.round(x / voxelWidth)].push(voxel)
 
-  // TODO particles fixen
   voxel.probabilities.forEach(row => {
     row.forEach(probability => {
       if (probability.particle) {

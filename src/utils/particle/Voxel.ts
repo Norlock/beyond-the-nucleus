@@ -3,6 +3,7 @@ import {Particle, ParticleAttributes} from "./Particle"
 import {Probability} from './Probability'
 import {FillStyle} from './FillStyle'
 import {ProbabilityOptions} from './Probability'
+import {updatePhysicsInterVoxel} from "./Physics"
 
 export interface VoxelAttributes {
   coordinates: Coordinates
@@ -19,6 +20,7 @@ export class Voxel {
   probabilities: Probability[][] = []
   attributes: VoxelAttributes
   transform: () => void
+  particles: () => Particle[]
 
   private constructor() {}
 
@@ -26,20 +28,36 @@ export class Voxel {
     const self = new Voxel()
     self.attributes = attributes
     self.transform = () => transform(self)
+    self.particles = () => particles(self)
 
     addProbabilities(self)
     addParticles(self)
+    console.log('eem tjekken', self.particles())
 
     return self
   }
 }
 
 const transform = (self: Voxel) => {
+  //updatePhysicsInterVoxel(self)
   self.probabilities.forEach(array => {
     array.forEach(probability => {
       probability.particle?.graphicalEntity.transform()
     })
   })
+}
+
+const particles = (self: Voxel) => {
+  const particles: Particle[] = []
+  self.probabilities.forEach(array => {
+    array.forEach(probability => {
+      if (probability.particle) {
+        particles.push(probability.particle)
+      }
+    })
+  })
+
+  return particles
 }
 
 //const getGlobalCoordinates = (self: Voxel) => {
@@ -106,8 +124,8 @@ const addParticles = (self: Voxel) => {
     case FillStyle.BOTTOM_VERTICAL_RIGHT:
       fillBottomVerticalRight(self, particleAmount)
       break
-    case FillStyle.RANDOM:
-      fillRandom(self, particleAmount)
+    case FillStyle.WHITE_NOISE:
+      fillWhiteNoise(self)
       break
     default:
       throw new Error("unknown fillstyle")
@@ -259,18 +277,33 @@ const fillBottomVerticalRight = (self: Voxel, particleAmount: number) => {
   addParticle(probabilityXCount - 1, probabilityYCount - 1)
 }
 
-const fillRandom = (self: Voxel, particleAmount: number) => {
+const fillWhiteNoise = (self: Voxel) => {
+  const {probabilityXCount, probabilityYCount, particlePercentage} = self.attributes
+
+  for (let x = 0; x < probabilityXCount; x++) {
+    for (let y = 0; y < probabilityYCount; y++) {
+      let addParticle = Math.round(Math.random() * 100) <= particlePercentage
+
+      if (addParticle) {
+        self.probabilities[x][y].createParticle()
+      }
+    }
+  }
+}
+
+const fillBlueNoise = (self: Voxel, particleAmount: number) => {
   const {probabilityXCount, probabilityYCount} = self.attributes
   const x = Math.round(Math.random() * (probabilityXCount - 1))
   const y = Math.round(Math.random() * (probabilityYCount - 1))
 
   if (self.probabilities[x][y].particle) {
-    fillRandom(self, particleAmount)
+    // TODO check for neighbours
+    fillBlueNoise(self, particleAmount)
   } else {
     self.probabilities[x][y].createParticle()
 
     if (0 < --particleAmount) {
-      fillRandom(self, particleAmount)
+      fillBlueNoise(self, particleAmount)
     }
   }
 }

@@ -1,3 +1,4 @@
+import {Coordinates} from "./Coordinates"
 import {GraphicalEntity, GraphicalEntityFactory} from "./ParticleRenderer"
 
 // Shapes 
@@ -22,24 +23,19 @@ export interface ParticleAttributes {
 
 export class Particle {
   attributes: ParticleAttributes
-  x: number
-  y: number
+  coordinates: Coordinates
   vx: number = 0
   vy: number = 0
-  z?: number
   graphicalEntity: GraphicalEntity
 
   private constructor() {}
 
-  static create(attributes: ParticleAttributes, x: number, y: number) {
+  static create(attributes: ParticleAttributes, coordinates: Coordinates) {
     const self = new Particle()
     self.attributes = attributes
-    self.x = x
-    self.y = y
+    self.coordinates = coordinates
     self.graphicalEntity = attributes.factory.create(self)
 
     return self
   }
 }
-
-

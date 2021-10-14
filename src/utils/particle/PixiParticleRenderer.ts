@@ -13,8 +13,8 @@ class PixiGraphicalEntity implements GraphicalEntity {
     self.mesh = createMesh(particle)
 
     self.transform = (): void => {
-      self.mesh.x = particle.x
-      self.mesh.y = particle.y
+      self.mesh.x = particle.coordinates.x
+      self.mesh.y = particle.coordinates.y
     }
 
     return self
@@ -22,7 +22,7 @@ class PixiGraphicalEntity implements GraphicalEntity {
 }
 
 const createMesh = (particle: Particle) => {
-  const {x, y, attributes} = particle
+  const {coordinates, attributes} = particle
   const {red, green, blue} = attributes.color
   const geometry = new PIXI.Geometry()
     .addAttribute('aVertexPosition', [-100, -50, 100, -50, 0, 100]);
@@ -50,8 +50,8 @@ const createMesh = (particle: Particle) => {
 `);
 
   const triangle = new PIXI.Mesh(geometry, shader);
-  triangle.x = x
-  triangle.y = y
+  triangle.x = coordinates.x
+  triangle.y = coordinates.y
   triangle.width = attributes.diameter
   triangle.height = attributes.diameter
   return triangle
