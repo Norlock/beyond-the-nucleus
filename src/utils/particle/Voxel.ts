@@ -39,7 +39,7 @@ export class Voxel {
 }
 
 const transform = (self: Voxel) => {
-  //updatePhysicsInterVoxel(self)
+  updatePhysicsInterVoxel(self)
   self.probabilities.forEach(array => {
     array.forEach(probability => {
       probability.particle?.graphicalEntity.transform()
@@ -295,7 +295,7 @@ const fillWhiteNoise = (self: Voxel) => {
 }
 
 const fillBlueNoise = (self: Voxel, particleAmount: number) => {
-  const probabilitiesArray = [].concat.apply([], self.probabilities);
+  const probabilitiesArray = self.probabilities.reduce((array, item) => array.concat(item), []);
 
   const addParticle = () => {
     const index = Math.floor(Math.random() * probabilitiesArray.length)

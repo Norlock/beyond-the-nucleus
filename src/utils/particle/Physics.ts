@@ -22,7 +22,7 @@ const move = (source: Probability, target: Probability) => {
 
 // Tries to move particle, remains unchanged otherwise
 const tryMove = (source: Probability, target: Probability) => {
-  if (source.particle && target.particle === undefined) {
+  if (source.particle && typeof target.particle === 'undefined') {
     move(source, target)
   }
 }
@@ -34,7 +34,10 @@ const updateGravity = (voxel: Voxel) => {
 
   const update = (x: number, y: number) => {
     const probability = probabilities[x][y]
-    const below = probability.getBelow()
+    const below = probabilities[x][y + 1]
+
+    if (typeof probability === "undefined" || typeof below === "undefined")
+      debugger
 
     tryMove(probability, below)
 

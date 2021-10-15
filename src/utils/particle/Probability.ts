@@ -32,10 +32,6 @@ export class Probability {
     const self = new Probability()
 
     self.options = options
-    self.getAbove = () => getAbove(self)
-    self.getBelow = () => getBelow(self)
-    self.getLeft = () => getLeft(self)
-    self.getRight = () => getRight(self)
     self.getParticleX = () => getParticleX(self)
     self.getParticleY = () => getParticleY(self)
     self.createParticle = () => createParticle(self, particleAttributes)
@@ -51,10 +47,6 @@ export class Probability {
   get voxelAttributes() {
     return this.options.voxel.attributes
   }
-}
-
-const getIndex = (self: Probability, point: number) => {
-  return point / self.options.particleSpace
 }
 
 const getParticleX = (self: Probability): number => {
@@ -76,41 +68,4 @@ const updateCoordinates = (self: Probability) => {
 const createParticle = (self: Probability, particleAttributes: ParticleAttributes) => {
   const coordinates = new Coordinates(self.getParticleX(), self.getParticleY())
   self.particle = Particle.create(particleAttributes, coordinates)
-}
-
-const getAbove = (self: Probability) => {
-  if (0 < self.options.y) {
-    const {particleSpace} = self.options
-    const x = getIndex(self, self.options.x)
-    const y = getIndex(self, self.options.y - particleSpace)
-    return self.voxelProbabilities[x][y]
-  }
-}
-
-const getBelow = (self: Probability) => {
-  const {particleSpace} = self.options
-  const y = getIndex(self, self.options.y + particleSpace)
-
-  if (y < self.voxelAttributes.probabilityYCount) {
-    const x = getIndex(self, self.options.x)
-    return self.voxelProbabilities[x][y]
-  }
-}
-
-const getLeft = (self: Probability) => {
-  if (0 < self.options.x) {
-    const {particleSpace} = self.options
-    const x = getIndex(self, self.options.x - particleSpace)
-    const y = getIndex(self, self.options.y)
-    return self.voxelProbabilities[x][y]
-  }
-}
-
-const getRight = (self: Probability) => {
-  const {particleSpace} = self.options
-  const x = getIndex(self, self.options.x + particleSpace)
-  if (x < self.voxelAttributes.probabilityXCount) {
-    const y = getIndex(self, self.options.y)
-    return self.voxelProbabilities[x][y]
-  }
 }
