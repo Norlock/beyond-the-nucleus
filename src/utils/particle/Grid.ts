@@ -2,7 +2,7 @@ import {Coordinates} from './Coordinates'
 import {FillStyle} from './FillStyle'
 import {ParticleAttributes} from './Particle'
 import {ParticleContainer} from './ParticleContainer'
-import {updatePhysics} from './Physics'
+import {physics} from './physics/Physics'
 import {Voxel} from './Voxel'
 
 export interface GridOptions {
@@ -60,7 +60,7 @@ const start = (self: Grid) => {
     if (self.animate) {
       requestAnimationFrame(render)
 
-      updatePhysics(self)
+      physics.update(self)
 
       self.voxelArrays.forEach(array => {
         array.forEach(voxel => {
@@ -90,7 +90,7 @@ const addVoxels = (self: Grid, x: number, y: number) => {
     particlePercentage,
     coordinates: new Coordinates(x, y),
     // TODO find good way to add fillstyle (eather by requesting shape or passing it on).
-    fillStyle: FillStyle.BLUE_NOISE
+    fillStyle: FillStyle.BOTTOM_HORIZONTAL_LEFT
   })
 
   const particleSpace = particleAttributes.spacing + particleAttributes.diameter
