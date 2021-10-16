@@ -3,7 +3,6 @@ import {Particle, ParticleAttributes} from "./Particle"
 import {Probability} from './Probability'
 import {FillStyle} from './FillStyle'
 import {ProbabilityOptions} from './Probability'
-import {updatePhysicsInterVoxel} from "./Physics"
 
 export interface VoxelAttributes {
   coordinates: Coordinates
@@ -32,14 +31,12 @@ export class Voxel {
 
     addProbabilities(self)
     addParticles(self)
-    console.log('eem tjekken', self.particles())
 
     return self
   }
 }
 
 const transform = (self: Voxel) => {
-  updatePhysicsInterVoxel(self)
   self.probabilities.forEach(array => {
     array.forEach(probability => {
       probability.particle?.graphicalEntity.transform()

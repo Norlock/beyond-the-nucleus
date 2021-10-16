@@ -2,6 +2,7 @@ import {Coordinates} from './Coordinates'
 import {FillStyle} from './FillStyle'
 import {ParticleAttributes} from './Particle'
 import {ParticleContainer} from './ParticleContainer'
+import {updatePhysics} from './Physics'
 import {Voxel} from './Voxel'
 
 export interface GridOptions {
@@ -58,6 +59,8 @@ const start = (self: Grid) => {
   const render = () => {
     if (self.animate) {
       requestAnimationFrame(render)
+
+      updatePhysics(self)
 
       self.voxelArrays.forEach(array => {
         array.forEach(voxel => {
